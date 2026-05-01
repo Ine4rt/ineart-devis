@@ -1,25 +1,27 @@
 import imaplib
 import email
 from email.header import decode_header
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 import json
 import os
 import re
 import sys
-import xmlrpc.client
+import smtplib
 from datetime import datetime, timedelta
 import anthropic
 
 IMAP_HOST  = "imap.one.com"
 IMAP_PORT  = 993
-IMAP_USER  = os.environ["MAIL_USER"]
-IMAP_PASS  = os.environ["MAIL_PASS"]
-ODOO_URL   = os.environ["ODOO_URL"]
-ODOO_DB    = os.environ["ODOO_DB"]
-ODOO_USER  = os.environ["ODOO_USER"]
-ODOO_PASS  = os.environ["ODOO_PASS"]
-CLAUDE_KEY   = os.environ["ANTHROPIC_API_KEY"]
+SMTP_HOST  = "send.one.com"
+SMTP_PORT  = 587
+
+MAIL_USER  = os.environ["MAIL_USER"]
+MAIL_PASS  = os.environ["MAIL_PASS"]
+CLAUDE_KEY = os.environ["ANTHROPIC_API_KEY"]
 CLAUDE_MODEL = "claude-haiku-4-5-20251001"
 JOURS_RETOUR = 1
+
 
 def decoder_header(valeur):
     parties = decode_header(valeur or "")
@@ -30,6 +32,7 @@ def decoder_header(valeur):
         else:
             result.append(data)
     return " ".join(result)
+
 
 def extraire_texte(msg):
     texte = ""
@@ -51,18 +54,19 @@ def extraire_texte(msg):
             texte = ""
     return texte.strip()
 
+
 def lire_mails_imap():
-    print(f"[IMAP] Connexion à {IMAP_HOST}...")
+    print(f"[IMAP] Connexion a {IMAP_HOST}...")
     mails = []
     with imaplib.IMAP4_SSL(IMAP_HOST, IMAP_PORT) as imap:
-        imap.login(IMAP_USER, IMAP_PASS)
+        imap.login(MAIL_USER, MAIL_PASS)
         imap.select("INBOX")
         depuis = (datetime.now() - timedelta(days=JOURS_RETOUR)).strftime("%d-%b-%Y")
         _, ids = imap.search(None, f'(UNSEEN SINCE "{depuis}")')
         ids_liste = ids[0].split()
         print(f"[IMAP] {len(ids_liste)} mail(s) non lu(s).")
         for uid in ids_liste:
-            _, data = imap.fetch(uid, "(RFC822)")
+            _, data = imap.fetch(uid, "(BODY.PEEK[])")
             msg = email.message_from_bytes(data[0][1])
             mails.append({
                 "uid":   uid.decode(),
@@ -73,9 +77,10 @@ def lire_mails_imap():
             })
     return mails
 
-PROMPT_SYSTEME = """Tu es un assistant commercial pour IneArt, entreprise belge de broderie et personnalisation textile.
-Analyse l'email et réponds UNIQUEMENT en JSON valide, sans markdown ni texte autour.
-Type : DEMANDE_DEVIS, COMMANDE_VALIDEE, ou AUTRE.
+
+PROMPT_SYSTEME = """Tu es un assistant commercial pour IneArt, entreprise belge de broderie et personnalisation textile (serigraphie, broderie, DTF, flocage).
+Analyse l'email et reponds UNIQUEMENT en JSON valide, sans markdown ni texte autour.
+Types : DEMANDE_DEVIS, COMMANDE_VALIDEE, AUTRE.
 Format :
 {
   "type": "DEMANDE_DEVIS",
@@ -83,15 +88,15 @@ Format :
   "client": {"nom": "...", "email": "...", "telephone": null, "entreprise": null},
   "articles": [{"description": "...", "quantite": 1, "prix_unitaire": null, "notes": null}],
   "delai_souhaite": null,
-  "notes_commerciales": "..."
+  "notes_commerciales": "resume en 1-2 phrases"
 }"""
 
-def analyser_mail(mail):
+
+def analyser_mail(mail: dict) -> dict:
     client = anthropic.Anthropic(api_key=CLAUDE_KEY)
     contenu = f"De : {mail['de']}\nSujet : {mail['sujet']}\nDate : {mail['date']}\n\n{mail['corps'][:3000]}"
     response = client.messages.create(
-        model=CLAUDE_MODEL,
-        max_tokens=1024,
+        model=CLAUDE_MODEL, max_tokens=1024,
         system=PROMPT_SYSTEME,
         messages=[{"role": "user", "content": contenu}],
     )
@@ -103,55 +108,88 @@ def analyser_mail(mail):
     except Exception:
         return {"type": "AUTRE", "confiance": 0, "articles": [], "client": {}}
 
-def connexion_odoo():
-    common = xmlrpc.client.ServerProxy(f"{ODOO_URL}/xmlrpc/2/common")
-    uid = common.authenticate(ODOO_DB, ODOO_USER, ODOO_PASS, {})
-    if not uid:
-        raise ConnectionError("Authentification Odoo échouée.")
-    models = xmlrpc.client.ServerProxy(f"{ODOO_URL}/xmlrpc/2/object")
-    return uid, models
 
-def trouver_ou_creer_client(uid, models, analyse):
-    info  = analyse.get("client", {})
-    email = info.get("email", "")
-    nom   = info.get("nom") or info.get("entreprise") or "Client inconnu"
-    if email:
-        ids = models.execute_kw(ODOO_DB, uid, ODOO_PASS, "res.partner", "search", [[["email", "=", email]]])
-        if ids:
-            return ids[0]
-    return models.execute_kw(ODOO_DB, uid, ODOO_PASS, "res.partner", "create", [{
-        "name": nom, "email": email or False,
-        "phone": info.get("telephone") or False,
-        "customer_rank": 1,
-    }])
+def construire_html(devis_list: list) -> str:
+    date_str = datetime.now().strftime("%d/%m/%Y a %H:%M")
+    blocs = ""
+    for i, d in enumerate(devis_list, 1):
+        a  = d["analyse"]
+        m  = d["mail"]
+        cl = a.get("client", {})
+        arts = a.get("articles", [])
+        type_m = a.get("type", "")
+        couleur = "#2ecc71" if type_m == "DEMANDE_DEVIS" else "#f39c12"
+        label   = "Devis" if type_m == "DEMANDE_DEVIS" else "Commande"
+        rows = ""
+        for art in arts:
+            prix = f"{art['prix_unitaire']} EUR" if art.get("prix_unitaire") else "A definir"
+            note = f" ({art['notes']})" if art.get("notes") else ""
+            rows += f"<tr><td style='padding:6px 10px;border-bottom:1px solid #eee'>{art.get('description','?')}{note}</td><td style='padding:6px 10px;border-bottom:1px solid #eee;text-align:center'>{art.get('quantite','?')}</td><td style='padding:6px 10px;border-bottom:1px solid #eee;text-align:center'>{prix}</td></tr>"
+        if not rows:
+            rows = "<tr><td colspan='3' style='padding:8px;color:#888'>Voir mail original</td></tr>"
+        notes_com = a.get("notes_commerciales", "")
+        delai = a.get("delai_souhaite") or "Non precise"
+        tel = cl.get("telephone", "")
+        blocs += f"""
+<div style='background:#fff;border:1px solid #ddd;border-radius:8px;margin-bottom:20px;overflow:hidden'>
+  <div style='background:#1a1a2e;padding:14px 20px'>
+    <span style='color:#fff;font-weight:bold;font-size:15px'>Demande #{i} — {cl.get("nom","Client inconnu")}</span>
+    <span style='background:{couleur};color:#fff;padding:3px 10px;border-radius:12px;font-size:12px;float:right'>{label}</span>
+  </div>
+  <div style='padding:12px 20px;background:#f8f9fa;border-bottom:1px solid #eee;font-size:13px'>
+    <b>Client :</b> {cl.get("nom","—")}{" — " + cl.get("entreprise","") if cl.get("entreprise") else ""}<br>
+    <b>Email :</b> {cl.get("email","—")}<br>
+    {"<b>Tel :</b> " + tel + "<br>" if tel else ""}
+    <b>Delai :</b> {delai}<br>
+    <b>Mail recu :</b> {m.get("date","—")}
+  </div>
+  {"<div style='padding:10px 20px;background:#fff8e1;border-bottom:1px solid #eee;font-size:13px'>💡 " + notes_com + "</div>" if notes_com else ""}
+  <div style='padding:14px 20px'>
+    <p style='font-size:12px;color:#888;margin:0 0 8px'>ARTICLES DETECTES</p>
+    <table style='width:100%;border-collapse:collapse;font-size:13px'>
+      <thead><tr style='background:#f8f9fa'>
+        <th style='padding:8px 10px;text-align:left'>Description</th>
+        <th style='padding:8px 10px;text-align:center'>Qte</th>
+        <th style='padding:8px 10px;text-align:center'>Prix unit.</th>
+      </tr></thead>
+      <tbody>{rows}</tbody>
+    </table>
+  </div>
+  <div style='padding:12px 20px;background:#f8f9fa;border-top:1px solid #eee;text-align:right'>
+    <a href='https://devis-ineart.odoo.com/odoo/sales/new' style='background:#1a1a2e;color:#fff;padding:8px 18px;border-radius:6px;text-decoration:none;font-size:13px'>
+      Creer le devis dans Odoo
+    </a>
+  </div>
+</div>"""
+    return f"""<!DOCTYPE html><html><head><meta charset='utf-8'></head>
+<body style='font-family:Arial,sans-serif;background:#f0f2f5;padding:20px;margin:0'>
+<div style='max-width:660px;margin:0 auto'>
+  <div style='background:#1a1a2e;border-radius:8px 8px 0 0;padding:20px 24px;text-align:center'>
+    <h1 style='color:#fff;margin:0;font-size:20px'>IneArt — Recap Devis</h1>
+    <p style='color:#aaa;margin:6px 0 0;font-size:13px'>Genere le {date_str} · {len(devis_list)} demande(s)</p>
+  </div>
+  <div style='background:#f0f2f5;padding:20px 0'>{blocs}</div>
+  <div style='background:#1a1a2e;border-radius:0 0 8px 8px;padding:14px 24px;text-align:center'>
+    <p style='color:#aaa;margin:0;font-size:12px'>IneArt AI · Les mails originaux restent non lus dans ta boite</p>
+  </div>
+</div></body></html>"""
 
-def creer_devis(analyse, mail):
-    try:
-        uid, models = connexion_odoo()
-    except Exception as e:
-        print(f"[ODOO] Erreur : {e}")
-        return None
-    partner_id = trouver_ou_creer_client(uid, models, analyse)
-    validite = (datetime.now() + timedelta(days=30)).strftime("%Y-%m-%d")
-    note = f"Mail de {mail['de']} — {mail['sujet']}\n{analyse.get('notes_commerciales','')}"
-    ids_prod = models.execute_kw(ODOO_DB, uid, ODOO_PASS, "product.product", "search",
-                                  [[["type","=","service"],["sale_ok","=",True]]], {"limit":1})
-    produit_id = ids_prod[0] if ids_prod else None
-    lignes = []
-    for art in analyse.get("articles", []):
-        ligne = {"name": art.get("description","Article à définir"),
-                 "product_uom_qty": art.get("quantite") or 1,
-                 "price_unit": art.get("prix_unitaire") or 0.0}
-        if produit_id:
-            ligne["product_id"] = produit_id
-        lignes.append((0, 0, ligne))
-    if not lignes:
-        lignes = [(0, 0, {"name": "Demande à compléter", "product_uom_qty": 1, "price_unit": 0.0})]
-    devis_id = models.execute_kw(ODOO_DB, uid, ODOO_PASS, "sale.order", "create", [{
-        "partner_id": partner_id, "validity_date": validite,
-        "note": note, "order_line": lignes, "state": "draft",
-    }])
-    return devis_id
+
+def envoyer_recap(devis_list: list):
+    nb = len(devis_list)
+    sujet = f"[IneArt AI] {nb} nouvelle(s) demande(s) — {datetime.now().strftime('%d/%m/%Y')}"
+    msg = MIMEMultipart("alternative")
+    msg["Subject"] = sujet
+    msg["From"]    = MAIL_USER
+    msg["To"]      = MAIL_USER
+    msg.attach(MIMEText(construire_html(devis_list), "html", "utf-8"))
+    print(f"[SMTP] Envoi recap a {MAIL_USER}...")
+    with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as smtp:
+        smtp.starttls()
+        smtp.login(MAIL_USER, MAIL_PASS)
+        smtp.sendmail(MAIL_USER, MAIL_USER, msg.as_bytes())
+    print("[SMTP] Email recap envoye !")
+
 
 def main(dry_run=False):
     print(f"\n{'='*50}")
@@ -160,26 +198,31 @@ def main(dry_run=False):
     print(f"{'='*50}\n")
     mails = lire_mails_imap()
     if not mails:
-        print("Aucun nouveau mail.")
+        print("Aucun nouveau mail non lu. Fin.")
         return
-    nb_devis = 0
+    devis_detectes = []
     for mail in mails:
         print(f"\n📧 {mail['de']}\n   {mail['sujet']}")
         analyse = analyser_mail(mail)
-        type_m = analyse.get("type", "AUTRE")
-        conf = analyse.get("confiance", 0)
+        type_m  = analyse.get("type", "AUTRE")
+        conf    = analyse.get("confiance", 0)
         print(f"   → {type_m} ({conf:.0%})")
         if type_m in ("DEMANDE_DEVIS", "COMMANDE_VALIDEE") and conf >= 0.6:
-            if dry_run:
-                print("   [TEST] " + json.dumps(analyse, ensure_ascii=False))
-            else:
-                devis_id = creer_devis(analyse, mail)
-                if devis_id:
-                    print(f"   ✅ Devis #{devis_id} créé dans Odoo")
-                    nb_devis += 1
+            devis_detectes.append({"mail": mail, "analyse": analyse})
+            print(f"   Ajoute au recap")
         else:
-            print("   ⏭ Ignoré")
-    print(f"\n✅ {len(mails)} mail(s) — {nb_devis} devis créé(s)\n")
+            print(f"   Ignore")
+    print(f"\n{'='*50}")
+    print(f"Resultat : {len(devis_detectes)} devis sur {len(mails)} mail(s)")
+    if devis_detectes:
+        if dry_run:
+            print("\n[TEST] Donnees extraites :")
+            for d in devis_detectes:
+                print(json.dumps(d["analyse"], indent=2, ensure_ascii=False))
+        else:
+            envoyer_recap(devis_detectes)
+    print(f"{'='*50}\n")
+
 
 if __name__ == "__main__":
     main(dry_run="--dry-run" in sys.argv)

@@ -1,7 +1,41 @@
 {
-  "mis_a_jour": "02/05/2026 20:44",
-  "total": 13,
+  "mis_a_jour": "02/05/2026 21:22",
+  "total": 15,
   "mails": [
+    {
+      "uid": "20647",
+      "de": "Info@ineart.be",
+      "sujet": "[IneArt AI] 2 nouvelle(s) demande(s) — 02/05/2026",
+      "date": "02/05/2026 21:22",
+      "type": "A",
+      "cf": 30,
+      "cl": {
+        "nom": null,
+        "email": "Info@ineart.be",
+        "ent": null,
+        "tel": null
+      },
+      "arts": [],
+      "delai": null,
+      "note": "Email de notification système sans contenu de demande visible. Nécessite consultation de l'interface IneArt pour accéder aux 2 demandes mentionnées."
+    },
+    {
+      "uid": "20648",
+      "de": "\"Ine4rt\" <notifications@github.com>",
+      "sujet": "[Ine4rt/ineart-devis] Run failed: IneArt — Analyse mails & Devis Odoo - main (c839943)",
+      "date": "02/05/2026 21:22",
+      "type": "A",
+      "cf": 5,
+      "cl": {
+        "nom": null,
+        "email": "notifications@github.com",
+        "ent": null,
+        "tel": null
+      },
+      "arts": [],
+      "delai": null,
+      "note": "Email de notification GitHub Actions - Échec du workflow d'analyse des mails. Non pertinent pour le traitement commercial."
+    },
     {
       "uid": "20645",
       "de": "Info@ineart.be",

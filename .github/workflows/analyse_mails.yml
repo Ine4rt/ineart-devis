@@ -14,12 +14,16 @@ on:
           - normal
           - dry-run
 
+permissions:
+  contents: write
+
 jobs:
   analyser-mails:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+
     steps:
-      - name: Télécharger le code
+      - name: Telecharger le code
         uses: actions/checkout@v4
 
       - name: Installer Python 3.11
@@ -28,7 +32,7 @@ jobs:
           python-version: '3.11'
           cache: 'pip'
 
-      - name: Installer les dépendances
+      - name: Installer les dependances
         run: pip install -r requirements.txt
 
       - name: Analyser les mails
@@ -36,13 +40,18 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           MAIL_USER: ${{ secrets.MAIL_USER }}
           MAIL_PASS: ${{ secrets.MAIL_PASS }}
-          ODOO_URL: ${{ secrets.ODOO_URL }}
-          ODOO_DB: ${{ secrets.ODOO_DB }}
-          ODOO_USER: ${{ secrets.ODOO_USER }}
-          ODOO_PASS: ${{ secrets.ODOO_PASS }}
         run: |
           if [ "${{ github.event.inputs.mode }}" = "dry-run" ]; then
             python analyseur_mails.py --dry-run
           else
             python analyseur_mails.py --now
           fi
+
+      - name: Sauvegarder mails.json
+        if: github.event.inputs.mode != 'dry-run'
+        run: |
+          git config user.name "IneArt AI Bot"
+          git config user.email "actions@github.com"
+          git add mails.json
+          git diff --cached --quiet || git commit -m "Mise a jour mails.json $(date '+%d/%m/%Y %H:%M')"
+          git push

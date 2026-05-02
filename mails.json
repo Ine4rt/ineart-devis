@@ -1,7 +1,41 @@
 {
-  "mis_a_jour": "02/05/2026 17:12",
-  "total": 10,
+  "mis_a_jour": "02/05/2026 18:06",
+  "total": 12,
   "mails": [
+    {
+      "uid": "20643",
+      "de": "Info@ineart.be",
+      "sujet": "[IneArt AI] 2 nouvelle(s) demande(s) — 02/05/2026",
+      "date": "02/05/2026 18:06",
+      "type": "A",
+      "cf": 30,
+      "cl": {
+        "nom": null,
+        "email": "Info@ineart.be",
+        "ent": null,
+        "tel": null
+      },
+      "arts": [],
+      "delai": null,
+      "note": "Email système IneArt AI notifiant 2 nouvelles demandes. Contenu principal manquant - demande complète requise pour analyse."
+    },
+    {
+      "uid": "20644",
+      "de": "\"Amy from Relevance AI\" <support@relevanceai.com>",
+      "sujet": "Give your Agent Superpowers",
+      "date": "02/05/2026 18:06",
+      "type": "A",
+      "cf": 95,
+      "cl": {
+        "nom": null,
+        "email": "support@relevanceai.com",
+        "ent": "Relevance AI",
+        "tel": null
+      },
+      "arts": [],
+      "delai": null,
+      "note": "Email marketing de Relevance AI destiné à un utilisateur nommé Dimitri. Contenu promotionnel sur les fonctionnalités d'agents IA. Non pertinent pour IneArt."
+    },
     {
       "uid": "20632",
       "de": "Ineart <info@ineart.be>",

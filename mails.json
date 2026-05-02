@@ -1,0 +1,204 @@
+{
+  "mis_a_jour": "02/05/2026 17:12",
+  "total": 10,
+  "mails": [
+    {
+      "uid": "20632",
+      "de": "Ineart <info@ineart.be>",
+      "sujet": "",
+      "date": "02/05/2026 17:12",
+      "type": "D",
+      "cf": 85,
+      "cl": {
+        "nom": "Dimitri Van den Ackerveken",
+        "email": "info@ineart.be",
+        "ent": null,
+        "tel": null
+      },
+      "arts": [
+        {
+          "d": "Polos brodés",
+          "q": 50,
+          "n": null
+        }
+      ],
+      "delai": null,
+      "note": "Client demande un devis pour 50 polos brodés. Détails de broderie et spécifications non précisés."
+    },
+    {
+      "uid": "20633",
+      "de": "info@djdams.be",
+      "sujet": "Commande t shirt",
+      "date": "02/05/2026 17:12",
+      "type": "C",
+      "cf": 85,
+      "cl": {
+        "nom": "Dam's",
+        "email": "info@djdams.be",
+        "ent": "DJ Dams",
+        "tel": null
+      },
+      "arts": [
+        {
+          "d": "T-shirt noir XL avec logo DJ Syl et DJ Dam's + boule facette dorée",
+          "q": 2,
+          "n": "Reproduction identique aux t-shirts précédents"
+        }
+      ],
+      "delai": null,
+      "note": "Client récurrent commandant 2 t-shirts noirs XL identiques aux précédents avec logos personnalisés et détail doré. Demande simple de réédition."
+    },
+    {
+      "uid": "20635",
+      "de": "bpost <notify@bpost.be>",
+      "sujet": "Confirmation de votre commande",
+      "date": "02/05/2026 17:12",
+      "type": "A",
+      "cf": 95,
+      "cl": {
+        "nom": null,
+        "email": "notify@bpost.be",
+        "ent": "bpost",
+        "tel": null
+      },
+      "arts": [],
+      "delai": null,
+      "note": "Email automatisé de bpost (notification de suivi postal). Non pertinent pour IneArt - à ignorer ou classer dans l'historique postal."
+    },
+    {
+      "uid": "20636",
+      "de": "Info@ineart.be",
+      "sujet": "[IneArt AI] 2 nouvelle(s) demande(s) — 01/05/2026",
+      "date": "02/05/2026 17:12",
+      "type": "A",
+      "cf": 30,
+      "cl": {
+        "nom": null,
+        "email": "Info@ineart.be",
+        "ent": null,
+        "tel": null
+      },
+      "arts": [],
+      "delai": null,
+      "note": "Email système IneArt signalant 2 nouvelles demandes sans contenu détaillé. Aucune information client ni article spécifié."
+    },
+    {
+      "uid": "20637",
+      "de": "Moïse Manzila  <moisebg0506@gmail.com>",
+      "sujet": "Re: moisebg0506@gmail.com",
+      "date": "02/05/2026 17:12",
+      "type": "A",
+      "cf": 95,
+      "cl": {
+        "nom": "Moïse Manzila",
+        "email": "moisebg0506@gmail.com",
+        "ent": null,
+        "tel": null
+      },
+      "arts": [
+        {
+          "d": "Pulls noirs XXL",
+          "q": 5,
+          "n": "Reçus sales et chiffonnés"
+        },
+        {
+          "d": "Pulls noirs XL",
+          "q": 3,
+          "n": "Reçus sales et chiffonnés"
+        },
+        {
+          "d": "Pulls blancs XXL",
+          "q": 2,
+          "n": "Reçus sales et chiffonnés"
+        }
+      ],
+      "delai": null,
+      "note": "Client signale réception de commande endommagée (pulls sales et chiffonnés) due à absence d'emballage/sachets. Demande amélioration packaging pour prochaine commande."
+    },
+    {
+      "uid": "20638",
+      "de": "Anthropic <no-reply-KNUmNrXd0PHZ95KinyTzDw@mail.anthropic.com>",
+      "sujet": "Lien  sécurisé pour vous connecter à Claude.ai |  2026-05-02 14:56:32",
+      "date": "02/05/2026 17:12",
+      "type": "A",
+      "cf": 95,
+      "cl": {
+        "nom": null,
+        "email": "no-reply-KNUmNrXd0PHZ95KinyTzDw@mail.anthropic.com",
+        "ent": null,
+        "tel": null
+      },
+      "arts": [],
+      "delai": null,
+      "note": "Email automatisé de réinitialisation de mot de passe Claude.ai - Non pertinent pour IneArt. Possible tentative de phishing ou email reçu par erreur."
+    },
+    {
+      "uid": "20639",
+      "de": "\"Ine4rt\" <notifications@github.com>",
+      "sujet": "[Ine4rt/ineart-devis] Run failed: IneArt — Analyse mails & Devis Odoo - main (0c01f42)",
+      "date": "02/05/2026 17:12",
+      "type": "A",
+      "cf": 95,
+      "cl": {
+        "nom": null,
+        "email": "notifications@github.com",
+        "ent": null,
+        "tel": null
+      },
+      "arts": [],
+      "delai": null,
+      "note": "Notification GitHub Actions - Workflow d'analyse de mails échoué. Non pertinent pour traitement commercial."
+    },
+    {
+      "uid": "20640",
+      "de": "\"Ine4rt\" <notifications@github.com>",
+      "sujet": "[Ine4rt/ineart-devis] Run failed: IneArt — Analyse mails & Devis Odoo - main (0c01f42)",
+      "date": "02/05/2026 17:12",
+      "type": "A",
+      "cf": 0,
+      "cl": {
+        "nom": null,
+        "email": "notifications@github.com",
+        "ent": null,
+        "tel": null
+      },
+      "arts": [],
+      "delai": null,
+      "note": "Notification GitHub Actions - échec du workflow d'analyse des mails. Aucun contenu commercial."
+    },
+    {
+      "uid": "20641",
+      "de": "Info@ineart.be",
+      "sujet": "[IneArt AI] 2 nouvelle(s) demande(s) — 02/05/2026",
+      "date": "02/05/2026 17:12",
+      "type": "A",
+      "cf": 30,
+      "cl": {
+        "nom": null,
+        "email": "Info@ineart.be",
+        "ent": null,
+        "tel": null
+      },
+      "arts": [],
+      "delai": null,
+      "note": "Email système IneArt notifiant 2 nouvelles demandes reçues le 02/05/2026. Contenu du message manquant - impossible d'analyser les demandes."
+    },
+    {
+      "uid": "20642",
+      "de": "Claude Team <no-reply@email.claude.com>",
+      "sujet": "Get better results with prompt engineering",
+      "date": "02/05/2026 17:12",
+      "type": "A",
+      "cf": 95,
+      "cl": {
+        "nom": null,
+        "email": "no-reply@email.claude.com",
+        "ent": "Anthropic",
+        "tel": null
+      },
+      "arts": [],
+      "delai": null,
+      "note": "Email marketing d'Anthropic sur le prompt engineering de Claude. Non pertinent pour IneArt - à ignorer."
+    }
+  ]
+}

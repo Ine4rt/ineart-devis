@@ -1,3 +1,8 @@
+"""
+IneArt — Analyseur de mails & Récap par email
+Version 2 : sauvegarde mails.json dans le dépôt GitHub pour le dashboard
+"""
+
 import imaplib
 import email
 from email.header import decode_header
@@ -21,6 +26,10 @@ MAIL_PASS  = os.environ["MAIL_PASS"]
 CLAUDE_KEY = os.environ["ANTHROPIC_API_KEY"]
 CLAUDE_MODEL = "claude-haiku-4-5-20251001"
 JOURS_RETOUR = 1
+
+# Fichier de sortie pour le dashboard
+OUTPUT_FILE = "mails.json"
+MAX_MAILS_SAVED = 50  # garder les 50 derniers mails dans le JSON
 
 
 def decoder_header(valeur):
@@ -66,6 +75,7 @@ def lire_mails_imap():
         ids_liste = ids[0].split()
         print(f"[IMAP] {len(ids_liste)} mail(s) non lu(s).")
         for uid in ids_liste:
+            # BODY.PEEK = lit sans marquer comme lu
             _, data = imap.fetch(uid, "(BODY.PEEK[])")
             msg = email.message_from_bytes(data[0][1])
             mails.append({
@@ -81,7 +91,7 @@ def lire_mails_imap():
 PROMPT_SYSTEME = """Tu es un assistant commercial pour IneArt, entreprise belge de broderie et personnalisation textile (serigraphie, broderie, DTF, flocage).
 Analyse l'email et reponds UNIQUEMENT en JSON valide, sans markdown ni texte autour.
 Types : DEMANDE_DEVIS, COMMANDE_VALIDEE, AUTRE.
-Format :
+Format exact :
 {
   "type": "DEMANDE_DEVIS",
   "confiance": 0.9,
@@ -109,6 +119,43 @@ def analyser_mail(mail: dict) -> dict:
         return {"type": "AUTRE", "confiance": 0, "articles": [], "client": {}}
 
 
+def charger_historique():
+    """Charge le fichier mails.json existant pour y ajouter les nouveaux."""
+    if os.path.exists(OUTPUT_FILE):
+        try:
+            with open(OUTPUT_FILE, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                return data.get("mails", [])
+        except Exception:
+            pass
+    return []
+
+
+def sauvegarder_json(nouveaux_mails: list):
+    """Fusionne avec l'historique et sauvegarde mails.json."""
+    historique = charger_historique()
+
+    # Éviter les doublons par uid
+    uids_existants = {m.get("uid") for m in historique}
+    a_ajouter = [m for m in nouveaux_mails if m.get("uid") not in uids_existants]
+
+    # Fusionner et garder les MAX_MAILS_SAVED derniers
+    tous = a_ajouter + historique
+    tous = tous[:MAX_MAILS_SAVED]
+
+    data = {
+        "mis_a_jour": datetime.now().strftime("%d/%m/%Y %H:%M"),
+        "total": len(tous),
+        "mails": tous
+    }
+
+    with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+    print(f"[JSON] mails.json sauvegarde : {len(tous)} mails ({len(a_ajouter)} nouveaux)")
+    return len(a_ajouter)
+
+
 def construire_html(devis_list: list) -> str:
     date_str = datetime.now().strftime("%d/%m/%Y a %H:%M")
     blocs = ""
@@ -129,7 +176,7 @@ def construire_html(devis_list: list) -> str:
             rows = "<tr><td colspan='3' style='padding:8px;color:#888'>Voir mail original</td></tr>"
         notes_com = a.get("notes_commerciales", "")
         delai = a.get("delai_souhaite") or "Non precise"
-        tel = cl.get("telephone", "")
+        tel = cl.get("telephone", "") or ""
         blocs += f"""
 <div style='background:#fff;border:1px solid #ddd;border-radius:8px;margin-bottom:20px;overflow:hidden'>
   <div style='background:#1a1a2e;padding:14px 20px'>
@@ -140,17 +187,15 @@ def construire_html(devis_list: list) -> str:
     <b>Client :</b> {cl.get("nom","—")}{" — " + cl.get("entreprise","") if cl.get("entreprise") else ""}<br>
     <b>Email :</b> {cl.get("email","—")}<br>
     {"<b>Tel :</b> " + tel + "<br>" if tel else ""}
-    <b>Delai :</b> {delai}<br>
-    <b>Mail recu :</b> {m.get("date","—")}
+    <b>Delai :</b> {delai}
   </div>
   {"<div style='padding:10px 20px;background:#fff8e1;border-bottom:1px solid #eee;font-size:13px'>💡 " + notes_com + "</div>" if notes_com else ""}
   <div style='padding:14px 20px'>
-    <p style='font-size:12px;color:#888;margin:0 0 8px'>ARTICLES DETECTES</p>
     <table style='width:100%;border-collapse:collapse;font-size:13px'>
       <thead><tr style='background:#f8f9fa'>
-        <th style='padding:8px 10px;text-align:left'>Description</th>
+        <th style='padding:8px 10px;text-align:left'>Article</th>
         <th style='padding:8px 10px;text-align:center'>Qte</th>
-        <th style='padding:8px 10px;text-align:center'>Prix unit.</th>
+        <th style='padding:8px 10px;text-align:center'>Prix</th>
       </tr></thead>
       <tbody>{rows}</tbody>
     </table>
@@ -170,7 +215,7 @@ def construire_html(devis_list: list) -> str:
   </div>
   <div style='background:#f0f2f5;padding:20px 0'>{blocs}</div>
   <div style='background:#1a1a2e;border-radius:0 0 8px 8px;padding:14px 24px;text-align:center'>
-    <p style='color:#aaa;margin:0;font-size:12px'>IneArt AI · Les mails originaux restent non lus dans ta boite</p>
+    <p style='color:#aaa;margin:0;font-size:12px'>Dashboard : https://dashboard.ineart.be</p>
   </div>
 </div></body></html>"""
 
@@ -183,12 +228,12 @@ def envoyer_recap(devis_list: list):
     msg["From"]    = MAIL_USER
     msg["To"]      = MAIL_USER
     msg.attach(MIMEText(construire_html(devis_list), "html", "utf-8"))
-    print(f"[SMTP] Envoi recap a {MAIL_USER}...")
+    print(f"[SMTP] Envoi recap...")
     with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as smtp:
         smtp.starttls()
         smtp.login(MAIL_USER, MAIL_PASS)
         smtp.sendmail(MAIL_USER, MAIL_USER, msg.as_bytes())
-    print("[SMTP] Email recap envoye !")
+    print("[SMTP] Email envoye !")
 
 
 def main(dry_run=False):
@@ -196,31 +241,62 @@ def main(dry_run=False):
     print(f"IneArt — {datetime.now().strftime('%d/%m/%Y %H:%M')}")
     print(f"Mode : {'TEST' if dry_run else 'NORMAL'}")
     print(f"{'='*50}\n")
-    mails = lire_mails_imap()
-    if not mails:
-        print("Aucun nouveau mail non lu. Fin.")
+
+    mails_bruts = lire_mails_imap()
+    if not mails_bruts:
+        print("Aucun nouveau mail non lu.")
+        # Sauvegarder quand même le JSON (avec l'historique)
+        sauvegarder_json([])
         return
+
     devis_detectes = []
-    for mail in mails:
+    mails_structures = []
+
+    for mail in mails_bruts:
         print(f"\n📧 {mail['de']}\n   {mail['sujet']}")
         analyse = analyser_mail(mail)
         type_m  = analyse.get("type", "AUTRE")
         conf    = analyse.get("confiance", 0)
         print(f"   → {type_m} ({conf:.0%})")
+
+        # Structurer pour le dashboard
+        mail_dash = {
+            "uid":     mail["uid"],
+            "de":      mail["de"],
+            "sujet":   mail["sujet"],
+            "date":    datetime.now().strftime("%d/%m/%Y %H:%M"),
+            "type":    type_m[0] if type_m else "A",  # D, C, ou A
+            "cf":      round(conf * 100),
+            "cl": {
+                "nom":  analyse.get("client", {}).get("nom", ""),
+                "email":analyse.get("client", {}).get("email", ""),
+                "ent":  analyse.get("client", {}).get("entreprise", ""),
+                "tel":  analyse.get("client", {}).get("telephone", ""),
+            },
+            "arts":    [{"d": a.get("description",""), "q": a.get("quantite",1), "n": a.get("notes","")} for a in analyse.get("articles", [])],
+            "delai":   analyse.get("delai_souhaite", ""),
+            "note":    analyse.get("notes_commerciales", ""),
+        }
+        mails_structures.append(mail_dash)
+
         if type_m in ("DEMANDE_DEVIS", "COMMANDE_VALIDEE") and conf >= 0.6:
             devis_detectes.append({"mail": mail, "analyse": analyse})
-            print(f"   Ajoute au recap")
-        else:
-            print(f"   Ignore")
+
+    # Sauvegarder le JSON pour le dashboard
+    if not dry_run:
+        sauvegarder_json(mails_structures)
+
     print(f"\n{'='*50}")
-    print(f"Resultat : {len(devis_detectes)} devis sur {len(mails)} mail(s)")
+    print(f"Resultat : {len(devis_detectes)} devis sur {len(mails_bruts)} mail(s)")
+
     if devis_detectes:
         if dry_run:
-            print("\n[TEST] Donnees extraites :")
+            print("\n[TEST] Donnees :")
             for d in devis_detectes:
                 print(json.dumps(d["analyse"], indent=2, ensure_ascii=False))
         else:
             envoyer_recap(devis_detectes)
+
     print(f"{'='*50}\n")
 
 

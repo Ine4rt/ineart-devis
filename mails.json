@@ -1,7 +1,24 @@
 {
-  "mis_a_jour": "02/05/2026 18:12",
-  "total": 12,
+  "mis_a_jour": "02/05/2026 19:03",
+  "total": 13,
   "mails": [
+    {
+      "uid": "20645",
+      "de": "Info@ineart.be",
+      "sujet": "[IneArt AI] 2 nouvelle(s) demande(s) — 02/05/2026",
+      "date": "02/05/2026 19:03",
+      "type": "A",
+      "cf": 30,
+      "cl": {
+        "nom": null,
+        "email": "Info@ineart.be",
+        "ent": null,
+        "tel": null
+      },
+      "arts": [],
+      "delai": null,
+      "note": "Email système d'IneArt signalant 2 nouvelles demandes. Contenu du message incomplet, aucune information client ou article détectable."
+    },
     {
       "uid": "20643",
       "de": "Info@ineart.be",

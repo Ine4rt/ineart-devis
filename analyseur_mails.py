@@ -90,7 +90,12 @@ def lire_mails_imap():
 
 PROMPT_SYSTEME = """Tu es un assistant commercial pour IneArt, entreprise belge de broderie et personnalisation textile (serigraphie, broderie, DTF, flocage).
 Analyse l'email et reponds UNIQUEMENT en JSON valide, sans markdown ni texte autour.
-Types : DEMANDE_DEVIS, COMMANDE_VALIDEE, AUTRE.
+
+REGLES DE CLASSIFICATION :
+- DEMANDE_DEVIS : le client demande un prix, un devis, une offre, parle de quantites, de broderie, impression, textiles, vetements personnalises. Inclus aussi les reponses a des devis (RE: Devis), relances, demandes de precisions sur un devis existant.
+- COMMANDE_VALIDEE : le client confirme une commande, valide un devis, demande la production, envoie un bon de commande.
+- AUTRE : newsletters, notifications automatiques, factures fournisseurs, emails de livraison (bpost, PostNL), reseaux sociaux, GitHub, PayPal, Anthropic, publicites, confirmations de retour colis. En cas de doute entre DEVIS et AUTRE, choisis DEVIS.
+
 Format exact :
 {
   "type": "DEMANDE_DEVIS",
@@ -102,7 +107,20 @@ Format exact :
 }"""
 
 
-def analyser_mail(mail: dict) -> dict:
+EXPEDITEURS_IGNORES = [
+    "github.com", "anthropic.com", "paypal.be", "paypal.com",
+    "bpost.be", "postnl.nl", "inpost-group.com", "zalando.be",
+    "facebook.com", "business-updates.facebook.com", "relevanceai.com",
+    "bigmat.be", "irobot.com", "link.com", "email.claude.com",
+    "alun.dk", "q8.com", "odoo.com",
+]
+
+def est_expediteur_ignore(expediteur):
+    exp = expediteur.lower()
+    return any(domaine in exp for domaine in EXPEDITEURS_IGNORES)
+
+
+
     client = anthropic.Anthropic(api_key=CLAUDE_KEY)
     contenu = f"De : {mail['de']}\nSujet : {mail['sujet']}\nDate : {mail['date']}\n\n{mail['corps'][:3000]}"
     response = client.messages.create(
@@ -254,6 +272,20 @@ def main(dry_run=False):
 
     for mail in mails_bruts:
         print(f"\n📧 {mail['de']}\n   {mail['sujet']}")
+
+        # Filtrer les expéditeurs parasites sans appeler Claude
+        if est_expediteur_ignore(mail['de']):
+            print(f"   → IGNORÉ (expéditeur système)")
+            mail_dash = {
+                "uid": mail["uid"], "de": mail["de"], "sujet": mail["sujet"],
+                "date": datetime.now().strftime("%d/%m/%Y %H:%M"),
+                "type": "A", "cf": 99,
+                "cl": {"nom": "", "email": "", "ent": "", "tel": ""},
+                "arts": [], "delai": "", "note": "Expéditeur automatique filtré.",
+            }
+            mails_structures.append(mail_dash)
+            continue
+
         analyse = analyser_mail(mail)
         type_m  = analyse.get("type", "AUTRE")
         conf    = analyse.get("confiance", 0)

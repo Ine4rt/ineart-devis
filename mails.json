@@ -1,7 +1,430 @@
 {
-  "mis_a_jour": "03/05/2026 17:10",
-  "total": 16,
+  "mis_a_jour": "03/05/2026 17:41",
+  "total": 38,
   "mails": [
+    {
+      "uid": "20611",
+      "de": "\"PostNL Extra@Home\" <noreply_postnleh@edm.postnl.nl>",
+      "sujet": "Uw tijdvak indicatie is bekend voor levering via PostNL Extra@Home / Votre créneau horaire est connu pour la livraison via PostNL Extra@Home",
+      "date": "03/05/2026 17:40",
+      "type": "A",
+      "cf": 95,
+      "cl": {
+        "nom": "Dimitri van den Ackerveken",
+        "email": "noreply_postnleh@edm.postnl.nl",
+        "ent": null,
+        "tel": null
+      },
+      "arts": [],
+      "delai": null,
+      "note": "Email de notification de livraison PostNL pour commande home24 SE (n° 0099614095). Non pertinent pour IneArt."
+    },
+    {
+      "uid": "20612",
+      "de": "\"Van Assche Pierre (ZP SeraingNeupre)\"\r\n\t<Pierre.VanAssche@police.belgium.eu>",
+      "sujet": "Re: Projet - Pull capuche personnalisé",
+      "date": "03/05/2026 17:40",
+      "type": "D",
+      "cf": 85,
+      "cl": {
+        "nom": "Van Assche Pierre",
+        "email": "Pierre.VanAssche@police.belgium.eu",
+        "ent": "Police Locale Seraing-Neupré",
+        "tel": "0475853436"
+      },
+      "arts": [
+        {
+          "d": "Sweat K476 capuche taille S couleur Candyfloss avec prénom Caro",
+          "q": 1,
+          "n": "Impression dos et prénom coeur"
+        },
+        {
+          "d": "Sweat K476 capuche taille L couleur Ink blue avec prénom Pierre",
+          "q": 1,
+          "n": "Impression dos et prénom coeur"
+        },
+        {
+          "d": "Sweat K476 capuche taille 2XL couleur Oxford Grey avec prénom Del",
+          "q": 1,
+          "n": "Impression dos et prénom coeur"
+        },
+        {
+          "d": "Sweat K476 capuche taille S couleur Ink blue avec prénom Marine",
+          "q": 1,
+          "n": "Impression dos et prénom coeur"
+        },
+        {
+          "d": "Sweat K476 capuche taille S couleur Navy avec prénom Madi",
+          "q": 1,
+          "n": "Impression dos et prénom coeur"
+        },
+        {
+          "d": "Sweat K476 capuche taille 4XL couleur Navy avec prénom Jo",
+          "q": 1,
+          "n": "Impression dos et prénom coeur"
+        }
+      ],
+      "delai": null,
+      "note": "Client demande un projet pour validation sur un seul sweat avant production des 6 commandes. Questions sur modalités paiement et réception. Référence: TORMEN Naussicaa (client antérieur)."
+    },
+    {
+      "uid": "20613",
+      "de": "<fleetcard@q8.com>",
+      "sujet": "Q8 - Votre demande d'offre - BE - 334119",
+      "date": "03/05/2026 17:40",
+      "type": "D",
+      "cf": 70,
+      "cl": {
+        "nom": null,
+        "email": "fleetcard@q8.com",
+        "ent": "Q8",
+        "tel": null
+      },
+      "arts": [
+        {
+          "d": "Non spécifié - référence dossier BE-334119",
+          "q": null,
+          "n": null
+        }
+      ],
+      "delai": null,
+      "note": "Email de Q8 concernant une demande d'offre. Référence dossier BE-334119. Informations insuffisantes pour traiter la demande - nécessite suivi pour détails de commande."
+    },
+    {
+      "uid": "20614",
+      "de": "Zalando Team <info@service-mail.zalando.be>",
+      "sujet": "Votre demande de retour",
+      "date": "03/05/2026 17:40",
+      "type": "A",
+      "cf": 95,
+      "cl": {
+        "nom": "Dimitri",
+        "email": "info@service-mail.zalando.be",
+        "ent": null,
+        "tel": null
+      },
+      "arts": [],
+      "delai": null,
+      "note": "Email de confirmation de retour Zalando - non pertinent pour IneArt. Cet email provient d'un service de e-commerce de mode et n'a aucun rapport avec les services de broderie et personnalisation textile."
+    },
+    {
+      "uid": "20615",
+      "de": "HB Textiles&créatifs  <hbtextilescreatifs@gmail.com>",
+      "sujet": "devis",
+      "date": "03/05/2026 17:40",
+      "type": "D",
+      "cf": 85,
+      "cl": {
+        "nom": "HB Textiles&créatifs",
+        "email": "hbtextilescreatifs@gmail.com",
+        "ent": "HB Textiles&créatifs",
+        "tel": "0494052939"
+      },
+      "arts": [
+        {
+          "d": "T-shirt Kariban avec logo WM",
+          "q": 20,
+          "n": "Personnalisation avec logo WM"
+        }
+      ],
+      "delai": "Aujourd'hui (suivi de devis)",
+      "note": "Client suivant un devis réalisé hier après-midi. Demande de statut et de livraison rapide du devis pour 20 t-shirts Kariban personnalisés."
+    },
+    {
+      "uid": "20616",
+      "de": "\"Ineart\" <notifications@devis-ineart.odoo.com>",
+      "sujet": "Ineart - Nouvelle facture dans le journal Factures fournisseurs",
+      "date": "03/05/2026 17:40",
+      "type": "A",
+      "cf": 95,
+      "cl": {
+        "nom": "TOP-TEX GROUP",
+        "email": null,
+        "ent": "TOP-TEX GROUP",
+        "tel": null
+      },
+      "arts": [],
+      "delai": null,
+      "note": "Email automatique interne IneArt : notification de création de facture fournisseur (F26029626) pour TOP-TEX GROUP, montant 633,36€. Pas une demande client."
+    },
+    {
+      "uid": "20617",
+      "de": "InPost <noreply@inpost-group.com>",
+      "sujet": "Mondial Relay by InPost – Changement de règlement",
+      "date": "03/05/2026 17:40",
+      "type": "A",
+      "cf": 95,
+      "cl": {
+        "nom": null,
+        "email": "noreply@inpost-group.com",
+        "ent": "InPost",
+        "tel": null
+      },
+      "arts": [],
+      "delai": null,
+      "note": "Email automatisé de notification concernant un changement de règlement pour le service Mondial Relay by InPost. Pas de demande commerciale."
+    },
+    {
+      "uid": "20618",
+      "de": "\"Meta for Business\" <noreply@business-updates.facebook.com>",
+      "sujet": "Votre reçu pour les publicités Meta (Identifiant du compte : 252065050)",
+      "date": "03/05/2026 17:40",
+      "type": "A",
+      "cf": 95,
+      "cl": {
+        "nom": "Dimitri",
+        "email": "info@ineart.be",
+        "ent": "IneArt",
+        "tel": null
+      },
+      "arts": [],
+      "delai": null,
+      "note": "Email de facturation Meta pour dépenses publicitaires (1,26€). Non pertinent pour activité commerciale IneArt. À ignorer."
+    },
+    {
+      "uid": "20619",
+      "de": "PayPal <service@paypal.be>",
+      "sujet": "Reçu pour votre paiement à Meta Platforms, Inc.",
+      "date": "03/05/2026 17:40",
+      "type": "A",
+      "cf": 95,
+      "cl": {
+        "nom": null,
+        "email": null,
+        "ent": null,
+        "tel": null
+      },
+      "arts": [],
+      "delai": null,
+      "note": "Email automatique de PayPal concernant un paiement vers Meta Platforms, Inc. Non pertinent pour IneArt."
+    },
+    {
+      "uid": "20620",
+      "de": "BigMat Poleur-Kinet <info@bigmatampsin.be>",
+      "sujet": "Prise de contact en cours de traitement",
+      "date": "03/05/2026 17:40",
+      "type": "A",
+      "cf": 95,
+      "cl": {
+        "nom": "Van den Ackerveken",
+        "email": "info@ineart.be",
+        "ent": null,
+        "tel": "+3247211149"
+      },
+      "arts": [
+        {
+          "d": "Poteaux en béton pour séchage de linge (dimension 2m40 ou plus)",
+          "q": 3,
+          "n": "Livraison requise"
+        }
+      ],
+      "delai": null,
+      "note": "Email de confirmation BigMat reçu par erreur à IneArt. Demande concerne des poteaux en béton (hors secteur IneArt - broderie/textile). À rediriger ou clarifier l'erreur de routage."
+    },
+    {
+      "uid": "20621",
+      "de": "\"BigMat\" <newsletter@bigmat.be>",
+      "sujet": "Dimitri, confirmez votre abonnement aux newsletters BigMat !",
+      "date": "03/05/2026 17:40",
+      "type": "A",
+      "cf": 95,
+      "cl": {
+        "nom": null,
+        "email": "info@ineart.be",
+        "ent": null,
+        "tel": null
+      },
+      "arts": [],
+      "delai": null,
+      "note": "Email de newsletter BigMat (construction/rénovation) envoyé à l'adresse IneArt. Pas de demande de devis ni de commande - simple confirmation d'abonnement."
+    },
+    {
+      "uid": "20622",
+      "de": "Anthropic <no-reply-w19I5c5jomS6sW3JS57SxQ@mail.anthropic.com>",
+      "sujet": "Secure link to log in to the Claude Console |  2026-05-01 15:05:58",
+      "date": "03/05/2026 17:40",
+      "type": "A",
+      "cf": 95,
+      "cl": {
+        "nom": null,
+        "email": "no-reply-w19I5c5jomS6sW3JS57SxQ@mail.anthropic.com",
+        "ent": null,
+        "tel": null
+      },
+      "arts": [],
+      "delai": null,
+      "note": "Email automatisé d'Anthropic pour accès Claude Console. Non pertinent pour IneArt - spam/notification système."
+    },
+    {
+      "uid": "20623",
+      "de": "Link <notifications@link.com>",
+      "sujet": "Vérifiez votre adresse e-mail",
+      "date": "03/05/2026 17:40",
+      "type": "A",
+      "cf": 95,
+      "cl": {
+        "nom": null,
+        "email": null,
+        "ent": null,
+        "tel": null
+      },
+      "arts": [],
+      "delai": null,
+      "note": "Email de vérification d'identité Link/Anthropic - non pertinent pour IneArt. Ignorer."
+    },
+    {
+      "uid": "20624",
+      "de": "\"Anthropic, PBC\" <invoice+statements@mail.anthropic.com>",
+      "sujet": "Your receipt from Anthropic, PBC #2568-5367-2334",
+      "date": "03/05/2026 17:41",
+      "type": "A",
+      "cf": 95,
+      "cl": {
+        "nom": null,
+        "email": "invoice+statements@mail.anthropic.com",
+        "ent": "Anthropic, PBC",
+        "tel": null
+      },
+      "arts": [],
+      "delai": null,
+      "note": "Email de reçu/facture d'Anthropic PBC. Non pertinent pour IneArt - pas de demande de service de broderie ou personnalisation textile."
+    },
+    {
+      "uid": "20625",
+      "de": "\"Ine4rt\" <notifications@github.com>",
+      "sujet": "[Ine4rt/ineart-devis] Run failed: IneArt — Analyse mails & Devis Odoo - main (f2fe3f8)",
+      "date": "03/05/2026 17:41",
+      "type": "A",
+      "cf": 95,
+      "cl": {
+        "nom": null,
+        "email": "notifications@github.com",
+        "ent": null,
+        "tel": null
+      },
+      "arts": [],
+      "delai": null,
+      "note": "Notification automatique GitHub - Erreur dans le workflow d'analyse mails. Non pertinent pour le traitement commercial."
+    },
+    {
+      "uid": "20626",
+      "de": "iRobot France Service Client <serviceclient-fr@irobot.com>",
+      "sujet": "Re: Votre dossier de support a été ouvert",
+      "date": "03/05/2026 17:41",
+      "type": "A",
+      "cf": 95,
+      "cl": {
+        "nom": "Van Den Ackerveken",
+        "email": null,
+        "ent": null,
+        "tel": null
+      },
+      "arts": [],
+      "delai": null,
+      "note": "Email reçu par erreur - provenance iRobot France (service client robotique). Aucune pertinence pour IneArt (broderie/personnalisation textile)."
+    },
+    {
+      "uid": "20627",
+      "de": "\"Ine4rt\" <notifications@github.com>",
+      "sujet": "[Ine4rt/ineart-devis] Run failed: IneArt — Analyse mails & Devis Odoo - main (f2fe3f8)",
+      "date": "03/05/2026 17:41",
+      "type": "A",
+      "cf": 95,
+      "cl": {
+        "nom": null,
+        "email": "notifications@github.com",
+        "ent": null,
+        "tel": null
+      },
+      "arts": [],
+      "delai": null,
+      "note": "Notification GitHub Actions - échec du workflow d'analyse des mails. Non pertinent pour le traitement commercial."
+    },
+    {
+      "uid": "20628",
+      "de": "Claude Team <no-reply@email.claude.com>",
+      "sujet": "Welcome to the Claude Platform",
+      "date": "03/05/2026 17:41",
+      "type": "A",
+      "cf": 95,
+      "cl": {
+        "nom": null,
+        "email": "no-reply@email.claude.com",
+        "ent": "Anthropic",
+        "tel": null
+      },
+      "arts": [],
+      "delai": null,
+      "note": "Email automatique de bienvenue Anthropic Claude API, non pertinent pour IneArt. À ignorer ou archiver."
+    },
+    {
+      "uid": "20629",
+      "de": "\"Ine4rt\" <notifications@github.com>",
+      "sujet": "[Ine4rt/ineart-devis] Run failed: IneArt — Analyse mails & Devis Odoo - main (f2fe3f8)",
+      "date": "03/05/2026 17:41",
+      "type": "A",
+      "cf": 95,
+      "cl": {
+        "nom": null,
+        "email": "notifications@github.com",
+        "ent": null,
+        "tel": null
+      },
+      "arts": [],
+      "delai": null,
+      "note": "Notification GitHub automatique - échec du workflow d'analyse des emails. Pas de demande commerciale."
+    },
+    {
+      "uid": "20630",
+      "de": "\"Amy from Relevance AI\" <support@relevanceai.com>",
+      "sujet": "Build your first AI Agent",
+      "date": "03/05/2026 17:41",
+      "type": "A",
+      "cf": 95,
+      "cl": {
+        "nom": "Dimitri",
+        "email": null,
+        "ent": null,
+        "tel": null
+      },
+      "arts": [],
+      "delai": null,
+      "note": "Email marketing de Relevance AI (plateforme IA) non pertinent pour IneArt. Destinataire Dimitri, sujet création d'agent IA."
+    },
+    {
+      "uid": "20631",
+      "de": "OneKundeservice <info@alun.dk>",
+      "sujet": "Sidste påmindelse: Din webhosting er suspenderet   ineart.be",
+      "date": "03/05/2026 17:41",
+      "type": "A",
+      "cf": 95,
+      "cl": {
+        "nom": null,
+        "email": "info@alun.dk",
+        "ent": null,
+        "tel": null
+      },
+      "arts": [],
+      "delai": null,
+      "note": "Email de phishing/spam - notification falsifiée d'One.com concernant le renouvellement du domaine ineart.be. Lien suspect redirigé vers un site non autorisé. À ignorer."
+    },
+    {
+      "uid": "20634",
+      "de": "\"service@paypal.be\" <service@paypal.be>",
+      "sujet": "Reçu de votre paiement PayPal",
+      "date": "03/05/2026 17:41",
+      "type": "A",
+      "cf": 95,
+      "cl": {
+        "nom": null,
+        "email": "service@paypal.be",
+        "ent": null,
+        "tel": null
+      },
+      "arts": [],
+      "delai": null,
+      "note": "Email automatisé de PayPal - Reçu de paiement. Non une demande commerciale pour IneArt."
+    },
     {
       "uid": "20646",
       "de": "\"Amy from Relevance AI\" <support@relevanceai.com>",

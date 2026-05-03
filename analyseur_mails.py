@@ -121,6 +121,7 @@ def est_expediteur_ignore(expediteur):
 
 
 
+def analyser_mail(mail):
     client = anthropic.Anthropic(api_key=CLAUDE_KEY)
     contenu = f"De : {mail['de']}\nSujet : {mail['sujet']}\nDate : {mail['date']}\n\n{mail['corps'][:3000]}"
     response = client.messages.create(

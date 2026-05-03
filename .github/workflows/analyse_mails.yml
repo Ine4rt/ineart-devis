@@ -2,7 +2,7 @@ name: IneArt — Analyse mails & Devis Odoo
 
 on:
   schedule:
-    - cron: '0 */2 * * *'
+    - cron: '*/30 * * * *'
   workflow_dispatch:
     inputs:
       mode:
@@ -44,7 +44,7 @@ jobs:
           if [ "${{ github.event.inputs.mode }}" = "dry-run" ]; then
             python analyseur_mails.py --dry-run
           else
-            python analyseur_mails.py --now
+            python analyseur_mails.py
           fi
 
       - name: Sauvegarder mails.json

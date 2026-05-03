@@ -1,7 +1,24 @@
 {
-  "mis_a_jour": "03/05/2026 16:54",
-  "total": 15,
+  "mis_a_jour": "03/05/2026 17:10",
+  "total": 16,
   "mails": [
+    {
+      "uid": "20646",
+      "de": "\"Amy from Relevance AI\" <support@relevanceai.com>",
+      "sujet": "Scale to an AI Workforce",
+      "date": "03/05/2026 17:10",
+      "type": "A",
+      "cf": 95,
+      "cl": {
+        "nom": null,
+        "email": "support@relevanceai.com",
+        "ent": "Relevance AI",
+        "tel": null
+      },
+      "arts": [],
+      "delai": null,
+      "note": "Email marketing de Relevance AI concernant leur plateforme d'IA (Workforce et AgentOS). Pas de rapport avec les services de broderie IneArt."
+    },
     {
       "uid": "20647",
       "de": "Info@ineart.be",

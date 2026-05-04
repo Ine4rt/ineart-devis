@@ -1,7 +1,30 @@
 {
-  "mis_a_jour": "04/05/2026 13:08",
-  "total": 38,
+  "mis_a_jour": "04/05/2026 15:30",
+  "total": 39,
   "mails": [
+    {
+      "uid": "20649",
+      "de": "Simon Kleykens <info@pixcom.be>",
+      "sujet": "TR: Impressions t-shirts Oh!",
+      "date": "04/05/2026 15:30",
+      "type": "D",
+      "cf": 85,
+      "cl": {
+        "nom": "Simon Kleykens",
+        "email": "info@pixcom.be",
+        "ent": "Pixcom",
+        "tel": "0473/44.63.76"
+      },
+      "arts": [
+        {
+          "d": "Impressions t-shirts avec design jusqu'au bord (dos)",
+          "q": null,
+          "n": "Design fourni en image jointe"
+        }
+      ],
+      "delai": null,
+      "note": "Client demande si IneArt fait des impressions t-shirt et souhaite un devis pour un projet spécifique avec design personnalisé jusqu'au bord du dos."
+    },
     {
       "uid": "20611",
       "de": "\"PostNL Extra@Home\" <noreply_postnleh@edm.postnl.nl>",

@@ -1,8 +1,9 @@
 name: IneArt — Analyse mails & Devis Odoo
 
 on:
-  schedule:
-    - cron: '*/30 * * * *'
+  # PAUSE : cron désactivé temporairement
+  # schedule:
+  #   - cron: '*/30 * * * *'
   workflow_dispatch:
     inputs:
       mode:

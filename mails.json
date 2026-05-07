@@ -1,7 +1,843 @@
 {
-  "mis_a_jour": "04/05/2026 17:15",
-  "total": 39,
+  "mis_a_jour": "07/05/2026 12:29",
+  "total": 69,
   "mails": [
+    {
+      "uid": "20651",
+      "de": "delphine Vanhecke <delphine-vanhecke@hotmail.com>",
+      "sujet": "Re: Flocage sweat",
+      "date": "07/05/2026 12:28",
+      "type": "C",
+      "cf": 85,
+      "repondu": false,
+      "statut": "en_attente",
+      "cl": {
+        "nom": "Delphine Vanhecke",
+        "email": "delphine-vanhecke@hotmail.com",
+        "ent": null,
+        "tel": null
+      },
+      "arts": [
+        {
+          "d": "Sweats flocage (équipes Dame 1 et Dame 25)",
+          "q": 12,
+          "tech": "flocage",
+          "n": "Logo sponsor Leonidas à retirer du groupe dame 25. Sweat supplémentaire taille M (dame 1) à floquer dos et manche. Placement logo sponsor sur manche/poignet gauche. Prénoms taille originale à l'avant. Logo club à descendre légèrement."
+        }
+      ],
+      "delai": "Retrait mercredi 6 mai 2026 à 18h15",
+      "budget": null,
+      "note": "Commande en phase de finalisation. Client confirme modifications et retrait prévu demain fin de journée. Quelques ajustements de placement et tailles à respecter."
+    },
+    {
+      "uid": "20654",
+      "de": "Sophie Verbrouck <sophie.verbrouck@ccengis.be>",
+      "sujet": "Re: sophie.verbrouck@ccengis.be",
+      "date": "07/05/2026 12:28",
+      "type": "D",
+      "cf": 95,
+      "repondu": true,
+      "statut": "urgent",
+      "cl": {
+        "nom": "Sophie Verbrouck",
+        "email": "sophie.verbrouck@ccengis.be",
+        "ent": "CCEngis",
+        "tel": null
+      },
+      "arts": [
+        {
+          "d": "Sweat-shirt capuche unisexe noir",
+          "q": 15,
+          "tech": "serigraphie",
+          "n": "Impression 2 couleurs (blanc et rouge), détails à préciser"
+        },
+        {
+          "d": "T-shirt noir unisexe toutes tailles",
+          "q": 20,
+          "tech": "serigraphie",
+          "n": "Impression 2 couleurs (blanc et rouge)"
+        },
+        {
+          "d": "T-shirt bleu foncé unisexe toutes tailles",
+          "q": 20,
+          "tech": "serigraphie",
+          "n": "Impression 2 couleurs"
+        },
+        {
+          "d": "Vareuse unisexe",
+          "q": 15,
+          "tech": "serigraphie",
+          "n": "Demande de disponibilité et devis"
+        }
+      ],
+      "delai": "avant 3 juillet 2026 (fichiers à envoyer lundi)",
+      "budget": null,
+      "note": "Client fidèle, réimpression pour festival. Urgent : livraison requise avant 3 juillet, fichiers à envoyer lundi. Demande confirmation délais de production."
+    },
+    {
+      "uid": "20655",
+      "de": "\"EDI TOPTEX Belgique\" <customerservice@toptex.be>",
+      "sujet": "TOPTEX : Accuse de Commande  N°  O26050094  \"WEB Panier\"",
+      "date": "07/05/2026 12:28",
+      "type": "A",
+      "cf": 95,
+      "repondu": false,
+      "statut": "nouveau",
+      "cl": {
+        "nom": "EDI TOPTEX Belgique",
+        "email": "customerservice@toptex.be",
+        "ent": "TOPTEX Belgique",
+        "tel": null
+      },
+      "arts": [],
+      "delai": null,
+      "budget": null,
+      "note": "Accusé de réception de commande fournisseur TOPTEX - document administratif interne, pas une demande devis client."
+    },
+    {
+      "uid": "20658",
+      "de": "Gregory-Michel Bontemps <location@bhmachines.be>",
+      "sujet": "RE: Devis",
+      "date": "07/05/2026 12:28",
+      "type": "D",
+      "cf": 85,
+      "repondu": false,
+      "statut": "en_attente",
+      "cl": {
+        "nom": "Gregory-Michel Bontemps (Didier)",
+        "email": "location@bhmachines.be",
+        "ent": "BH Machines",
+        "tel": null
+      },
+      "arts": [
+        {
+          "d": "Panneaux format A3",
+          "q": null,
+          "tech": "serigraphie|dtf",
+          "n": "Fichiers à retravailler selon conseils"
+        },
+        {
+          "d": "Bâches",
+          "q": 2,
+          "tech": "serigraphie|dtf",
+          "n": "2 bâches de 2m x 4m"
+        },
+        {
+          "d": "Vêtements (pulls)",
+          "q": null,
+          "tech": "broderie",
+          "n": "Couleurs à définir en vrai, pas encore spécifiés"
+        }
+      ],
+      "delai": "semaine du 5 mai 2026",
+      "budget": null,
+      "note": "Client envoie fichiers via lien SwissTransfer pour retouches. RDV prévu en fin de journée pour finaliser choix couleurs et modifications Illustrator. Vêtements non inclus dans fichiers envoyés."
+    },
+    {
+      "uid": "20659",
+      "de": "\"EDI TOPTEX Belgique\" <customerservice@toptex.be>",
+      "sujet": "TopTex:  départ(s)  du jour L26049678 WEB Panier",
+      "date": "07/05/2026 12:28",
+      "type": "A",
+      "cf": 95,
+      "repondu": false,
+      "statut": "nouveau",
+      "cl": {
+        "nom": null,
+        "email": "customerservice@toptex.be",
+        "ent": "EDI TOPTEX Belgique",
+        "tel": null
+      },
+      "arts": [],
+      "delai": null,
+      "budget": null,
+      "note": "Notification de départ/expédition d'une commande de la part d'un fournisseur textile (TOPTEX). Référence L26049678."
+    },
+    {
+      "uid": "20662",
+      "de": "\"TOPTEX - Customer Service\" <customerservice@toptex.be>",
+      "sujet": "TOPTEX - Report de livraison",
+      "date": "07/05/2026 12:28",
+      "type": "A",
+      "cf": 95,
+      "repondu": false,
+      "statut": "autre",
+      "cl": {
+        "nom": null,
+        "email": "customerservice@toptex.be",
+        "ent": "TOPTEX",
+        "tel": null
+      },
+      "arts": [],
+      "delai": null,
+      "budget": null,
+      "note": "Email de notification de report de livraison en provenance d'un fournisseur (TOPTEX). Non pertinent pour la prospection commerciale IneArt."
+    },
+    {
+      "uid": "20665",
+      "de": "info DJ dam's <info@djdams.be>",
+      "sujet": "Re: Demande de prix",
+      "date": "07/05/2026 12:28",
+      "type": "D",
+      "cf": 85,
+      "repondu": true,
+      "statut": "relance",
+      "cl": {
+        "nom": "DJ dam's",
+        "email": "info@djdams.be",
+        "ent": "DJ dam's",
+        "tel": null
+      },
+      "arts": [
+        {
+          "d": "Sweat à tirette sans capuche noir, taille XL, 2 pièces",
+          "q": 2,
+          "tech": "serigraphie",
+          "n": "Logo blanc sur le cœur - logo à fournir (image reçue était blanche)"
+        }
+      ],
+      "delai": null,
+      "budget": null,
+      "note": "Client a reçu les sweats mais le logo fourni était incorrect (image blanche). Demande de renvoi du fichier logo correct pour impression. Relance sur fichier graphique manquant."
+    },
+    {
+      "uid": "20669",
+      "de": "Simon Kleykens <info@pixcom.be>",
+      "sujet": "RE: TR: Impressions t-shirts Oh!",
+      "date": "07/05/2026 12:28",
+      "type": "D",
+      "cf": 85,
+      "repondu": true,
+      "statut": "en_attente",
+      "cl": {
+        "nom": "Simon Kleykens",
+        "email": "info@pixcom.be",
+        "ent": "Pixcom",
+        "tel": "0473/44.63.76"
+      },
+      "arts": [
+        {
+          "d": "T-shirts impression dos (couture à couture) - client final: agence de communication",
+          "q": 15,
+          "tech": "serigraphie",
+          "n": "Tailles S-M-L (hommes), couleur bleu foncé. Client souhaite essayages. Impression large demandée (couture à couture) mais limité à 30cm de largeur selon IneArt."
+        }
+      ],
+      "delai": null,
+      "budget": null,
+      "note": "Relance en cours de discussion technique. Client demande essayages et visite/appel pour finaliser. Limitation technique identifiée : impression max 30cm vs demande couture-à-couture."
+    },
+    {
+      "uid": "20670",
+      "de": "\"Van Assche Pierre (ZP SeraingNeupre)\"\r\n\t<Pierre.VanAssche@police.belgium.eu>",
+      "sujet": "RE: Projet - Pull capuche personnalisé",
+      "date": "07/05/2026 12:28",
+      "type": "C",
+      "cf": 95,
+      "repondu": false,
+      "statut": "urgent",
+      "cl": {
+        "nom": "Van Assche Pierre",
+        "email": "Pierre.VanAssche@police.belgium.eu",
+        "ent": "Police Locale Seraing-Neupré",
+        "tel": "0475853436"
+      },
+      "arts": [
+        {
+          "d": "Pull capuche personnalisé taille S couleur Candyfloss prénom Caro",
+          "q": 1,
+          "tech": "broderie",
+          "n": null
+        },
+        {
+          "d": "Pull capuche personnalisé taille L couleur Ink blue prénom Pierre",
+          "q": 1,
+          "tech": "broderie",
+          "n": null
+        },
+        {
+          "d": "Pull capuche personnalisé taille 2XL couleur Oxford Grey prénom Del",
+          "q": 1,
+          "tech": "broderie",
+          "n": null
+        },
+        {
+          "d": "Pull capuche personnalisé taille S couleur Ink blue prénom Marine",
+          "q": 1,
+          "tech": "broderie",
+          "n": null
+        },
+        {
+          "d": "Pull capuche personnalisé taille S couleur Navy prénom Madi",
+          "q": 1,
+          "tech": "broderie",
+          "n": null
+        },
+        {
+          "d": "Pull capuche personnalisé taille 4XL couleur Navy prénom Jo",
+          "q": 1,
+          "tech": "broderie",
+          "n": null
+        }
+      ],
+      "delai": null,
+      "budget": null,
+      "note": "Client valide la production de 6 pulls capuche personnalisés avec noms brodés. Demande délai de livraison et modalités de paiement."
+    },
+    {
+      "uid": "20671",
+      "de": "Raccoon Communication <bonjour@raccooncommunication.be>",
+      "sujet": "Re: Devis important",
+      "date": "07/05/2026 12:28",
+      "type": "D",
+      "cf": 85,
+      "repondu": true,
+      "statut": "urgent",
+      "cl": {
+        "nom": "Karine",
+        "email": "bonjour@raccooncommunication.be",
+        "ent": "Raccoon Communication",
+        "tel": null
+      },
+      "arts": [
+        {
+          "d": "Casquette blanche coton unisexe grammage moyen avec logo orange",
+          "q": 200,
+          "tech": "flocage",
+          "n": "100% coton, unisexe, grammage moyen demi-saison"
+        },
+        {
+          "d": "Bob blanc coton unisexe KP125 avec logo orange",
+          "q": 200,
+          "tech": "flocage",
+          "n": "Modèle KP125, 100% coton, unisexe, grammage moyen demi-saison"
+        }
+      ],
+      "delai": "20 mai 2026",
+      "budget": null,
+      "note": "Client demande confirmation du prix pour KP125 (200 casquettes + 200 bobs). Produits publicitaires Chaîne TV Quatre. Logo orange fourni. Délai serré (20 mai)."
+    },
+    {
+      "uid": "20672",
+      "de": "Cécile  Truyen <cecile.truyen@huy.be>",
+      "sujet": "Fwd: Avis d'attribution - Ville de Huy - Sacs réutilisables cadeau commerçants Bal des hutois",
+      "date": "07/05/2026 12:28",
+      "type": "C",
+      "cf": 95,
+      "repondu": false,
+      "statut": "urgent",
+      "cl": {
+        "nom": "Cécile Truyen",
+        "email": "cecile.truyen@huy.be",
+        "ent": "Ville de Huy",
+        "tel": "0472/66.68.72"
+      },
+      "arts": [
+        {
+          "d": "Sacs réutilisables cadeau commerçants Bal des hutois",
+          "q": null,
+          "tech": "autre",
+          "n": "Marché public attribué"
+        }
+      ],
+      "delai": null,
+      "budget": "430.52 EUR TTC",
+      "note": "Avis d'attribution de marché public approuvé. Client envoie fichier vectoriel pour production. Fichier joint à traiter."
+    },
+    {
+      "uid": "20673",
+      "de": "Raccoon Communication <bonjour@raccooncommunication.be>",
+      "sujet": "Re: Devis important",
+      "date": "07/05/2026 12:28",
+      "type": "D",
+      "cf": 95,
+      "repondu": true,
+      "statut": "urgent",
+      "cl": {
+        "nom": "Karine",
+        "email": "bonjour@raccooncommunication.be",
+        "ent": "Raccoon Communication",
+        "tel": null
+      },
+      "arts": [
+        {
+          "d": "200 casquettes blanches avec logo orange",
+          "q": 200,
+          "tech": "flocage",
+          "n": "100% coton, unisexe, grammage moyen, demi-saison"
+        },
+        {
+          "d": "200 bobs blancs avec logo orange (modèle KP125)",
+          "q": 200,
+          "tech": "flocage",
+          "n": "100% coton, forme standard KP125, pas modèle haut"
+        }
+      ],
+      "delai": "avant 20 mai 2026",
+      "budget": null,
+      "note": "Client en attente de confirmation du délai pour finaliser son offre à Chaîne TV Quatre. Demande urgent concernant produits publicitaires (casquettes + bobs en flocage, une couleur, logo orange)."
+    },
+    {
+      "uid": "20674",
+      "de": "MAISON SEON <commercial.maisonseon@gmail.com>",
+      "sujet": "Tarifs Revendeurs",
+      "date": "07/05/2026 12:28",
+      "type": "A",
+      "cf": 85,
+      "repondu": false,
+      "statut": "autre",
+      "cl": {
+        "nom": "David Bonnefoy",
+        "email": "commercial.maisonseon@gmail.com",
+        "ent": "MAISON SEON",
+        "tel": "+33762239703"
+      },
+      "arts": [
+        {
+          "d": "T-shirt sublimation 150/160g (Hand Ball, Volley, Football, Running, Padel, Basketball, Cyclisme)",
+          "q": 10,
+          "tech": "sublimation",
+          "n": "A partir de 10pcs"
+        }
+      ],
+      "delai": "2-3 semaines",
+      "budget": "11.63€ HT unitaire",
+      "note": "Email de revendeur proposant tarifs en sublimation. Non une demande mais une offre commerciale/newsletter."
+    },
+    {
+      "uid": "20678",
+      "de": "\"Realisaprint.com\" <nepasrepondre@realisaprint.com>",
+      "sujet": "Réception fichiers commande n°1723204_1 : [Mug]",
+      "date": "07/05/2026 12:28",
+      "type": "A",
+      "cf": 95,
+      "repondu": false,
+      "statut": "en_attente",
+      "cl": {
+        "nom": null,
+        "email": "nepasrepondre@realisaprint.com",
+        "ent": "Realisaprint.com",
+        "tel": null
+      },
+      "arts": [
+        {
+          "d": "Mug",
+          "q": null,
+          "tech": "autre",
+          "n": "Commande n°1723204_1"
+        }
+      ],
+      "delai": null,
+      "budget": null,
+      "note": "Notification automatique de réception de fichiers d'une commande mug. Email de suivi de fournisseur externe (Realisaprint), non un client IneArt."
+    },
+    {
+      "uid": "20679",
+      "de": "\"Realisaprint.com\" <nepasrepondre@realisaprint.com>",
+      "sujet": "Réception fichiers commande n°1723204_2 : [Mug]",
+      "date": "07/05/2026 12:28",
+      "type": "A",
+      "cf": 95,
+      "repondu": false,
+      "statut": "autre",
+      "cl": {
+        "nom": null,
+        "email": null,
+        "ent": null,
+        "tel": null
+      },
+      "arts": [],
+      "delai": null,
+      "budget": null,
+      "note": "Notification automatique de réception de fichiers pour commande Mug n°1723204_2 chez fournisseur Realisaprint.com. Non pertinent pour IneArt."
+    },
+    {
+      "uid": "20680",
+      "de": "Stitchcraft Emb <scraftemb@gmail.com>",
+      "sujet": "Numérisation broderie rapide et précise",
+      "date": "07/05/2026 12:28",
+      "type": "A",
+      "cf": 95,
+      "repondu": false,
+      "statut": "autre",
+      "cl": {
+        "nom": "Stitchcraft Emb",
+        "email": "scraftemb@gmail.com",
+        "ent": "Embroidery Digitizing Services",
+        "tel": null
+      },
+      "arts": [],
+      "delai": null,
+      "budget": null,
+      "note": "Prospection commerciale d'un prestataire externe proposant services de numérisation pour broderie. Non un client cherchant un devis IneArt."
+    },
+    {
+      "uid": "20681",
+      "de": "Dheur Elodie <elodiedheur@yahoo.fr>",
+      "sujet": "T-shirt Kariban + flocage",
+      "date": "07/05/2026 12:28",
+      "type": "C",
+      "cf": 95,
+      "repondu": false,
+      "statut": "en_attente",
+      "cl": {
+        "nom": "Dheur Élodie",
+        "email": "elodiedheur@yahoo.fr",
+        "ent": null,
+        "tel": null
+      },
+      "arts": [
+        {
+          "d": "T-shirt Kariban noir coupe femme taille S",
+          "q": 1,
+          "tech": "flocage",
+          "n": "Logo à placer dans le dos"
+        }
+      ],
+      "delai": null,
+      "budget": null,
+      "note": "Client valide la commande suite à devis précédent. Logo fourni en annexe pour flocage au dos."
+    },
+    {
+      "uid": "20682",
+      "de": "\"Realisaprint.com\" <nepasrepondre@realisaprint.com>",
+      "sujet": "Commande en impression : n°1723204_1 - Livraison le 20/05/2026",
+      "date": "07/05/2026 12:28",
+      "type": "A",
+      "cf": 95,
+      "repondu": false,
+      "statut": "en_attente",
+      "cl": {
+        "nom": null,
+        "email": null,
+        "ent": null,
+        "tel": null
+      },
+      "arts": [],
+      "delai": null,
+      "budget": null,
+      "note": "Notification de suivi de commande en production chez un fournisseur tiers (Realisaprint). Commande n°1723204_1 - Mug en impression, livraison prévue 20/05/2026."
+    },
+    {
+      "uid": "20683",
+      "de": "\"EDI TOPTEX Belgique\" <customerservice@toptex.be>",
+      "sujet": "TOPTEX : Accuse de Commande  N°  O26051034  \"WEB Panier\"",
+      "date": "07/05/2026 12:28",
+      "type": "A",
+      "cf": 95,
+      "repondu": false,
+      "statut": "autre",
+      "cl": {
+        "nom": "TOPTEX Belgique",
+        "email": "customerservice@toptex.be",
+        "ent": "EDI TOPTEX Belgique",
+        "tel": null
+      },
+      "arts": [],
+      "delai": null,
+      "budget": null,
+      "note": "Accusé de réception de commande fournisseur TOPTEX - notification automatique, pas une demande commerciale IneArt."
+    },
+    {
+      "uid": "20684",
+      "de": "delphine Vanhecke <delphine-vanhecke@hotmail.com>",
+      "sujet": "Re: Flocage sweat",
+      "date": "07/05/2026 12:28",
+      "type": "C",
+      "cf": 85,
+      "repondu": false,
+      "statut": "en_attente",
+      "cl": {
+        "nom": "Delphine Vanhecke",
+        "email": "delphine-vanhecke@hotmail.com",
+        "ent": null,
+        "tel": null
+      },
+      "arts": [
+        {
+          "d": "Sweats (multiple équipes: Dame 1, Dame 25)",
+          "q": null,
+          "tech": "flocage",
+          "n": "Flocage dos et manche, logo sponsor Leonidas à retirer du groupe Dame 25"
+        }
+      ],
+      "delai": "retrait mercredi 6 mai 2026 après 18h (confirmé à 18h15)",
+      "budget": null,
+      "note": "Commande finalisée en production. Client confirme retrait mercredi 18h15 mais signale 15 minutes de retard. Un sweat supplémentaire taille M détecté dans équipe Dame 1 - instruction donnée pour flocage dos/manche uniquement."
+    },
+    {
+      "uid": "20685",
+      "de": "Julien Swennen <julienswennen64@gmail.com>",
+      "sujet": "Devis la renaissance",
+      "date": "07/05/2026 12:28",
+      "type": "D",
+      "cf": 95,
+      "repondu": false,
+      "statut": "nouveau",
+      "cl": {
+        "nom": "Julien Swennen",
+        "email": "julienswennen64@gmail.com",
+        "ent": null,
+        "tel": null
+      },
+      "arts": [
+        {
+          "d": "Polo beige",
+          "q": 8,
+          "tech": "broderie",
+          "n": "3 en S, 3 en XXL, 2 en L. Sans le noir du logo en broderie"
+        },
+        {
+          "d": "Sweat à capuche noir",
+          "q": 2,
+          "tech": "broderie",
+          "n": "1 en S, 1 en XXL"
+        }
+      ],
+      "delai": null,
+      "budget": null,
+      "note": "Client demande devis pour 8 polos beige brodés avec logo sans noir, 2 sweats à capuche noirs brodés. Questionne également sur vestes de cuisine brodées."
+    },
+    {
+      "uid": "20686",
+      "de": "Julien Swennen <julienswennen64@gmail.com>",
+      "sujet": "Re: Devis la renaissance",
+      "date": "07/05/2026 12:29",
+      "type": "D",
+      "cf": 95,
+      "repondu": false,
+      "statut": "nouveau",
+      "cl": {
+        "nom": "Julien Swennen",
+        "email": "julienswennen64@gmail.com",
+        "ent": null,
+        "tel": null
+      },
+      "arts": [
+        {
+          "d": "Polo beige",
+          "q": 8,
+          "tech": "broderie",
+          "n": "3x S, 3x XXL, 2x L. Logo en broderie sans le noir"
+        },
+        {
+          "d": "Sweat à capuche noir",
+          "q": 2,
+          "tech": "broderie",
+          "n": "1x S, 1x XXL"
+        },
+        {
+          "d": "Vestes de cuisine brodées",
+          "q": null,
+          "tech": "broderie",
+          "n": "Question sur faisabilité"
+        }
+      ],
+      "delai": null,
+      "budget": null,
+      "note": "Client demande devis pour 8 polos beige et 2 sweats noirs en broderie avec logo personnalisé (sans noir). Demande aussi si vestes de cuisine brodées possibles. Logo en pièce jointe."
+    },
+    {
+      "uid": "20687",
+      "de": "Addy Nguyen <addy2008order@gmail.com>",
+      "sujet": "Re: DIGIT - SB GARDEN",
+      "date": "07/05/2026 12:29",
+      "type": "D",
+      "cf": 70,
+      "repondu": true,
+      "statut": "en_attente",
+      "cl": {
+        "nom": "Alden",
+        "email": "addy2008order@gmail.com",
+        "ent": "Saigon Embroidery",
+        "tel": null
+      },
+      "arts": [
+        {
+          "d": "DIGIT - SB GARDEN",
+          "q": null,
+          "tech": "broderie",
+          "n": "Design fourni en pièce jointe"
+        }
+      ],
+      "delai": null,
+      "budget": null,
+      "note": "Client envoie un design de broderie et demande confirmation de réception. Contexte incomplet - possible relance ou suivi de commande antérieure."
+    },
+    {
+      "uid": "20688",
+      "de": "Stéphanie Colin  <stephanie@mksweb.be>",
+      "sujet": "RE: Demande congé ",
+      "date": "07/05/2026 12:29",
+      "type": "A",
+      "cf": 95,
+      "repondu": false,
+      "statut": "archive",
+      "cl": {
+        "nom": "",
+        "email": "",
+        "ent": "",
+        "tel": ""
+      },
+      "arts": [],
+      "delai": null,
+      "budget": null,
+      "note": "Email interne : demande de congé d'un collaborateur, approuvée par la direction. Pas de demande commerciale."
+    },
+    {
+      "uid": "20689",
+      "de": "<fleetcard@q8.com>",
+      "sujet": "Q8 - Votre demande d'offre - BE - 334119",
+      "date": "07/05/2026 12:29",
+      "type": "A",
+      "cf": 85,
+      "repondu": false,
+      "statut": "en_attente",
+      "cl": {
+        "nom": null,
+        "email": "fleetcard@q8.com",
+        "ent": "Q8",
+        "tel": null
+      },
+      "arts": [],
+      "delai": null,
+      "budget": null,
+      "note": "Email de Q8 concernant une demande d'offre (référence BE-334119). Contenu insuffisant pour analyser les détails techniques ou commerciaux."
+    },
+    {
+      "uid": "20690",
+      "de": "\"EDI TOPTEX Belgique\" <customerservice@toptex.be>",
+      "sujet": "TopTex:  départ(s)  du jour L26050522 WEB Panier",
+      "date": "07/05/2026 12:29",
+      "type": "A",
+      "cf": 95,
+      "repondu": false,
+      "statut": "autre",
+      "cl": {
+        "nom": "EDI TOPTEX Belgique",
+        "email": "customerservice@toptex.be",
+        "ent": "TOPTEX",
+        "tel": null
+      },
+      "arts": [],
+      "delai": null,
+      "budget": null,
+      "note": "Notification de départ/expédition automatique d'un fournisseur textile. Pas de demande commerciale."
+    },
+    {
+      "uid": "20691",
+      "de": "\"Realisaprint.com\" <nepasrepondre@realisaprint.com>",
+      "sujet": "Commande en impression : n°1723204_2 - Livraison le 20/05/2026",
+      "date": "07/05/2026 12:29",
+      "type": "A",
+      "cf": 95,
+      "repondu": false,
+      "statut": "en_attente",
+      "cl": {
+        "nom": null,
+        "email": "nepasrepondre@realisaprint.com",
+        "ent": "Realisaprint.com",
+        "tel": null
+      },
+      "arts": [
+        {
+          "d": "Mug",
+          "q": 1,
+          "tech": "impression",
+          "n": "Commande n°1723204_2"
+        }
+      ],
+      "delai": "20/05/2026",
+      "budget": null,
+      "note": "Notification de production/livraison d'un fournisseur tiers (Realisaprint). Commande en cours d'impression, pas d'action commerciale requise."
+    },
+    {
+      "uid": "20692",
+      "de": "delphine Vanhecke <delphine-vanhecke@hotmail.com>",
+      "sujet": "Re: Flocage sweat",
+      "date": "07/05/2026 12:29",
+      "type": "D",
+      "cf": 95,
+      "repondu": false,
+      "statut": "nouveau",
+      "cl": {
+        "nom": "Delphine Vanhecke",
+        "email": "delphine-vanhecke@hotmail.com",
+        "ent": "Wh srl",
+        "tel": null
+      },
+      "arts": [
+        {
+          "d": "14 sweats RU7620M couleur bleu marine (ou équivalent blanc selon disponibilité)",
+          "q": 14,
+          "tech": "flocage",
+          "n": "Logo club dans le dos, logo sponsor épaule gauche, prénom à l'avant. Modification des couleurs par rapport à la commande précédente."
+        }
+      ],
+      "delai": null,
+      "budget": null,
+      "note": "Client satisfait de la commande précédente. Demande également modification de facture (regroupement sous Wh srl). Nouvelle commande avec spécifications similaires à la précédente commande."
+    },
+    {
+      "uid": "20694",
+      "de": "Nicolas Henry <textileandmore1@gmail.com>",
+      "sujet": "Re: Remise de prix - Max Concept",
+      "date": "07/05/2026 12:29",
+      "type": "C",
+      "cf": 85,
+      "repondu": true,
+      "statut": "urgent",
+      "cl": {
+        "nom": "Nicolas Henry",
+        "email": "textileandmore1@gmail.com",
+        "ent": "Lumax Consult Srl",
+        "tel": "0474/25.15.92"
+      },
+      "arts": [
+        {
+          "d": "35 packs (kit complet avec brassard Belgique, panneau signalisation, gilets fluo)",
+          "q": 35,
+          "tech": "serigraphie",
+          "n": "Impression coeur incluse"
+        },
+        {
+          "d": "Autocollants carrés 10x10cm - Logo sur fond blanc - High tack",
+          "q": 50,
+          "tech": "autre",
+          "n": "Découpé à la forme du logo avec trait noir, destiné à mange-debout"
+        }
+      ],
+      "delai": "25-26/05/2026",
+      "budget": null,
+      "note": "Client confirme le lancement de la production. Demande de prix pour les autocollants. Livraison impérative semaine du 25/05."
+    },
+    {
+      "uid": "20695",
+      "de": "Raccoon Communication <bonjour@raccooncommunication.be>",
+      "sujet": "Demande marque spécifique",
+      "date": "07/05/2026 12:29",
+      "type": "D",
+      "cf": 95,
+      "repondu": false,
+      "statut": "nouveau",
+      "cl": {
+        "nom": "Karine",
+        "email": "bonjour@raccooncommunication.be",
+        "ent": "Raccoon Communication",
+        "tel": null
+      },
+      "arts": [
+        {
+          "d": "Polo navy manches courtes Result Clothing ref 1479",
+          "q": 2,
+          "tech": "autre",
+          "n": "1 taille S + 1 taille M. Client final: Volumes & Dimensions. Marque spécifique imposée (teinte navy précise). Veste softshell à refaire ultérieurement."
+        }
+      ],
+      "delai": null,
+      "budget": null,
+      "note": "Client récurrent (veste softshell l'an dernier). Demande de sourcing sur marque spécifique Result Clothing + prix. Veste à refaire en attente validation client."
+    },
     {
       "uid": "20649",
       "de": "Simon Kleykens <info@pixcom.be>",
@@ -531,7 +1367,8 @@
       },
       "arts": [],
       "delai": null,
-      "note": "Email système IneArt AI notifiant 2 nouvelles demandes. Contenu principal manquant - demande complète requise pour analyse."
+      "note": "Email système IneArt AI notifiant 2 nouvelles demandes. Contenu principal manquant - demande complète requise pour analyse.",
+      "repondu": true
     },
     {
       "uid": "20644",
@@ -628,7 +1465,8 @@
       },
       "arts": [],
       "delai": null,
-      "note": "Email système IneArt signalant 2 nouvelles demandes sans contenu détaillé. Aucune information client ni article spécifié."
+      "note": "Email système IneArt signalant 2 nouvelles demandes sans contenu détaillé. Aucune information client ni article spécifié.",
+      "repondu": true
     },
     {
       "uid": "20637",
@@ -661,7 +1499,8 @@
         }
       ],
       "delai": null,
-      "note": "Client signale réception de commande endommagée (pulls sales et chiffonnés) due à absence d'emballage/sachets. Demande amélioration packaging pour prochaine commande."
+      "note": "Client signale réception de commande endommagée (pulls sales et chiffonnés) due à absence d'emballage/sachets. Demande amélioration packaging pour prochaine commande.",
+      "repondu": true
     },
     {
       "uid": "20638",
@@ -712,7 +1551,8 @@
       },
       "arts": [],
       "delai": null,
-      "note": "Notification GitHub Actions - échec du workflow d'analyse des mails. Aucun contenu commercial."
+      "note": "Notification GitHub Actions - échec du workflow d'analyse des mails. Aucun contenu commercial.",
+      "repondu": true
     },
     {
       "uid": "20641",
@@ -729,7 +1569,8 @@
       },
       "arts": [],
       "delai": null,
-      "note": "Email système IneArt notifiant 2 nouvelles demandes reçues le 02/05/2026. Contenu du message manquant - impossible d'analyser les demandes."
+      "note": "Email système IneArt notifiant 2 nouvelles demandes reçues le 02/05/2026. Contenu du message manquant - impossible d'analyser les demandes.",
+      "repondu": true
     },
     {
       "uid": "20642",

@@ -276,7 +276,7 @@ def main(dry_run=False):
 
         print(f"   -> {type_m} ({round(conf*100)}%){' - REPONDU' if repondu else ''}")
 
-        cl = analyse.get("client", {})
+        cl = analyse.get("client") or {}
         mails_structures.append({
             "uid":     mail["uid"],
             "de":      mail["de"],

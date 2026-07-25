@@ -31,9 +31,9 @@ class DemoWorldRepository implements WorldRepository {
   late Companion _companion;
   final List<NarrativeSeed> _seeds = [
     NarrativeSeed(
-      id: 'seed-dragon',
+      id: 'seed-herisson',
       kind: SeedKind.choiceConsequence,
-      summary: 'Léo a épargné le dragon Cendreflamme au pont des Brumes.',
+      summary: 'Léo a laissé un bol d\'eau au hérisson de la haie.',
       plantedAt: DateTime(2026, 1, 12),
       germinateAfter: DateTime(2026, 6, 1),
     ),
@@ -52,11 +52,13 @@ class DemoWorldRepository implements WorldRepository {
   @override
   Future<void> saveCompanion(Companion companion) async => _companion = companion;
 
+  // Registre « réalisme doux » : monde réel, poésie du quotidien —
+  // la magie vient de la mémoire du monde, pas de créatures fantastiques.
   @override
   Future<StoryEpisode?> tonightEpisode() async => StoryEpisode(
         id: 'demo-ep-214',
         number: 214,
-        title: 'Le retour de Cendreflamme',
+        title: 'Le jardin du soir',
         date: DateTime.now(),
         emotionalThread: 'courage après une journée difficile',
         isDownloaded: true,
@@ -64,28 +66,30 @@ class DemoWorldRepository implements WorldRepository {
           StoryScene(
             index: 0,
             text:
-                'Ce soir-là, une ombre douce glissa au-dessus du village de Lunelune. '
-                'Pipo dressa ses oreilles-feuilles : il connaissait ce battement '
-                'd\'ailes. Quelqu\'un revenait de très, très loin…',
+                'La journée se rangeait doucement. Dans le jardin, la lumière '
+                'était devenue dorée, et le petit renard attendait Léo près de '
+                'la porte, comme chaque soir.',
           ),
           StoryScene(
             index: 1,
             text:
-                'C\'était Cendreflamme ! Le dragon que Léo avait épargné au pont des '
-                'Brumes, il y a si longtemps. Ses écailles avaient poussé, et dans '
-                'ses yeux brillait quelque chose de nouveau : de la gratitude.',
+                'Au fond du jardin, la haie s\'est mise à remuer. Le petit renard '
+                's\'est arrêté net, une oreille levée. Là, sous les feuilles : un '
+                'hérisson, tout petit, qui cherchait son chemin.',
             choice: StoryChoice(
               prompt: 'Que fait Léo ?',
               options: [
                 ChoiceOption(
-                  id: 'opt-welcome',
-                  label: 'Courir l\'accueillir',
-                  seedSummary: 'Léo et Cendreflamme deviennent alliés du village.',
+                  id: 'opt-water',
+                  label: 'Lui laisser un bol d\'eau',
+                  seedSummary:
+                      'Le hérisson reviendra boire chaque soir de l\'été.',
                 ),
                 ChoiceOption(
-                  id: 'opt-hide',
-                  label: 'Observer caché avec Pipo',
-                  seedSummary: 'Léo découvre le secret que porte Cendreflamme.',
+                  id: 'opt-watch',
+                  label: 'L\'observer sans faire de bruit',
+                  seedSummary:
+                      'Léo connaît maintenant le passage secret de la haie.',
                 ),
               ],
             ),
@@ -93,9 +97,10 @@ class DemoWorldRepository implements WorldRepository {
           StoryScene(
             index: 2,
             text:
-                'Le dragon posa délicatement une écaille dorée dans la main de Léo. '
-                '« Tu m\'as sauvé un jour. Cette nuit, c\'est moi qui veille sur toi. » '
-                'Et au-dessus de Lunelune, les étoiles se mirent à ronronner.',
+                'Dedans, la maison sentait le soir. Léo a regardé une dernière '
+                'fois le jardin par la fenêtre : la haie, la nuit bleue, et '
+                'quelque part là-dessous, un hérisson qui s\'endormait aussi. '
+                'Demain, le jardin s\'en souviendrait.',
           ),
         ],
       );

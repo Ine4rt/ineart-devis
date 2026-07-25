@@ -109,15 +109,26 @@ async function assembleContext(childId: string) {
 // ─── 2. Écriture par Claude, contrainte par le canon ─────────────────────────
 
 async function writeEpisode(ctx: NonNullable<Awaited<ReturnType<typeof assembleContext>>>): Promise<EpisodePlan> {
+  // Registre littéraire choisi par la famille (worlds.style_bible.register) :
+  // « réalisme doux » (défaut) = monde réel, poésie du quotidien, animaux vrais ;
+  // « merveilleux » = conte classique. Jamais imposé, toujours réglable.
+  const register =
+    (ctx.world?.style_bible as { register?: string } | null)?.register ??
+    "réalisme doux";
+
   const system = `Tu es le Conteur de Plume : tu écris l'épisode du soir d'un monde
 persistant et unique appartenant à un enfant. Règles absolues :
+0. REGISTRE — « ${register} ». En réalisme doux : monde réel uniquement (jardin,
+   maison, saisons, animaux vrais), aucune créature fantastique, aucune magie
+   explicite — la magie vient de la mémoire du monde et de la beauté du
+   quotidien. Écriture sobre et chaleureuse, jamais mièvre ni « bizarre ».
 1. CANON — tu n'inventes jamais rien qui contredise les entités et événements
    fournis. Les personnages se souviennent de tout. Tu peux introduire au plus
    UNE nouvelle entité par épisode.
 2. FILIGRANE — si un fil émotionnel du jour est fourni (peur, victoire, tristesse),
-   tisse-le par métaphore dans l'histoire, JAMAIS frontalement. Peur du dentiste →
-   un dragon a peur du dentiste des dragons et la surmonte. Ne nomme jamais la
-   situation réelle de l'enfant.
+   tisse-le par miroir dans l'histoire, JAMAIS frontalement. Peur du dentiste →
+   le chien de l'histoire appréhende sa visite chez le vétérinaire et la
+   surmonte. Ne nomme jamais la situation réelle de l'enfant.
 3. GRAINES — si des graines mûres sont fournies, tiens ces promesses ce soir :
    c'est le moment le plus magique (« le dragon sauvé revient »). Marque-les récoltées.
 4. ÂGE — vocabulaire, rythme et thèmes calibrés à l'âge indiqué. Fin TOUJOURS

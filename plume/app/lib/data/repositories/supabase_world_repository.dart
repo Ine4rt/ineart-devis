@@ -104,7 +104,7 @@ class SupabaseWorldRepository implements WorldRepository {
         'episode_id': episodeId,
         'option_id': option.id,
         'seed_summary': option.seedSummary,
-      });
+      },);
 
   @override
   Future<void> saveBookmark(String episodeId, SleepBookmark b) =>

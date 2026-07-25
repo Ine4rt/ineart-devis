@@ -5,7 +5,6 @@ import 'package:intl/intl.dart';
 
 import '../../core/router/app_router.dart';
 import '../../core/theme/app_colors.dart';
-import '../../domain/entities/child_profile.dart';
 import '../../providers.dart';
 
 /// La Lune — l'espace parent (design §4.8). Verrou par appui long (2 s),
@@ -25,7 +24,7 @@ class _ParentScreenState extends ConsumerState<ParentScreen> {
   Widget build(BuildContext context) {
     return _unlocked ? const _ParentDashboard() : _ParentLock(onUnlocked: () {
       setState(() => _unlocked = true);
-    });
+    },);
   }
 }
 
@@ -141,7 +140,7 @@ class _ParentDashboard extends ConsumerWidget {
         backgroundColor: AppColors.dawnLinen,
         leading: BackButton(onPressed: context.pop, color: AppColors.dayInk),
         title: Text('La Lune',
-            style: theme.titleLarge?.copyWith(color: AppColors.dayInk)),
+            style: theme.titleLarge?.copyWith(color: AppColors.dayInk),),
       ),
       body: profileAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -222,11 +221,11 @@ class _ParentDashboard extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(title,
-                  style: theme.titleMedium?.copyWith(color: AppColors.dayInk)),
+                  style: theme.titleMedium?.copyWith(color: AppColors.dayInk),),
               const SizedBox(height: 6),
               Text(subtitle,
                   style: theme.bodyMedium
-                      ?.copyWith(color: AppColors.dayInk.withOpacity(.7))),
+                      ?.copyWith(color: AppColors.dayInk.withOpacity(.7)),),
               if (action != null) ...[
                 const SizedBox(height: 10),
                 FilledButton.tonal(onPressed: onTap, child: Text(action)),

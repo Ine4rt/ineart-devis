@@ -60,15 +60,15 @@ class DemoWorldRepository implements WorldRepository {
         date: DateTime.now(),
         emotionalThread: 'courage après une journée difficile',
         isDownloaded: true,
-        scenes: [
-          const StoryScene(
+        scenes: const [
+          StoryScene(
             index: 0,
             text:
                 'Ce soir-là, une ombre douce glissa au-dessus du village de Lunelune. '
                 'Pipo dressa ses oreilles-feuilles : il connaissait ce battement '
                 'd\'ailes. Quelqu\'un revenait de très, très loin…',
           ),
-          const StoryScene(
+          StoryScene(
             index: 1,
             text:
                 'C\'était Cendreflamme ! Le dragon que Léo avait épargné au pont des '
@@ -90,7 +90,7 @@ class DemoWorldRepository implements WorldRepository {
               ],
             ),
           ),
-          const StoryScene(
+          StoryScene(
             index: 2,
             text:
                 'Le dragon posa délicatement une écaille dorée dans la main de Léo. '

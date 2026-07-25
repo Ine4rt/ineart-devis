@@ -49,7 +49,7 @@ class WorldMapScreen extends ConsumerWidget {
                       tooltip: 'Espace parent',
                       iconSize: 32,
                       icon: const Icon(Icons.nightlight_round,
-                          color: AppColors.mist),
+                          color: AppColors.mist,),
                     ),
                   ],
                 ),

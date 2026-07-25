@@ -76,9 +76,9 @@ class AlbumScreen extends ConsumerWidget {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text('Épisode ${ep.number} — ${ep.title}',
-                                          style: theme.titleMedium),
+                                          style: theme.titleMedium,),
                                       Text(dateFormat.format(ep.date),
-                                          style: theme.bodySmall),
+                                          style: theme.bodySmall,),
                                     ],
                                   ),
                                 ),

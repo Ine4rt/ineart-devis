@@ -102,7 +102,7 @@ class _CompanionScreenState extends ConsumerState<CompanionScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text('Les mots qu\'il a appris de toi',
-                                style: theme.titleMedium),
+                                style: theme.titleMedium,),
                             const SizedBox(height: 8),
                             Wrap(
                               spacing: 8,

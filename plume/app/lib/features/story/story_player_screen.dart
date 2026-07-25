@@ -167,7 +167,7 @@ class _ChoiceRow extends StatelessWidget {
     return Column(
       children: [
         Text(choice.prompt,
-            style: theme.titleLarge?.copyWith(color: AppColors.lanternGold)),
+            style: theme.titleLarge?.copyWith(color: AppColors.lanternGold),),
         const SizedBox(height: 16),
         Wrap(
           spacing: 14,

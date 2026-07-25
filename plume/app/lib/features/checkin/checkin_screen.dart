@@ -63,7 +63,7 @@ class _CheckinScreenState extends ConsumerState<CheckinScreen> {
           backgroundColor: AppColors.dawnLinen,
           leading: BackButton(onPressed: context.pop, color: AppColors.dayInk),
           title: Text('La météo du jour',
-              style: theme.titleLarge?.copyWith(color: AppColors.dayInk)),
+              style: theme.titleLarge?.copyWith(color: AppColors.dayInk),),
         ),
         body: _sent
             ? Center(

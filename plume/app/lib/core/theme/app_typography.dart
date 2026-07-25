@@ -6,8 +6,8 @@ import 'app_colors.dart';
 /// Fraunces = la voix du conte (titres). Nunito Sans = l'interface.
 abstract final class AppTypography {
   static TextTheme textTheme(Color body, Color soft) {
-    final serif = GoogleFonts.fraunces;
-    final sans = GoogleFonts.nunitoSans;
+    const serif = GoogleFonts.fraunces;
+    const sans = GoogleFonts.nunitoSans;
     return TextTheme(
       displayLarge: serif(fontSize: 40, fontWeight: FontWeight.w600, color: body, height: 1.15),
       headlineLarge: serif(fontSize: 32, fontWeight: FontWeight.w600, color: body, height: 1.2),

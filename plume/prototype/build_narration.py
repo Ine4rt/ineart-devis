@@ -156,12 +156,15 @@ def siwis_pcm(text: str) -> np.ndarray:
     return pcm.astype(np.float64) / 32767
 
 
+PAUSE_SCALE = 0.6  # retour client : pauses après les points trop longues
+
+
 def scene_pcm(fragments: list[tuple[str, float]], synth) -> np.ndarray:
     parts: list[np.ndarray] = []
     for text, pause in fragments:
         parts.append(synth(text))
         if pause > 0:
-            parts.append(np.zeros(int(pause * RATE)))
+            parts.append(np.zeros(int(pause * PAUSE_SCALE * RATE)))
     return np.concatenate(parts)
 
 

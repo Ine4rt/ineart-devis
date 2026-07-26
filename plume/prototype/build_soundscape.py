@@ -1,19 +1,17 @@
 #!/usr/bin/env python3
-"""Bande-son de Plume, 100 % synthétisée (gratuite, aucune banque de sons) :
+"""Bande-son v2 — retours client : musique audible, niveaux doux, sons réalistes.
 
-- MUSIQUE : berceuse de boîte à musique (ré majeur pentatonique) sur nappe
-  chaude, souffle léger et grillons discrets — boucle sans couture ;
-- BRUITAGES par scène, en rapport avec le texte :
-    open    → feuilles qui bruissent + « cric, crac » de brindille
-    amb1    → rafale douce dans les arbres + chant du merle
-    amb2    → petits pas dans l'herbe
-    amb3    → carillon d'étoiles (clochettes rares)
-    amb4    → bruits de maison feutrés (tintement, chaise)
-    victory → merle joyeux + carillon ascendant
-    fear    → froissement inquiet puis clochette rassurante
-    close   → petites gorgées d'eau + dernier carillon + souffle qui s'éteint
+Techniques :
+- craquement de branche : pré-craquements + rafale de micro-fractures
+  (60-100 impulsions en 80 ms) résonnant dans un « corps de bois »
+  (combs 130/310 Hz) + choc sourd final ;
+- bruissement : bruit « velours » (impulsions éparses lissées), bien plus
+  naturel qu'un bruit blanc filtré ;
+- merle : motifs à deux notes avec portamento + petite queue de réverbe ;
+- gorgées : glouglous graves à formant + gouttelettes ;
+- tous les effets normalisés au même niveau crête (0,5) puis mixés bas.
 
-Sortie : soundscape.js (const AMBIENCE, const SFX) à injecter dans le proto.
+Sortie : soundscape.js (AMBIENCE = musique, SFX = bruitages par scène).
 """
 import base64
 import json
@@ -35,217 +33,254 @@ def silence(seconds: float) -> np.ndarray:
     return np.zeros(int(seconds * RATE))
 
 
-def env_hann(n: int) -> np.ndarray:
-    return np.hanning(n)
-
-
 def place(target: np.ndarray, clip: np.ndarray, at: float, gain: float = 1.0) -> None:
     i0 = int(at * RATE)
     i1 = min(i0 + len(clip), len(target))
-    target[i0:i1] += clip[: i1 - i0] * gain
+    if i1 > i0:
+        target[i0:i1] += clip[: i1 - i0] * gain
 
 
 def lowpass(x: np.ndarray, width: int) -> np.ndarray:
     return np.convolve(x, np.ones(width) / width, mode="same")
 
 
-# ─── Instruments ────────────────────────────────────────────────────────────
+def normalize(x: np.ndarray, peak: float = 0.5) -> np.ndarray:
+    m = np.abs(x).max()
+    return x * (peak / m) if m > 0 else x
 
-def music_box_note(freq: float, dur: float = 2.2, gain: float = 1.0) -> np.ndarray:
-    """Note de boîte à musique : fondamentale + partiels cloche, chute exp."""
+
+def reverb(x: np.ndarray, delay_s: float = 0.09, decay: float = 0.35, taps: int = 4) -> np.ndarray:
+    out = np.copy(x)
+    d = int(delay_s * RATE)
+    for k in range(1, taps + 1):
+        shifted = np.zeros_like(x)
+        shifted[k * d:] = x[: len(x) - k * d] * (decay ** k)
+        out += shifted
+    return out
+
+
+def comb_body(x: np.ndarray, freqs: tuple[float, ...], decay: float = 0.5) -> np.ndarray:
+    """Résonance de « corps » : combs bouclés aux fréquences données."""
+    out = np.copy(x)
+    for f in freqs:
+        d = max(1, int(RATE / f))
+        buf = np.copy(x)
+        for _ in range(6):
+            shifted = np.zeros_like(buf)
+            shifted[d:] = buf[:-d] * decay
+            buf = shifted
+            out += buf
+    return out
+
+
+# ─── Effets réalistes ───────────────────────────────────────────────────────
+
+def branch_crack(rng: np.random.Generator) -> np.ndarray:
+    """Vrai craquement : ça craque d'abord, puis ça CASSE, puis ça retombe."""
+    total = silence(2.2)
+
+    # 1. Pré-craquements : le bois travaille (4 petits clics espacés).
+    for k in range(4):
+        n = int(rng.uniform(0.006, 0.012) * RATE)
+        click = rng.standard_normal(n) * np.exp(-np.linspace(0, 10, n))
+        place(total, comb_body(click, (400.0,), 0.4), 0.15 + k * rng.uniform(0.09, 0.16),
+              rng.uniform(0.15, 0.3))
+
+    # 2. La fracture : rafale dense de micro-impulsions sur ~90 ms.
+    n = int(0.09 * RATE)
+    burst = np.zeros(n)
+    for _ in range(80):
+        i = int(rng.uniform(0, n - 4))
+        burst[i:i + 3] += rng.uniform(-1, 1)
+    burst *= np.exp(-np.linspace(0, 5, n))
+    fracture = comb_body(burst, (130.0, 310.0), 0.55)
+    place(total, fracture, 0.82, 1.0)
+
+    # 3. Choc sourd (la branche cède) + petites retombées.
+    thud = np.sin(2 * np.pi * 85 * t_axis(0.16)) * np.exp(-t_axis(0.16) * 26)
+    place(total, thud, 0.90, 0.8)
+    for k in range(3):
+        n2 = int(0.01 * RATE)
+        debris = rng.standard_normal(n2) * np.exp(-np.linspace(0, 9, n2))
+        place(total, debris, 1.1 + k * rng.uniform(0.1, 0.2), rng.uniform(0.08, 0.15))
+
+    return normalize(reverb(total, 0.07, 0.25, 2))
+
+
+def velvet_rustle(dur: float, density: float, rng: np.random.Generator,
+                  swells: int = 2) -> np.ndarray:
+    """Feuillage en bruit « velours » : impulsions éparses lissées."""
+    n = int(dur * RATE)
+    x = np.zeros(n)
+    count = int(density * dur)
+    for _ in range(count):
+        i = int(rng.uniform(0, n - 2))
+        x[i] = rng.choice((-1.0, 1.0)) * rng.uniform(0.4, 1.0)
+    x = lowpass(x, 3) - lowpass(x, 14)  # timbre feuille sèche
+    envelope = np.zeros(n)
+    for k in range(swells):
+        at = (k + rng.uniform(0.15, 0.45)) * dur / swells
+        width = int(rng.uniform(0.6, 1.1) * RATE)
+        i0 = int(at * RATE)
+        i1 = min(i0 + width, n)
+        if i1 > i0:
+            envelope[i0:i1] += np.hanning(i1 - i0)
+    return normalize(x * envelope)
+
+
+def blackbird(rng: np.random.Generator) -> np.ndarray:
+    """Merle : motifs flûtés à deux notes, portamento, un peu d'air."""
+    parts = []
+    for _ in range(rng.integers(2, 4)):
+        f0 = rng.uniform(1800, 2400)
+        f1 = f0 * rng.uniform(1.15, 1.4)
+        for fa, fb, dur in ((f0, f1, 0.13), (f1, f0 * rng.uniform(0.85, 1.0), 0.17)):
+            t = t_axis(dur)
+            freq = fa + (fb - fa) * (t / dur) ** 0.7
+            vib = 1 + 0.015 * np.sin(2 * np.pi * 35 * t)
+            phase = 2 * np.pi * np.cumsum(freq * vib) / RATE
+            syl = np.sin(phase) * np.hanning(len(t))
+            parts.append(syl)
+            parts.append(silence(rng.uniform(0.04, 0.1)))
+        parts.append(silence(rng.uniform(0.25, 0.5)))
+    song = np.concatenate(parts)
+    return normalize(reverb(song, 0.11, 0.3, 3))
+
+
+def grass_steps(count: int, rng: np.random.Generator) -> np.ndarray:
+    total = silence(0.72 * count + 0.4)
+    for k in range(count):
+        swish = velvet_rustle(0.16, 900, rng, swells=1)
+        thump = np.sin(2 * np.pi * 78 * t_axis(0.07)) * np.exp(-t_axis(0.07) * 55)
+        at = 0.2 + k * 0.72 + rng.uniform(-0.04, 0.04)
+        place(total, swish, at, 0.7)
+        place(total, thump, at + 0.02, 0.5)
+    return normalize(total)
+
+
+def star_chimes() -> np.ndarray:
+    total = silence(6.5)
+    for k, note in enumerate((1174.66, 1760.0, 1479.98)):
+        t = t_axis(2.6)
+        tone = (np.sin(2 * np.pi * note * t)
+                + 0.3 * np.sin(2 * np.pi * note * 2.76 * t)) * np.exp(-t * 2.2)
+        place(total, tone, 0.5 + k * 1.7, 0.8)
+    return normalize(reverb(total, 0.13, 0.35, 3))
+
+
+def house_sounds(rng: np.random.Generator) -> np.ndarray:
+    total = silence(6.0)
+    # tintement feutré (vaisselle au loin) : cloche très amortie.
+    t = t_axis(0.7)
+    clink = np.sin(2 * np.pi * 840 * t) * np.exp(-t * 9)
+    place(total, lowpass(clink, 6), 0.6, 0.7)
+    # chaise : frottement grave descendant.
+    t = t_axis(0.4)
+    creak = np.sin(2 * np.pi * (115 - 35 * t / 0.4) * t) * np.hanning(len(t))
+    place(total, creak, 2.6, 0.5)
+    place(total, lowpass(clink, 6), 4.3, 0.5)
+    return normalize(total)
+
+
+def water_sips(rng: np.random.Generator) -> np.ndarray:
+    """Petites gorgées : glouglous graves + gouttelettes."""
+    total = silence(5.0)
+    for k in range(5):
+        # glouglou : sinus descendant avec formant (bouche/gorge).
+        dur = rng.uniform(0.07, 0.1)
+        t = t_axis(dur)
+        f = rng.uniform(300, 380) * (1 - 0.5 * t / dur)
+        glug = np.sin(2 * np.pi * np.cumsum(f) / RATE) * np.hanning(len(t))
+        place(total, glug, 0.3 + k * rng.uniform(0.28, 0.4), 0.8)
+        # gouttelette juste après.
+        t2 = t_axis(0.03)
+        fr = rng.uniform(1000, 1400)
+        drop = np.sin(2 * np.pi * fr * (1 - 0.4 * t2 / 0.03) * t2) * np.hanning(len(t2))
+        place(total, drop, 0.36 + k * 0.33, 0.25)
+    return normalize(total)
+
+
+def night_settle(rng: np.random.Generator) -> np.ndarray:
+    """Fin : dernier carillon + souffle qui s'éteint."""
+    total = silence(8.0)
+    t = t_axis(4.0)
+    bell = (np.sin(2 * np.pi * 1174.66 * t)
+            + 0.3 * np.sin(2 * np.pi * 1174.66 * 2.76 * t)) * np.exp(-t * 1.6)
+    place(total, bell, 0.5, 0.7)
+    wind = lowpass(rng.standard_normal(int(5.0 * RATE)), 500)
+    wind = normalize(wind, 1.0) * np.linspace(0.6, 0.0, int(5.0 * RATE))
+    place(total, wind, 2.5, 0.3)
+    return normalize(reverb(total, 0.12, 0.3, 2))
+
+
+# ─── Musique : berceuse audible mais douce ──────────────────────────────────
+
+def music_box_note(freq: float, dur: float = 2.4) -> np.ndarray:
     t = t_axis(dur)
     tone = (np.sin(2 * np.pi * freq * t)
             + 0.35 * np.sin(2 * np.pi * freq * 2.0 * t)
-            + 0.18 * np.sin(2 * np.pi * freq * 4.16 * t))
-    envelope = np.exp(-t * 2.6)
+            + 0.15 * np.sin(2 * np.pi * freq * 4.16 * t))
+    envelope = np.exp(-t * 2.2)
     attack = int(0.004 * RATE)
     envelope[:attack] *= np.linspace(0, 1, attack)
-    return tone * envelope * gain
+    return tone * envelope
 
 
-def bell(freq: float, dur: float = 2.0, gain: float = 1.0) -> np.ndarray:
-    t = t_axis(dur)
-    tone = (np.sin(2 * np.pi * freq * t)
-            + 0.4 * np.sin(2 * np.pi * freq * 2.76 * t)
-            + 0.2 * np.sin(2 * np.pi * freq * 5.4 * t))
-    return tone * np.exp(-t * 3.0) * gain
-
-
-def chirp(f0: float, f1: float, dur: float, gain: float = 1.0) -> np.ndarray:
-    """Syllabe d'oiseau : glissando avec vibrato."""
-    t = t_axis(dur)
-    freq = f0 + (f1 - f0) * t / dur
-    vib = 1 + 0.02 * np.sin(2 * np.pi * 40 * t)
-    phase = 2 * np.pi * np.cumsum(freq * vib) / RATE
-    return np.sin(phase) * env_hann(len(t)) * gain
-
-
-def blackbird(rng: np.random.Generator, gain: float = 1.0) -> np.ndarray:
-    """Petit motif de merle : 3-5 syllabes flûtées."""
-    parts = []
-    for _ in range(rng.integers(3, 6)):
-        f0 = rng.uniform(1700, 2600)
-        f1 = f0 * rng.uniform(0.7, 1.35)
-        parts.append(chirp(f0, f1, rng.uniform(0.08, 0.16), gain))
-        parts.append(silence(rng.uniform(0.05, 0.14)))
-    return np.concatenate(parts)
-
-
-def rustle(dur: float, swells: int, rng: np.random.Generator, gain: float = 1.0) -> np.ndarray:
-    """Feuillage : bruit filtré en bande, gonflements successifs."""
-    n = int(dur * RATE)
-    noise = rng.standard_normal(n)
-    band = lowpass(noise, 4) - lowpass(noise, 24)  # ~1-5 kHz
-    envelope = np.zeros(n)
-    for k in range(swells):
-        at = (k + rng.uniform(0.1, 0.5)) * dur / swells
-        width = int(rng.uniform(0.5, 0.9) * RATE)
-        i0 = int(at * RATE)
-        i1 = min(i0 + width, n)
-        envelope[i0:i1] += env_hann(i1 - i0)
-    return band * envelope * gain
-
-
-def twig_snap(rng: np.random.Generator, gain: float = 1.0) -> np.ndarray:
-    """« cric, crac » : deux claquements secs + petit choc sourd."""
-    def snap() -> np.ndarray:
-        click = rng.standard_normal(int(0.02 * RATE)) * np.exp(-np.linspace(0, 8, int(0.02 * RATE)))
-        knock = np.sin(2 * np.pi * 180 * t_axis(0.07)) * np.exp(-t_axis(0.07) * 40)
-        return np.concatenate([click, knock])
-    return np.concatenate([snap(), silence(0.22), snap()]) * gain
-
-
-def footsteps(count: int, rng: np.random.Generator, gain: float = 1.0) -> np.ndarray:
-    """Pas feutrés dans l'herbe."""
-    total = silence(0.62 * count + 0.3)
-    for k in range(count):
-        thump = np.sin(2 * np.pi * 95 * t_axis(0.09)) * np.exp(-t_axis(0.09) * 45)
-        grass = lowpass(rng.standard_normal(int(0.08 * RATE)), 6) * env_hann(int(0.08 * RATE)) * 0.8
-        step = thump + grass[: len(thump)] if len(grass) >= len(thump) else thump
-        place(total, step, 0.15 + k * 0.62 + rng.uniform(-0.05, 0.05))
-    return total * gain
-
-
-def droplets(count: int, rng: np.random.Generator, gain: float = 1.0) -> np.ndarray:
-    """Petites gorgées / gouttes : pings descendants très courts."""
-    total = silence(0.2 * count + 0.4)
-    for k in range(count):
-        d = chirp(rng.uniform(1100, 1400), rng.uniform(500, 700), 0.045)
-        place(total, d, 0.1 + k * rng.uniform(0.16, 0.24))
-    return total * gain
-
-
-# ─── Musique de fond (boucle) ───────────────────────────────────────────────
-
-def build_music(seconds: float = 44.0) -> np.ndarray:
+def build_music(seconds: float = 46.0) -> np.ndarray:
     rng = np.random.default_rng(11)
     n = int(seconds * RATE)
     t = t_axis(seconds)
 
-    # Nappe chaude très discrète (ré, la, ré à l'octave).
-    pad = (0.24 * np.sin(2 * np.pi * 73.42 * t)
-           + 0.18 * np.sin(2 * np.pi * 110.0 * t)
-           + 0.12 * np.sin(2 * np.pi * 146.83 * t))
-    pad *= 0.55 + 0.45 * np.sin(2 * np.pi * t / 22.0 - np.pi / 2)
-
-    # Berceuse : pentatonique de ré (ré, mi, fa#, la, si), tempo lent.
+    # Mélodie au premier plan (c'était le retour client : on ne l'entendait pas).
     d5, e5, fs5, a5, b5, d6 = 587.33, 659.25, 739.99, 880.0, 987.77, 1174.66
     melody = [d5, fs5, a5, b5, a5, fs5, e5, d5,
               fs5, a5, d6, b5, a5, fs5, e5, d5]
     music = np.zeros(n)
-    beat = 2.6  # une note toutes les ~2,6 s : très paisible
+    beat = 2.4
     for k, note in enumerate(melody):
-        at = 0.8 + k * beat
+        at = 0.6 + k * beat
         if at + 2.4 >= seconds:
             break
-        gain = 0.30 if k % 4 == 0 else 0.22
-        place(music, music_box_note(note, gain=gain), at + rng.uniform(-0.08, 0.08))
+        place(music, music_box_note(note), at + rng.uniform(-0.06, 0.06),
+              1.0 if k % 4 == 0 else 0.75)
+    music = reverb(music, 0.14, 0.3, 3)
 
-    # Souffle léger + grillons rares (plus discrets qu'avant).
-    wind = lowpass(rng.standard_normal(n), 400)
-    wind /= np.abs(wind).max()
-    wind *= 0.5 + 0.5 * np.sin(2 * np.pi * t / 13.0)
-    crickets = np.zeros(n)
-    carrier = np.sin(2 * np.pi * 4100 * t)
-    mod = (np.sin(2 * np.pi * 32 * t) > 0.2).astype(float)
-    pos = 2.0
-    while pos < seconds - 3.0:
-        dur = rng.uniform(0.4, 0.9)
-        i0, i1 = int(pos * RATE), int((pos + dur) * RATE)
-        crickets[i0:i1] += carrier[i0:i1] * mod[i0:i1] * env_hann(i1 - i0) * rng.uniform(0.3, 0.6)
-        pos += dur + rng.uniform(2.0, 4.5)
+    # Nappe discrète dessous.
+    pad = (0.5 * np.sin(2 * np.pi * 146.83 * t)
+           + 0.35 * np.sin(2 * np.pi * 220.0 * t))
+    pad *= 0.55 + 0.45 * np.sin(2 * np.pi * t / 20.0 - np.pi / 2)
 
-    mix = 0.14 * pad + 0.30 * music + 0.035 * wind + 0.030 * crickets
+    mix = normalize(music, 0.62) + normalize(pad, 0.10)
 
     # Boucle sans couture.
     fade = int(2.5 * RATE)
     ramp = np.linspace(0, 1, fade)
     mix[:fade] = mix[:fade] * ramp + mix[-fade:] * (1 - ramp)
-    return mix[: n - fade]
+    return normalize(mix[: n - fade], 0.7)
 
 
-# ─── Bruitages par scène ────────────────────────────────────────────────────
+# ─── Assemblage par scène (nouvelles clés synchronisées) ────────────────────
 
 def build_sfx() -> dict[str, np.ndarray]:
     rng = np.random.default_rng(23)
-    sfx: dict[str, np.ndarray] = {}
-
-    # open : feuilles + cric-crac + petit froissement (le hérisson).
-    s = silence(7.0)
-    place(s, rustle(2.2, 2, rng), 0.2, 0.8)
-    place(s, twig_snap(rng), 2.8, 0.9)
-    place(s, rustle(1.6, 3, rng), 4.4, 0.55)
-    sfx["open"] = s
-
-    # amb1 : rafale douce + merle.
-    s = silence(7.0)
-    place(s, rustle(3.2, 3, rng), 0.2, 0.7)
-    place(s, blackbird(rng), 3.8, 0.5)
-    sfx["amb1"] = s
-
-    # amb2 : pas dans l'herbe.
-    sfx["amb2"] = footsteps(5, rng, 0.9)
-
-    # amb3 : carillon d'étoiles.
-    s = silence(6.5)
-    for k, note in enumerate([1174.66, 1760.0, 1479.98]):
-        place(s, bell(note, gain=0.5), 0.4 + k * 1.6)
-    sfx["amb3"] = s
-
-    # amb4 : maison feutrée — tintement + chaise.
-    s = silence(6.0)
-    place(s, bell(820, dur=1.0, gain=0.35), 0.5)
-    creak_t = t_axis(0.35)
-    creak = np.sin(2 * np.pi * (120 - 40 * creak_t / 0.35) * creak_t) * env_hann(len(creak_t))
-    place(s, creak, 2.4, 0.4)
-    place(s, bell(650, dur=0.9, gain=0.3), 4.2)
-    sfx["amb4"] = s
-
-    # victory : merle joyeux + carillon ascendant.
-    s = silence(6.0)
-    place(s, blackbird(rng), 0.3, 0.6)
-    for k, note in enumerate([587.33, 739.99, 880.0, 1174.66]):
-        place(s, bell(note, gain=0.45), 2.2 + k * 0.5)
-    sfx["victory"] = s
-
-    # fear : froissement inquiet, puis clochette qui rassure.
-    s = silence(7.0)
-    place(s, rustle(1.8, 4, rng), 0.3, 0.6)
-    place(s, bell(587.33, gain=0.4), 3.6)
-    place(s, bell(880.0, gain=0.4), 4.6)
-    sfx["fear"] = s
-
-    # close : gorgées + dernier carillon + souffle qui s'éteint.
-    s = silence(9.0)
-    place(s, droplets(6, rng), 0.4, 0.8)
-    place(s, rustle(1.4, 2, rng), 2.6, 0.4)
-    place(s, bell(1174.66, dur=3.0, gain=0.4), 5.0)
-    dying = lowpass(rng.standard_normal(int(3.0 * RATE)), 400)
-    dying /= np.abs(dying).max()
-    place(s, dying * np.linspace(0.5, 0.0, len(dying)), 5.5, 0.12)
-    sfx["close"] = s
-
-    return sfx
+    return {
+        # open1 : le jardin calme — léger feuillage lointain.
+        "open1": velvet_rustle(3.2, 1400, rng, swells=2) * 0.5,
+        # open2 : « Et puis, soudain… cric, crac ! » — LE craquement, à t=0.
+        "open2": branch_crack(rng),
+        "amb1": np.concatenate([velvet_rustle(2.6, 2200, rng, swells=2),
+                                silence(0.4), blackbird(rng) * 0.8]),
+        "amb2": grass_steps(5, rng),
+        "amb3": star_chimes(),
+        "amb4": house_sounds(rng),
+        "victory": np.concatenate([blackbird(rng) * 0.8, silence(0.3),
+                                   star_chimes()[: int(3.5 * RATE)] * 0.8]),
+        "fear": np.concatenate([velvet_rustle(1.6, 1800, rng, swells=3) * 0.6,
+                                silence(0.6), star_chimes()[: int(2.5 * RATE)] * 0.6]),
+        # close2 : « et il a bu ! » — gorgées à t=0.
+        "close2": water_sips(rng),
+        "close3": night_settle(rng),
+    }
 
 
 # ─── Encodage ───────────────────────────────────────────────────────────────
@@ -266,12 +301,12 @@ def data_uri(mp3: bytes) -> str:
 
 def main() -> None:
     music = data_uri(pcm_to_mp3(build_music(), kbps=48))
-    sfx = {key: data_uri(pcm_to_mp3(pcm)) for key, pcm in build_sfx().items()}
+    sfx = {key: data_uri(pcm_to_mp3(normalize(pcm, 0.5)))
+           for key, pcm in build_sfx().items()}
     js = ("const AMBIENCE = " + json.dumps(music) + ";\n"
           + "const SFX = " + json.dumps(sfx) + ";\n")
     (HERE / "soundscape.js").write_text(js)
-    total = len(js) // 1024
-    print(f"musique: {len(music) // 1024} Ko · sfx: {len(sfx)} scènes · soundscape.js: {total} Ko")
+    print(f"musique: {len(music) // 1024} Ko · sfx: {len(sfx)} · total: {len(js) // 1024} Ko")
 
 
 if __name__ == "__main__":

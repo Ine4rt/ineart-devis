@@ -29,9 +29,11 @@ SCENES: dict[str, list[tuple[str, float]]] = {
         ("Voilà…", 0.9),
         ("L'histoire va bientôt commencer.", 0.0),
     ],
-    "open": [
+    "open1": [
         ("Ce soir-là, dans le jardin, la lumière était toute dorée… comme du miel.", 1.1),
-        ("Ton ami t'attendait près de la porte, comme tous les soirs.", 1.2),
+        ("Ton ami t'attendait près de la porte, comme tous les soirs.", 0.0),
+    ],
+    "open2": [
         ("Et puis, soudain…", 0.9),
         ("cric… crac !", 0.8),
         ("La haie s'est mise à bouger !", 1.0),
@@ -94,11 +96,15 @@ SCENES: dict[str, list[tuple[str, float]]] = {
         ("Ça voulait dire : d'accord…", 0.8),
         ("J'essaierai.", 0.0),
     ],
-    "close": [
-        ("Alors, sans faire de bruit, tu as posé un petit bol d'eau près de la haie.", 1.1),
-        ("Le hérisson s'est approché…", 1.0),
-        ("et il a bu !", 0.9),
-        ("À toutes petites gorgées.", 1.2),
+    "close1": [
+        ("Alors, sans faire de bruit, tu as posé un petit bol d'eau près de la haie.", 1.0),
+        ("Le hérisson s'est approché…", 0.0),
+    ],
+    "close2": [
+        ("Et il a bu !", 0.9),
+        ("À toutes petites gorgées.", 0.0),
+    ],
+    "close3": [
         ("Puis la nuit est tombée pour de bon…", 1.0),
         ("et il a disparu sous les feuilles, pour faire dodo, lui aussi.", 1.2),
         ("Est-ce qu'il reviendra demain ?", 1.1),

@@ -434,6 +434,7 @@ requestAnimationFrame(drawSky);
 // ─── Navigation ─────────────────────────────────────────────────────────────
 function go(id) {
   stopSpeech();
+  if (typeof fallbackTimer !== 'undefined') clearTimeout(fallbackTimer);
   // L'ambiance survit entre rituel et histoire ; tout le reste s'arrête.
   const keepMusic = id === 's-ritual' || id === 's-story' || id === 's-end';
   if (typeof stopAudio === 'function') stopAudio(keepMusic);
@@ -512,17 +513,22 @@ function onlineUrl(text, voice) {
   return 'https://text.pollinations.ai/' + encodeURIComponent(prompt)
     + '?model=openai-audio&voice=' + voice;
 }
+let clipToken = 0; // invalide les rappels d'un clip interrompu par stopAudio
 function playClip(key, onEnd) {
   // Garde-fous : l'échec réseau déclenche l'événement error ET le rejet de
   // la promesse play() — chaque étape ne doit compter qu'une fois, sinon
   // les scènes défilent en accéléré.
+  const token = ++clipToken;
   let finished = false;
-  const done = () => { if (!finished) { finished = true; onEnd && onEnd(); } };
+  const done = () => {
+    if (finished || token !== clipToken) return;
+    finished = true; onEnd && onEnd();
+  };
   if (S.audioVoice === 'onyx' || S.audioVoice === 'fable') {
     const text = key === 'test' ? TEST_PHRASE : (AUDIO_TEXT[key] || TEST_PHRASE);
     let fellBack = false;
     const fallback = () => { // repli : voix locale Pierre
-      if (fellBack) return;
+      if (fellBack || token !== clipToken) return;
       fellBack = true;
       sharedAudio.onerror = () => done();
       sharedAudio.src = NARRATION.homme[key];
@@ -542,7 +548,9 @@ function playClip(key, onEnd) {
   sharedAudio.play().catch(() => setTimeout(done, 2000));
 }
 function stopAudio(keepMusic = false) {
-  sharedAudio.onended = null; sharedAudio.pause();
+  clipToken++; // les rappels du clip en cours deviennent inertes
+  sharedAudio.onended = null; sharedAudio.onerror = null;
+  sharedAudio.pause();
   try { sharedAudio.currentTime = 0; } catch (_) {}
   if (!keepMusic) ambience.pause();
   sfxAudio.pause();
@@ -829,9 +837,9 @@ function togglePause() {
   if (EP && EP.audio) {
     if (paused) { sharedAudio.pause(); clearTimeout(fallbackTimer); }
     else if (sharedAudio.ended || !sharedAudio.src) {
-      // La scène s'était terminée pendant la pause : on reprend la suite.
-      if (sceneIdx < EP.scenes.length - 1) { sceneIdx++; }
-      playScene();
+      // La scène s'était terminée pendant la pause : suite ou fin.
+      if (sceneIdx < EP.scenes.length - 1) { sceneIdx++; playScene(); }
+      else finishStory();
     } else { sharedAudio.play().catch(() => playScene()); }
     return;
   }

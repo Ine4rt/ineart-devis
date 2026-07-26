@@ -266,6 +266,7 @@
       <p class="eyebrow" id="ep-label"></p>
       <button class="cta" style="min-width:240px" onclick="unlockAudio(); go('s-ritual'); startBreathing()">C'est l'heure de l'histoire</button>
       <p class="lede" style="font-size:12px" id="dur-label"></p>
+      <button class="bare" id="replay-btn" style="display:none" onclick="replayChapter(1)">↻ Réécouter le chapitre 1 (voix IA)</button>
     </div>
   </section>
 
@@ -472,7 +473,7 @@ function setVoiceByName(name) {
 // NARRATION est injecté en fin de page : mp3 pré-générés du chapitre 1,
 // écrits en tutoiement (« ton ami ») pour valoir quel que soit le profil.
 const hasNarration = () => typeof NARRATION !== 'undefined';
-const audioMode = () => S.audioVoice !== 'device' && hasNarration() && S.episode === 1;
+const audioMode = () => S.audioVoice !== 'device' && hasNarration() && (replaying ?? S.episode) === 1;
 const sharedAudio = new Audio();
 // Ambiance de soir d'été (grillons + nappe), en boucle sous la narration.
 const ambience = new Audio(typeof AMBIENCE !== 'undefined' ? AMBIENCE : '');
@@ -619,12 +620,23 @@ function renderHome() {
     el('seednote').style.display = 'block';
     el('seednote').textContent = `Là où on en est : ${S.lastSummary}`;
   }
+  el('replay-btn').style.display = S.episode > 1 ? '' : 'none';
+}
+
+// Réécoute d'un chapitre déjà raconté : ne touche pas à la progression.
+let replaying = null;
+function replayChapter(n) {
+  replaying = n;
+  unlockAudio();
+  go('s-ritual');
+  startBreathing();
 }
 
 function renderLibrary() {
   if (S.told.length) {
     el('booklist').innerHTML = S.told.map(e =>
-      `<div class="list-row"><b>Chapitre ${e.n} — ${e.title}</b><small>${e.date}</small></div>`).join('');
+      `<button class="list-row" style="background:none;border-left:none;border-right:none;border-top:none;cursor:pointer;color:var(--text);width:100%" onclick="replayChapter(${e.n})">
+        <b>Chapitre ${e.n} — ${e.title}</b><small>${e.date} · ▶ réécouter</small></button>`).join('');
   }
 }
 
@@ -718,11 +730,11 @@ function weaveBeats() {
 }
 
 // Assemble le chapitre pour la durée demandée (~115 mots/min à ce débit).
-function buildEpisode() {
-  const ch = chapterFor(S.episode);
+function buildEpisode(n = S.episode) {
+  const ch = chapterFor(n);
   const budget = S.minutes * 115;
   const scenes = [];
-  if (S.episode > 1 && S.lastSummary) {
+  if (n === S.episode && S.episode > 1 && S.lastSummary) {
     scenes.push({ recap: true, text: `La dernière fois, dans le jardin… ${S.lastSummary} Et ce soir, l'histoire continue.` });
   }
   scenes.push({ text: ch.open() });
@@ -736,7 +748,7 @@ function buildEpisode() {
     scenes.push({ text }); words += text.split(/\s+/).length;
   }
   scenes.push({ text: ch.close() });
-  return { n: S.episode, title: ch.title, scenes, summary: ch.summary() };
+  return { n, title: ch.title, scenes, summary: ch.summary() };
 }
 
 // ─── Lecture : la voix mène, aucune interaction ─────────────────────────────
@@ -753,7 +765,7 @@ function startStory() {
       summary: 'Tu as découvert un hérisson sous la haie et tu lui as laissé un bol d\'eau.',
     };
   } else {
-    EP = buildEpisode();
+    EP = buildEpisode(replaying ?? S.episode);
   }
   sceneIdx = 0; paused = false;
   el('story-ep').textContent = `Chapitre ${EP.n}`;
@@ -804,6 +816,12 @@ function togglePause() {
 }
 function finishStory() {
   stopSpeech();
+  if (replaying !== null) {
+    el('end-text').textContent = `Fin de la réécoute du chapitre ${EP.n}. Ta progression n'a pas bougé : l'aventure t'attend au chapitre ${S.episode}.`;
+    replaying = null;
+    go('s-end');
+    return;
+  }
   S.told.push({ n: EP.n, title: EP.title, date: new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' }) });
   S.lastSummary = EP.summary;
   S.episode++;

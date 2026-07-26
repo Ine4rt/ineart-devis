@@ -92,7 +92,10 @@ check('l\'inquiétude est portée par un animal',
 await page.evaluate(() => { S.minutes = 3; S.checkin = { victory: '', fear: '' }; persist(); });
 await page.click('text=C\'est l\'heure de l\'histoire');
 await page.click('text=Passer');
-await page.waitForTimeout(2000);
+// La voix en ligne par défaut échoue immédiatement (route bloquée), retente
+// une fois après 3.5 s (quota de l'API gratuite), puis bascule sur le mp3
+// pré-généré : il faut laisser ce délai s'écouler avant de mesurer.
+await page.waitForTimeout(4200);
 const playing = await page.evaluate(() => ({
   composed: !!(EP && EP.composed),
   source: document.getElementById('story-source').textContent,
@@ -100,6 +103,31 @@ const playing = await page.evaluate(() => ({
 }));
 check('chapitre composé et joué', playing.composed, JSON.stringify(playing));
 check('provenance affichée à l\'écran', playing.source.includes('hors ligne'), playing.source);
+
+// ─── La voix EST audible même hors ligne (le bug historique) ──────────────
+// Avant le correctif, seul le chapitre de démo avait un mp3 pré-généré : un
+// chapitre composé, avec la voix en ligne coupée (route bloquée plus haut),
+// retombait en silence sur la synthèse de l'appareil — indétectable par les
+// anciens tests, qui ne vérifiaient que l'avancement des scènes, pas le son.
+const narrated = await page.evaluate(() => ({
+  hasComposerKey: !!(EP.scenes[sceneIdx] && EP.scenes[sceneIdx].audioKey),
+  src: sharedAudio.src.slice(0, 30),
+  paused: sharedAudio.paused,
+  currentTime: sharedAudio.currentTime,
+  speaking: 'speechSynthesis' in window && speechSynthesis.speaking,
+  status: document.getElementById('narr-status').dataset.state,
+}));
+check('la scène a bien une voix pré-générée associée', narrated.hasComposerKey, JSON.stringify(narrated));
+check('la voix pré-générée est réellement chargée (pas de repli silencieux)',
+  narrated.src.startsWith('data:audio/mpeg;base64,'), narrated.src);
+check('la voix joue (pas en pause, pas synthèse de l\'appareil)',
+  !narrated.paused && !narrated.speaking, JSON.stringify(narrated));
+check('indicateur affiché : voix douce (hors ligne, fiable)',
+  narrated.status === 'baked', narrated.status);
+await page.waitForTimeout(600);
+const advanced = await page.evaluate(() => sharedAudio.currentTime);
+check('la lecture avance vraiment (pas figée à 0)', advanced > narrated.currentTime,
+  `${narrated.currentTime} → ${advanced}`);
 // Honnêteté : la durée annoncée est celle réellement composée, pas la demandée.
 const honest = await page.evaluate(() => {
   const words = EP.scenes.reduce((n, s) => n + s.text.split(/\s+/).length, 0);

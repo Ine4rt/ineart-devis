@@ -94,6 +94,44 @@ check('scène 2 = « cric, crac »', scene2.key === 'open2' && scene2.text.inclu
   JSON.stringify(scene2));
 check('craquement de branche joué pile sur la scène 2', scene2.crackSynced);
 
+// ─── Mixage : on MESURE le niveau réellement produit ───────────────────────
+// Le piège corrigé ici : Safari iOS ignore element.volume, donc le niveau doit
+// venir des fichiers eux-mêmes + d'un gain Web Audio. Un simple test de
+// `volume` ne prouverait rien : on branche un analyseur sur le mixeur.
+const mixer = await page.evaluate(() => ({
+  hasContext: !!actx,
+  music: musicGain ? +musicGain.gain.value.toFixed(3) : null,
+  sfx: sfxGain ? +sfxGain.gain.value.toFixed(3) : null,
+}));
+check('mixeur Web Audio actif', mixer.hasContext, JSON.stringify(mixer));
+
+const measure = async (label) => page.evaluate(async () => {
+  if (!window.__probe) {
+    window.__probe = actx.createAnalyser();
+    window.__probe.fftSize = 2048;
+    musicGain.connect(window.__probe);
+  }
+  const buf = new Float32Array(window.__probe.fftSize);
+  let peak = 0;
+  for (let i = 0; i < 12; i++) { // ~0,4 s d'observation
+    window.__probe.getFloatTimeDomainData(buf);
+    for (const v of buf) peak = Math.max(peak, Math.abs(v));
+    await new Promise((r) => setTimeout(r, 35));
+  }
+  return +peak.toFixed(4);
+});
+
+const duckedPeak = await measure('voix en cours');
+check('musique audible mais très discrète pendant la voix',
+  duckedPeak > 0.0005 && duckedPeak < 0.05, 'crête=' + duckedPeak);
+
+// Curseur du parent à 0 % → silence complet du fond.
+await page.evaluate(() => setAmbienceLevel(0));
+await page.waitForTimeout(300);
+const mutedPeak = await measure('curseur à 0');
+check('curseur à 0 % : fond muet', mutedPeak < 0.0006, 'crête=' + mutedPeak);
+await page.evaluate(() => setAmbienceLevel(50));
+
 // ─── Pause générale ─────────────────────────────────────────────────────────
 await page.click('#voice-btn');
 await page.waitForTimeout(400);

@@ -301,9 +301,14 @@ def data_uri(mp3: bytes) -> str:
     return "data:audio/mpeg;base64," + base64.b64encode(mp3).decode()
 
 
+# Crêtes finales, gravées dans les mp3 (Safari iOS ignore element.volume).
+MUSIC_PEAK = 0.05   # ≈ -25 dB sous la narration : un souffle derrière
+SFX_PEAK = 0.10     # ≈ -19 dB : présent mais jamais devant la voix
+
+
 def main() -> None:
-    music = data_uri(pcm_to_mp3(build_music(), kbps=48))
-    sfx = {key: data_uri(pcm_to_mp3(normalize(pcm, 0.5)))
+    music = data_uri(pcm_to_mp3(normalize(build_music(), MUSIC_PEAK), kbps=48))
+    sfx = {key: data_uri(pcm_to_mp3(normalize(pcm, SFX_PEAK)))
            for key, pcm in build_sfx().items()}
     js = ("const AMBIENCE = " + json.dumps(music) + ";\n"
           + "const SFX = " + json.dumps(sfx) + ";\n")

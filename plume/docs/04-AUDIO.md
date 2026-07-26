@@ -35,12 +35,29 @@ Pipeline production : le moteur narratif tague chaque scène
 (`feuilles`, `oiseau`, `pas`, `eau`, `carillon`…) → `narrate-episode`
 mixe voix + tag SFX + musique (pistes séparées, ducking -12 dB sous la voix).
 
-## Mixage (validé en test v14)
+## Mixage (mesuré en test v16)
 
-- musique : volume de base **0,09**, **ducking à 0,05 pendant la voix**
-  (remontée en fondu de 1,2 s dans les silences), entrée en fondu de 1,8 s,
-  boucle sans couture, démarre dans le geste utilisateur (jamais en
-  autoplay différé — leçon du bug v11) ;
-- bruitages : **0,11**, un par scène, déclenchés au début de scène ;
-- voix : plein niveau ; pause globale = voix + musique + bruitages,
-  et la pause gagne toujours contre les minuteurs d'enchaînement.
+⚠️ **Piège majeur : Safari iOS ignore `HTMLMediaElement.volume`.** Baisser
+`audio.volume` n'a aucun effet sur iPhone — le son sort à plein niveau. C'est
+la cause des « c'est trop fort » répétés en v13-v15 malgré des chiffres
+divisés par cinq. Deux conséquences pour l'app Flutter comme pour le web :
+
+1. **Le mixage doit être gravé dans les fichiers audio** (seul niveau
+   garanti partout) : musique à crête **0,05**, bruitages à **0,10**, pour
+   une narration à crête ~0,9 — soit −25 dB et −19 dB sous la voix.
+2. **Le réglage dynamique passe par un vrai mixeur** : nœuds de gain
+   Web Audio (côté Flutter : volume de piste `just_audio`), ouverts dans un
+   geste utilisateur, jamais par `element.volume`.
+
+- **Curseur « ambiance sonore »** dans l'espace parent (0-100 %, défaut 50 %),
+  persisté : le parent règle lui-même musique + bruitages. À 0 % → voix seule.
+- **Ducking** : la musique descend à **45 %** de son niveau quand la voix
+  parle (rampe 0,7 s) et remonte en 1,2 s dans les silences.
+- Entrée en fondu de 1,8 s ; boucle sans couture ; démarre dans le geste
+  utilisateur (jamais en autoplay différé — leçon du bug v11).
+- Pause globale = voix + musique + bruitages, et la pause gagne toujours
+  contre les minuteurs d'enchaînement.
+
+**Vérification** : le test e2e branche un `AnalyserNode` sur le mixeur et
+**mesure** la crête réelle (0,0038 pendant la voix, 0 curseur à zéro). Un test
+qui se contenterait de lire `element.volume` ne prouverait rien.

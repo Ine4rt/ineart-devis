@@ -98,6 +98,18 @@ async function run(mockAI) {
   // Narration : le TTS en ligne est coupé → repli voix de l'appareil.
   const spoke = await page.evaluate(() => !!window.speechSynthesis);
   check('repli de narration disponible pour un texte IA', spoke);
+  check('badge « écrit par l\'IA » affiché',
+    (await page.textContent('#story-source')).includes("l'IA"),
+    await page.textContent('#story-source'));
+
+  // Garde-fou : narration muette (TTS coupé, synthèse absente) → l'histoire
+  // avance quand même. C'est ce qui empêche l'app de rester figée.
+  const advanced = await page.waitForFunction(
+    (from) => sceneIdx > from, 1, { timeout: 90000 },
+  ).then(() => true).catch(() => false);
+  check('garde-fou : l\'histoire avance même sans narration', advanced,
+    'scène ' + await page.evaluate(() => sceneIdx));
+
   check('aucune erreur JS (chapitre IA)', errors.length === 0, errors.join(' | ').slice(0, 200));
   await browser.close();
 }

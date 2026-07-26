@@ -73,15 +73,19 @@ check('bruitage de scène en lecture', await page.evaluate(
   () => sfxAudio.src.startsWith('data:audio') && sfxAudio.currentTime > 0,
 ), await page.evaluate(() => `t=${sfxAudio.currentTime.toFixed(2)}s`));
 
-// Voix : en ligne bloquée ici → le repli local doit prendre le relais.
-await page.waitForTimeout(6000);
+// Voix : en ligne bloquée ici → un essai de rattrapage, puis repli local.
+// On attend la condition plutôt qu'un délai fixe (le rattrapage prend ~3,5 s).
+const fellBack = await page.waitForFunction(
+  () => sharedAudio.src.startsWith('data:audio') && !sharedAudio.paused
+    && sharedAudio.currentTime > 0,
+  null, { timeout: 30000 },
+).then(() => true).catch(() => false);
 const voice = await page.evaluate(() => ({
-  src: sharedAudio.src.slice(0, 30),
-  playing: !sharedAudio.paused && sharedAudio.currentTime > 0,
+  src: sharedAudio.src.slice(0, 22),
   t: sharedAudio.currentTime.toFixed(1),
 }));
 check('narration en lecture (repli local après échec en ligne)',
-  voice.src.startsWith('data:audio') && voice.playing, JSON.stringify(voice));
+  fellBack, JSON.stringify(voice));
 
 // ─── Scène 2 : le craquement arrive AVEC « cric, crac » ────────────────────
 await page.waitForFunction(() => sceneIdx >= 1, null, { timeout: 60000 });

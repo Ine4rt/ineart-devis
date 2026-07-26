@@ -296,6 +296,7 @@
   <section class="screen" id="s-story">
     <div class="center-col" style="gap:8px">
       <p class="eyebrow" id="story-ep">Chapitre 1</p>
+      <p class="lede" id="story-source" style="font-size:11px;margin-top:-4px"></p>
       <h2 id="story-title" style="text-align:center"></h2>
       <div class="goldline"><i id="story-progress" style="width:0%"></i></div>
     </div>
@@ -367,6 +368,13 @@
           oninput="setAmbienceLevel(+this.value)">
       </div>
       <div class="day-card">
+        <b>Le conteur IA</b>
+        <p>Chaque soir, l'IA écrit un chapitre neuf, à la longueur choisie, dans la suite du feuilleton. Sans elle, l'app joue un chapitre écrit d'avance.</p>
+        <button class="day-btn" style="margin-top:10px;min-height:44px;background:none;border:1px solid rgba(35,39,61,.25);color:var(--dayink)"
+          onclick="testAI(this)">Vérifier que l'IA répond</button>
+        <p class="lede" id="ai-status" style="display:none;margin-top:10px"></p>
+      </div>
+      <div class="day-card">
         <b>Studio des voix</b>
         <p>Écoutez et dites-nous laquelle vous préférez — elle deviendra la voix du conteur.</p>
         <div id="lab-btns" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px"></div>
@@ -422,6 +430,8 @@ try {
   const saved = JSON.parse(localStorage.getItem('plume-state') || 'null');
   if (saved && saved.name) S = { ...DEFAULTS, ...saved };
   if (!S.voiceChosen && (S.audioVoice === 'femme' || S.audioVoice === 'homme')) S.audioVoice = 'onyx';
+  // Répare un état corrompu par l'ancien bug du sélecteur (nom de voix système).
+  if (!['onyx', 'fable', 'homme', 'femme', 'device'].includes(S.audioVoice)) S.audioVoice = 'onyx';
 } catch (_) { /* stockage indisponible : session éphémère */ }
 function persist() { try { localStorage.setItem('plume-state', JSON.stringify(S)); } catch (_) {} }
 // Confirmation en deux touchers : le libellé devient la question, un second
@@ -483,6 +493,7 @@ requestAnimationFrame(drawSky);
 function go(id) {
   stopSpeech();
   if (typeof fallbackTimer !== 'undefined') clearTimeout(fallbackTimer);
+  if (typeof watchdog !== 'undefined') clearTimeout(watchdog);
   // L'ambiance survit entre rituel et histoire ; tout le reste s'arrête.
   const keepMusic = id === 's-ritual' || id === 's-story' || id === 's-end';
   if (typeof stopAudio === 'function') stopAudio(keepMusic);
@@ -501,25 +512,17 @@ const quality = (v) =>
   (/Neural|Natural|Wavenet|Studio/i.test(v.name) ? 6 : 0) +
   (/Thomas|Nicolas|Paul|Daniel|Jérôme|Yannick/i.test(v.name) ? 3 : 0) +
   (v.localService ? 1 : 0);
+// Choisit silencieusement la meilleure voix française de l'appareil : elle ne
+// sert plus que de dernier repli. (Cette fonction écrivait dans #in-voice, qui
+// est devenu le sélecteur de voix du conteur : elle le corrompait.)
 function loadVoices() {
   if (!('speechSynthesis' in window)) return;
   frVoices = speechSynthesis.getVoices()
     .filter(v => v.lang.startsWith('fr'))
     .sort((a, b) => quality(b) - quality(a));
-  voice = frVoices.find(v => v.name === S.voiceName) || frVoices[0] || null;
-  const sel = el('in-voice');
-  sel.innerHTML = frVoices.length
-    ? frVoices.map(v =>
-        `<option ${voice && v.name === voice.name ? 'selected' : ''}>${v.name}</option>`).join('')
-    : '<option>Aucune voix française sur cet appareil</option>';
+  voice = frVoices[0] || null;
 }
 if ('speechSynthesis' in window) { loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; }
-function setVoiceByName(name) {
-  voice = frVoices.find(v => v.name === name) || voice;
-  S.voiceName = name; persist();
-  testVoice();
-}
-
 // ─── Voix humaine intégrée (Piper, TTS neuronal gratuit, hors-ligne) ───────
 // NARRATION est injecté en fin de page : mp3 pré-générés du chapitre 1,
 // écrits en tutoiement (« ton ami ») pour valoir quel que soit le profil.
@@ -632,10 +635,24 @@ function playClip(key, text, onEnd) {
         speak(spoken, done); // texte IA : aucun mp3 pré-généré possible
       }
     };
-    sharedAudio.onended = done;
-    sharedAudio.onerror = fallback;
-    sharedAudio.src = onlineUrl(spoken, S.audioVoice);
-    sharedAudio.play().catch(fallback);
+    // Le service gratuit limite à une requête toutes les 15 s : la génération
+    // du chapitre vient d'en consommer une. On réessaie une fois avant de
+    // basculer sur une voix locale.
+    let retried = false;
+    const attempt = () => {
+      if (token !== clipToken) return;
+      sharedAudio.onended = done;
+      sharedAudio.onerror = () => {
+        if (!retried) { retried = true; setTimeout(attempt, 3500); return; }
+        fallback();
+      };
+      sharedAudio.src = onlineUrl(spoken, S.audioVoice);
+      sharedAudio.play().catch(() => {
+        if (!retried) { retried = true; setTimeout(attempt, 3500); return; }
+        fallback();
+      });
+    };
+    attempt();
     return;
   }
   if (!baked) { speak(spoken, done); return; }
@@ -882,6 +899,24 @@ function chapterFor(n) {
       summary: () => `La cabane est finie : Grattouille y a passé sa première nuit.`,
     },
     {
+      title: 'La nuit des lucioles',
+      open: () => `Ce soir-là, le jardin s'était mis à clignoter. Une lumière, puis deux, puis dix ! Des lucioles, partout, comme si les étoiles avaient glissé dans l'herbe. ${cap(C())} tournait la tête à droite, à gauche, complètement perdu.`,
+      close: () => `${N()} en a attrapé une, tout doucement, dans le creux de ses deux mains. Elle brillait entre ses doigts comme un petit secret. Et puis il a ouvert les mains, et elle est repartie rejoindre les autres. « Reviens l'été prochain », a chuchoté ${N()}. Les lucioles, ça n'oublie jamais une promesse.`,
+      summary: () => `Une nuit de lucioles a illuminé le jardin ; ${N()} en a laissé repartir une, avec une promesse.`,
+    },
+    {
+      title: 'Le jardin sous la pluie',
+      open: () => `Ploc. Ploc. Ploc-ploc-ploc ! La pluie est arrivée d'un coup, et tout le jardin s'est mis à chanter. ${cap(C())} a filé sous la table de pierre, l'air de dire : moi, je n'avais pas prévu ça.`,
+      close: () => `Mais Grattouille, lui, adorait la pluie. Il trottait dans les flaques, splich, splach, comme un tout petit parapluie à l'envers. ${N()} l'a regardé longtemps par la fenêtre, le front contre la vitre fraîche. Dehors, le jardin buvait. Demain, tout serait un peu plus vert.`,
+      summary: () => `Une grande pluie a traversé le jardin ; Grattouille a joué dans les flaques.`,
+    },
+    {
+      title: 'Le premier matin de gel',
+      open: () => `Ce matin-là, le jardin était blanc. Pas de neige : du givre ! Chaque brin d'herbe portait son petit manteau de sucre, et l'herbe faisait crounch-crounch sous les pieds.`,
+      close: () => `${cap(C())} a soufflé un nuage de buée, tout content de faire de la fumée avec son nez. Et devant la cabane de Grattouille, il y avait trois petites traces de pattes qui allaient jusqu'au bol — et qui revenaient. Il était bien là, bien au chaud. Tout allait bien dans le jardin.`,
+      summary: () => `Le premier gel est arrivé ; Grattouille dort au chaud dans sa cabane.`,
+    },
+    {
       title: 'Les nouvelles du vent',
       open: () => `L'automne arrivait doucement. Les feuilles tombaient une à une, comme des lettres que les arbres s'envoyaient. ${N()} et ${C()} faisaient leur tournée du soir : le bol d'eau, la cabane, un salut de loin à la lanterne de Madame Lila.`,
       close: () => `Ce soir-là, un rouge-gorge s'est posé sur la haie et a chanté longtemps, comme s'il racontait des nouvelles de très loin. ${N()} n'a pas tout compris, bien sûr. Mais ${C()} écoutait, très sérieux, et quelque chose disait que demain, le jardin aurait encore une histoire à raconter.`,
@@ -941,7 +976,19 @@ function buildEpisode(n = S.episode) {
 }
 
 // ─── Lecture : la voix mène, aucune interaction ─────────────────────────────
-let EP = null, sceneIdx = 0, paused = false, fallbackTimer = null;
+let EP = null, sceneIdx = 0, paused = false, fallbackTimer = null, watchdog = null;
+
+// Durée plausible d'une scène lue à voix haute + marge de génération.
+function armWatchdog(text) {
+  clearTimeout(watchdog);
+  const words = String(text || '').split(/\s+/).length;
+  const ms = words * 480 + 12000;
+  watchdog = setTimeout(() => {
+    if (paused) { armWatchdog(text); return; } // on attend la reprise
+    console.warn('narration silencieuse : passage à la scène suivante');
+    advance();
+  }, ms);
+}
 async function startStory() {
   breathTimers.forEach(clearTimeout);
 
@@ -957,6 +1004,8 @@ async function startStory() {
     if (ai) {
       EP = ai; sceneIdx = 0; paused = false;
       el('story-ep').textContent = `Chapitre ${EP.n}`;
+      el('story-source').textContent =
+        `écrit ce soir par l'IA · ${EP.scenes.length} scènes · ~${S.minutes} min`;
       el('story-title').textContent = EP.title;
       el('voice-btn').setAttribute('aria-pressed', 'true');
       el('voice-label').textContent = 'Pause';
@@ -979,6 +1028,8 @@ async function startStory() {
   }
   sceneIdx = 0; paused = false;
   el('story-ep').textContent = `Chapitre ${EP.n}`;
+  el('story-source').textContent =
+    `chapitre écrit d'avance (IA injoignable) · ${EP.scenes.length} scènes`;
   el('story-title').textContent = EP.title;
   el('voice-btn').setAttribute('aria-pressed', 'true');
   el('voice-label').textContent = 'Pause';
@@ -1000,6 +1051,9 @@ function playScene() {
     sfxAudio.src = SFX[sfxKey];
     sfxAudio.play().catch(() => {});
   }
+  // Garde-fou : quoi qu'il arrive (voix muette, réseau qui pend, synthèse qui
+  // n'annonce jamais sa fin), la scène suivante arrive. Jamais de blocage.
+  armWatchdog(sc.text);
   const done = () => { if (!paused) advance(); };
   // Chapitre IA : narration en ligne sur le texte fraîchement écrit.
   // Chapitre local du soir 1 : mp3 pré-générés. Sinon : voix de l'appareil.
@@ -1009,6 +1063,7 @@ function playScene() {
 }
 function advance() {
   clearTimeout(fallbackTimer);
+  clearTimeout(watchdog);
   fallbackTimer = setTimeout(() => {
     if (paused) return; // repris via togglePause
     if (sceneIdx < EP.scenes.length - 1) { sceneIdx++; playScene(); }
@@ -1040,6 +1095,7 @@ function togglePause() {
   else { playScene(); }
 }
 function finishStory() {
+  clearTimeout(watchdog);
   stopSpeech();
   if (replaying !== null) {
     el('end-text').textContent = `Fin de la réécoute du chapitre ${EP.n}. Ta progression n'a pas bougé : l'aventure t'attend au chapitre ${S.episode}.`;
@@ -1088,7 +1144,7 @@ function openParent() {
   el('in-amb').value = pct; el('amb-val').textContent = pct;
   el('in-victory').value = S.checkin.victory; el('in-fear').value = S.checkin.fear;
   el('checkin-done').style.display = 'none';
-  loadVoices();
+  el('in-voice').value = S.audioVoice;
   go('s-checkin');
 }
 function submitCheckin() {
@@ -1112,6 +1168,26 @@ if (typeof VOICELAB !== 'undefined') {
   el('lab-btns').innerHTML = Object.keys(VOICELAB).map(k =>
     `<button class="day-chip" onclick="playLab('${k}')">▶ ${LAB_LABELS[k] || k}</button>`).join('');
 }
+async function testAI(btn) {
+  const out = el('ai-status');
+  out.style.display = 'block';
+  out.textContent = 'Le conteur écrit une phrase d\'essai…';
+  btn.disabled = true;
+  try {
+    const chapter = await generateChapter();
+    const words = chapter.scenes.reduce((n, s) => n + s.text.split(/\s+/).length, 0);
+    out.innerHTML = `✓ L'IA répond. Essai : « <b>${chapter.title}</b> » — `
+      + `${chapter.scenes.length} scènes, ${words} mots (~${Math.round(words / 115)} min). `
+      + `Le chapitre de ce soir sera écrit en direct.`;
+  } catch (e) {
+    out.innerHTML = `✗ L'IA n'est pas joignable (${e.message}). L'app jouera un `
+      + `chapitre écrit d'avance. Si vous avez ouvert le fichier téléchargé, `
+      + `essayez plutôt le lien https — les navigateurs bloquent ces appels `
+      + `depuis un fichier local.`;
+  }
+  btn.disabled = false;
+}
+
 function setAmbienceLevel(percent) {
   S.ambienceLevel = percent / 100;
   el('amb-val').textContent = percent;

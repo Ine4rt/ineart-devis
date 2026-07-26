@@ -162,9 +162,9 @@ def star_chimes() -> np.ndarray:
     total = silence(6.5)
     for k, note in enumerate((1174.66, 1760.0, 1479.98)):
         t = t_axis(2.6)
-        tone = (np.sin(2 * np.pi * note * t)
-                + 0.3 * np.sin(2 * np.pi * note * 2.76 * t)) * np.exp(-t * 2.2)
-        place(total, tone, 0.5 + k * 1.7, 0.8)
+        tone = (np.sin(2 * np.pi * note / 2 * t)
+                + 0.12 * np.sin(2 * np.pi * note * 1.38 * t)) * np.exp(-t * 2.0)
+        place(total, tone, 0.5 + k * 1.7, 0.7)
     return normalize(reverb(total, 0.13, 0.35, 3))
 
 
@@ -215,13 +215,15 @@ def night_settle(rng: np.random.Generator) -> np.ndarray:
 
 # ─── Musique : berceuse audible mais douce ──────────────────────────────────
 
-def music_box_note(freq: float, dur: float = 2.4) -> np.ndarray:
+def music_box_note(freq: float, dur: float = 2.8) -> np.ndarray:
+    # Timbre chaud : presque pas d'harmoniques aigus (« ding » gommés),
+    # attaque adoucie, chute plus lente.
     t = t_axis(dur)
     tone = (np.sin(2 * np.pi * freq * t)
-            + 0.35 * np.sin(2 * np.pi * freq * 2.0 * t)
-            + 0.15 * np.sin(2 * np.pi * freq * 4.16 * t))
-    envelope = np.exp(-t * 2.2)
-    attack = int(0.004 * RATE)
+            + 0.15 * np.sin(2 * np.pi * freq * 2.0 * t)
+            + 0.03 * np.sin(2 * np.pi * freq * 4.16 * t))
+    envelope = np.exp(-t * 1.7)
+    attack = int(0.02 * RATE)
     envelope[:attack] *= np.linspace(0, 1, attack)
     return tone * envelope
 
@@ -232,9 +234,9 @@ def build_music(seconds: float = 46.0) -> np.ndarray:
     t = t_axis(seconds)
 
     # Mélodie au premier plan (c'était le retour client : on ne l'entendait pas).
-    d5, e5, fs5, a5, b5, d6 = 587.33, 659.25, 739.99, 880.0, 987.77, 1174.66
-    melody = [d5, fs5, a5, b5, a5, fs5, e5, d5,
-              fs5, a5, d6, b5, a5, fs5, e5, d5]
+    d4, e4, fs4, a4, b4, d5 = 293.66, 329.63, 369.99, 440.0, 493.88, 587.33
+    melody = [d4, fs4, a4, b4, a4, fs4, e4, d4,
+              fs4, a4, d5, b4, a4, fs4, e4, d4]
     music = np.zeros(n)
     beat = 2.4
     for k, note in enumerate(melody):
@@ -250,7 +252,7 @@ def build_music(seconds: float = 46.0) -> np.ndarray:
            + 0.35 * np.sin(2 * np.pi * 220.0 * t))
     pad *= 0.55 + 0.45 * np.sin(2 * np.pi * t / 20.0 - np.pi / 2)
 
-    mix = normalize(music, 0.62) + normalize(pad, 0.10)
+    mix = normalize(music, 0.42) + normalize(pad, 0.14)
 
     # Boucle sans couture.
     fade = int(2.5 * RATE)

@@ -1,12 +1,19 @@
 // PLUME — Edge Function `narrate-episode`
-// La voix de Plume : narration studio, profonde, calme, vraiment humaine.
+// La voix de Plume : narration humaine, calme, chaleureuse — GRATUITE.
 // Appelée juste après generate-episode (la nuit) : chaque scène est convertie
-// en audio via un TTS neuronal (ElevenLabs), stockée dans Supabase Storage,
-// et l'app ne fait que lire des mp3 — aucun TTS robotique côté client.
+// en audio, stockée dans Supabase Storage, et l'app ne fait que lire des
+// mp3/wav — aucun TTS robotique côté client.
 //
-// Secrets requis :
-//   supabase secrets set ELEVENLABS_API_KEY=...
-//   supabase secrets set ELEVENLABS_VOICE_ID=...   (voix française grave et chaleureuse)
+// Fournisseur par défaut (gratuit, open source) : un serveur Piper
+// auto-hébergé (https://github.com/rhasspy/piper) exposé en HTTP —
+// une petite VM à 5 €/mois narre des milliers d'épisodes par nuit ;
+// voix françaises libres : fr_FR-tom (homme), fr_FR-siwis (femme),
+// fr_FR-upmc (deux locuteurs). Validé sur le prototype.
+//   supabase secrets set TTS_SERVER_URL=https://tts.example.com/api/tts
+//
+// Option premium (payante, encore plus expressive) : ElevenLabs —
+// utilisée seulement si la clé est fournie.
+//   supabase secrets set ELEVENLABS_API_KEY=... ELEVENLABS_VOICE_ID=...
 
 import { createClient } from "npm:@supabase/supabase-js@2";
 
@@ -15,12 +22,11 @@ const supabase = createClient(
   Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
 );
 
-const ELEVEN_KEY = Deno.env.get("ELEVENLABS_API_KEY")!;
-// Voix cible : timbre masculin grave, débit lent, chaleur de conteur.
-// À choisir dans la bibliothèque ElevenLabs (ou une voix clonée maison).
-const VOICE_ID = Deno.env.get("ELEVENLABS_VOICE_ID")!;
+const PIPER_URL = Deno.env.get("TTS_SERVER_URL"); // gratuit, par défaut
+const ELEVEN_KEY = Deno.env.get("ELEVENLABS_API_KEY"); // optionnel
+const VOICE_ID = Deno.env.get("ELEVENLABS_VOICE_ID");
 
-const TTS_URL = (voiceId: string) =>
+const ELEVEN_URL = (voiceId: string) =>
   `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}?output_format=mp3_44100_64`;
 
 Deno.serve(async (req) => {
@@ -61,27 +67,47 @@ Deno.serve(async (req) => {
 });
 
 async function synthesize(text: string): Promise<Uint8Array> {
-  const response = await fetch(TTS_URL(VOICE_ID), {
-    method: "POST",
-    headers: {
-      "xi-api-key": ELEVEN_KEY,
-      "content-type": "application/json",
-    },
-    body: JSON.stringify({
-      text,
-      model_id: "eleven_multilingual_v2",
-      voice_settings: {
-        stability: 0.65, // posé, sans monotonie
-        similarity_boost: 0.8,
-        style: 0.25, // légère intention de conteur, jamais théâtral
-        speed: 0.9, // débit du soir
-      },
-    }),
-  });
-  if (!response.ok) {
-    throw new Error(`TTS ${response.status}: ${await response.text()}`);
+  // 1. Piper auto-hébergé : gratuit, illimité, hors des API payantes.
+  if (PIPER_URL) {
+    const response = await fetch(PIPER_URL, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        text,
+        voice: "fr_FR-tom-medium", // homme, calme ; siwis-medium pour femme
+        length_scale: 1.2, // débit du soir
+        sentence_silence: 0.45,
+      }),
+    });
+    if (!response.ok) {
+      throw new Error(`Piper ${response.status}: ${await response.text()}`);
+    }
+    return new Uint8Array(await response.arrayBuffer());
   }
-  return new Uint8Array(await response.arrayBuffer());
+
+  // 2. Option premium ElevenLabs, seulement si la clé est configurée.
+  if (ELEVEN_KEY && VOICE_ID) {
+    const response = await fetch(ELEVEN_URL(VOICE_ID), {
+      method: "POST",
+      headers: { "xi-api-key": ELEVEN_KEY, "content-type": "application/json" },
+      body: JSON.stringify({
+        text,
+        model_id: "eleven_multilingual_v2",
+        voice_settings: {
+          stability: 0.65, // posé, sans monotonie
+          similarity_boost: 0.8,
+          style: 0.25, // légère intention de conteur, jamais théâtral
+          speed: 0.9, // débit du soir
+        },
+      }),
+    });
+    if (!response.ok) {
+      throw new Error(`TTS ${response.status}: ${await response.text()}`);
+    }
+    return new Uint8Array(await response.arrayBuffer());
+  }
+
+  throw new Error("aucun fournisseur TTS configuré (TTS_SERVER_URL ou ELEVENLABS_API_KEY)");
 }
 
 const json = (body: unknown, status = 200) =>

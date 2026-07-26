@@ -27,7 +27,7 @@ class _CompanionScreenState extends ConsumerState<CompanionScreen> {
     'ronronne doucement',
     'fait une pirouette !',
     'te regarde avec des yeux pleins d\'étoiles',
-    'cache sa tête sous sa queue-lanterne, tout content',
+    'cache son nez sous sa queue, tout content',
   ];
 
   @override

@@ -42,7 +42,10 @@ class NarrativeSeed {
 }
 
 enum SeedKind {
-  choiceConsequence, // conséquence d'un choix de l'enfant
+  // Conséquence d'un geste posé dans le récit (le hérisson nourri, la
+  // cabane laissée ouverte). Plantée par le conteur, jamais par un bouton :
+  // il n'y a aucune interaction pendant l'histoire.
+  choiceConsequence,
   fearWork, // peur à travailler en filigrane (#7, #8)
   lifeMoment, // rentrée, déménagement… à préparer en avance (#9)
   kindnessSeed, // bonne action réelle → graine de lumière (#11)

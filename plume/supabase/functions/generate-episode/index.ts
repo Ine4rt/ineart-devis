@@ -11,13 +11,13 @@
 //
 // Les clés IA ne quittent jamais ce serveur.
 
-import { createClient } from "npm:@supabase/supabase-js@2";
 import Anthropic from "npm:@anthropic-ai/sdk";
 
-const supabase = createClient(
-  Deno.env.get("SUPABASE_URL")!,
-  Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
-);
+import { guardChildAccess, serviceClient } from "../_shared/guard.ts";
+
+// Clé service : elle court-circuite la RLS. Aucune requête ne part avant que
+// `guardChildAccess` ait validé l'appelant (parent authentifié ou pg_cron).
+const supabase = serviceClient();
 const anthropic = new Anthropic({ apiKey: Deno.env.get("ANTHROPIC_API_KEY")! });
 
 const MODEL = "claude-sonnet-5";
@@ -45,6 +45,11 @@ Deno.serve(async (req) => {
   try {
     const { child_id } = await req.json();
     if (!child_id) return json({ error: "child_id requis" }, 400);
+
+    // Sécurité : générer un épisode coûte des tokens et écrit dans le canon
+    // d'un enfant. On vérifie l'appelant AVANT toute lecture ou écriture.
+    const guard = await guardChildAccess(req, child_id, supabase);
+    if (!guard.ok) return guard.response;
 
     const context = await assembleContext(child_id);
     if (!context) return json({ error: "enfant inconnu" }, 404);
@@ -230,9 +235,17 @@ function validate(plan: EpisodePlan, ctx: { ripeSeeds: { id: string }[] }) {
 
 async function commit(
   childId: string,
-  ctx: { world: { id: string } | null; nextNumber: number },
+  ctx: {
+    world: { id: string } | null;
+    nextNumber: number;
+    child: { story_minutes?: number };
+    age: number;
+  },
   plan: EpisodePlan,
 ): Promise<string> {
+  // L'épisode naît en « generating » : il ne passera à « ready » qu'une fois
+  // ses scènes réellement écrites. Un épisode prêt avec zéro scène afficherait
+  // un écran vide à l'enfant — c'est le pire bug possible ici.
   const { data: episode, error } = await supabase
     .from("episodes")
     .insert({
@@ -241,34 +254,58 @@ async function commit(
       title: plan.title,
       emotional_thread: plan.emotional_thread,
       next_recap: plan.next_recap,
-      status: "ready",
+      // La durée voulue par le parent, vraiment écrite (elle restait à 9).
+      planned_minutes: plannedMinutes(ctx),
+      status: "generating",
     })
     .select("id").single();
   if (error) throw error;
 
-  await supabase.from("scenes").insert(
-    plan.scenes.map((scene, index) => ({
-      episode_id: episode.id,
-      index,
-      text: scene.text,
-      sfx: scene.sfx ?? "silence",
-    })),
-  );
-
-  if (ctx.world) {
-    await supabase.from("world_events").insert(
-      plan.world_events.map((summary) => ({
-        world_id: ctx.world!.id,
-        episode_number: ctx.nextNumber,
-        summary,
+  try {
+    const { error: scenesError } = await supabase.from("scenes").insert(
+      plan.scenes.map((scene, index) => ({
+        episode_id: episode.id,
+        index,
+        text: scene.text,
+        sfx: scene.sfx ?? "silence",
+        illustration_brief: scene.illustration_brief ?? null,
       })),
     );
-  }
+    if (scenesError) throw scenesError;
 
-  if (plan.harvested_seed_ids?.length) {
-    await supabase.from("narrative_seeds")
-      .update({ harvested_at: new Date().toISOString(), harvested_episode: ctx.nextNumber })
-      .in("id", plan.harvested_seed_ids);
+    if (ctx.world && plan.world_events?.length) {
+      const { error: eventsError } = await supabase.from("world_events").insert(
+        plan.world_events.map((summary) => ({
+          world_id: ctx.world!.id,
+          episode_number: ctx.nextNumber,
+          summary,
+        })),
+      );
+      // Le canon est la source de vérité : un événement perdu, c'est un monde
+      // qui oublie. On refuse de publier l'épisode dans ce cas.
+      if (eventsError) throw eventsError;
+    }
+
+    if (plan.harvested_seed_ids?.length) {
+      const { error: seedsError } = await supabase.from("narrative_seeds")
+        .update({
+          harvested_at: new Date().toISOString(),
+          harvested_episode: ctx.nextNumber,
+        })
+        .in("id", plan.harvested_seed_ids);
+      if (seedsError) throw seedsError;
+    }
+
+    // Tout est en base : l'épisode peut être servi à l'enfant.
+    const { error: readyError } = await supabase.from("episodes")
+      .update({ status: "ready" }).eq("id", episode.id);
+    if (readyError) throw readyError;
+  } catch (commitError) {
+    // On marque l'épisode en échec plutôt que de laisser une coquille vide
+    // que `tonightEpisode()` pourrait remonter (il ne lit que « ready »).
+    await supabase.from("episodes")
+      .update({ status: "failed" }).eq("id", episode.id);
+    throw commitError;
   }
 
   // TODO pipeline média : TTS multi-voix + illustrations depuis les briefs,
@@ -280,9 +317,12 @@ async function commit(
 
 const prio = (p: string) => ({ low: 0, normal: 1, high: 2 }[p] ?? 1);
 const today = () => new Date().toISOString().slice(0, 10);
-const wordsForMinutes = (min: number) => Math.round(min * 120); // voix grave, débit lent
-// Durée : choix du parent (children.story_minutes, borné 1-5 min),
-// sinon durée par défaut selon l'âge — miroir du Pacte de sommeil de l'app.
+// Débit de narration du soir : 115 mots/min. Valeur unique dans tout le
+// produit — voir StoryScene.wordsPerMinute (app) et docs/04-AUDIO.md.
+const wordsForMinutes = (min: number) => Math.round(min * 115);
+// Durée : choix du parent (children.story_minutes, borné 1-10 min comme le
+// curseur de la Lune), sinon durée par défaut selon l'âge — miroir du Pacte
+// de sommeil de l'app (EpisodeLengthPlanner).
 const plannedMinutes = (ctx: { child: { story_minutes?: number }; age: number }) => {
   const parent = ctx.child.story_minutes;
   if (parent) return Math.min(10, Math.max(1, parent));

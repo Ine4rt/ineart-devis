@@ -10,19 +10,27 @@ import '../../domain/repositories/world_repository.dart';
 /// Implémentation production : Postgres (RLS par famille) + Edge Functions.
 /// Les clés IA ne quittent jamais le serveur — l'app ne parle qu'à Supabase.
 class SupabaseWorldRepository implements WorldRepository {
-  SupabaseWorldRepository(this._client, {required this.childId});
+  SupabaseWorldRepository(this._client, {required String childId})
+      : _childId = childId;
 
   final SupabaseClient _client;
-  final String childId;
+
+  /// Enfant courant. L'onboarding crée un nouvel enfant : [saveProfile] le
+  /// mémorise pour que compagnon, monde et épisodes soient bien rattachés à
+  /// l'enfant qu'on vient de créer, et pas à celui d'avant.
+  String _childId;
+
+  String get childId => _childId;
 
   @override
   Future<ChildProfile?> loadProfile() async {
     final row = await _client
         .from('children')
         .select()
-        .eq('id', childId)
+        .eq('id', _childId)
         .maybeSingle();
     if (row == null) return null;
+    final sleep = row['target_sleep_time'] as String?;
     return ChildProfile(
       id: row['id'] as String,
       firstName: row['first_name'] as String,
@@ -30,25 +38,84 @@ class SupabaseWorldRepository implements WorldRepository {
       passions: _stringList(row['passions']),
       fears: _stringList(row['fears']),
       pets: _stringList(row['pets']),
+      storyMinutes: row['story_minutes'] as int?,
+      targetSleepTime:
+          sleep == null ? const SleepTime(20, 30) : SleepTime.parse(sleep),
     );
   }
 
   @override
-  Future<void> saveProfile(ChildProfile profile) => _client.from('children').upsert({
-        'id': profile.id,
-        'first_name': profile.firstName,
-        'birth_date': profile.birthDate.toIso8601String(),
-        'passions': profile.passions,
-        'fears': profile.fears,
-        'pets': profile.pets,
-      });
+  Future<void> saveProfile(ChildProfile profile) async {
+    // `children.family_id` est NOT NULL : sans famille, tout l'onboarding
+    // échouait silencieusement. On crée (ou retrouve) celle de l'utilisateur.
+    final familyId = await _ensureFamily();
+
+    await _client.from('children').upsert({
+      'id': profile.id,
+      'family_id': familyId,
+      'first_name': profile.firstName,
+      'birth_date': profile.birthDate.toIso8601String(),
+      'passions': profile.passions,
+      'fears': profile.fears,
+      'pets': profile.pets,
+      'reading_level': profile.readingLevel.name,
+      if (profile.storyMinutes != null) 'story_minutes': profile.storyMinutes,
+      'target_sleep_time': profile.targetSleepTime.toSql(),
+    });
+
+    // À partir d'ici, c'est cet enfant-là qui est le monde courant.
+    _childId = profile.id;
+
+    // `generate-episode` s'appuie sur `worlds.id` : sans ligne `worlds`,
+    // la requête canon partait sur un uuid vide et échouait sans bruit.
+    await _ensureWorld(profile);
+  }
+
+  /// La famille de l'utilisateur connecté, créée à la première sauvegarde.
+  Future<String> _ensureFamily() async {
+    final userId = _client.auth.currentUser?.id;
+    if (userId == null) {
+      throw StateError('Aucune session Supabase : impossible de créer la famille.');
+    }
+    final existing = await _client
+        .from('families')
+        .select('id')
+        .eq('owner_id', userId)
+        .limit(1)
+        .maybeSingle();
+    if (existing != null) return existing['id'] as String;
+
+    final created = await _client
+        .from('families')
+        .insert({'owner_id': userId})
+        .select('id')
+        .single();
+    return created['id'] as String;
+  }
+
+  /// Le monde de l'enfant — créé une fois, à la naissance du monde.
+  Future<void> _ensureWorld(ChildProfile profile) async {
+    final existing = await _client
+        .from('worlds')
+        .select('id')
+        .eq('child_id', profile.id)
+        .maybeSingle();
+    if (existing != null) return;
+
+    await _client.from('worlds').insert({
+      'child_id': profile.id,
+      'name': 'Le monde de ${profile.firstName}',
+      // Registre par défaut : monde réel, poésie du quotidien.
+      'style_bible': {'register': 'réalisme doux'},
+    });
+  }
 
   @override
   Future<Companion?> loadCompanion() async {
     final row = await _client
         .from('companions')
         .select()
-        .eq('child_id', childId)
+        .eq('child_id', _childId)
         .maybeSingle();
     if (row == null) return null;
     final dna = row['dna'] as Map<String, dynamic>;
@@ -71,7 +138,9 @@ class SupabaseWorldRepository implements WorldRepository {
   @override
   Future<void> saveCompanion(Companion c) => _client.from('companions').upsert({
         'id': c.id,
-        'child_id': childId,
+        // `_childId` est mis à jour par saveProfile : le compagnon est bien
+        // rattaché à l'enfant qui vient de naître, pas à un enfant précédent.
+        'child_id': _childId,
         'name': c.name,
         'dna': {
           'species': c.dna.species,
@@ -89,7 +158,7 @@ class SupabaseWorldRepository implements WorldRepository {
     final row = await _client
         .from('episodes')
         .select('*, scenes(*)')
-        .eq('child_id', childId)
+        .eq('child_id', _childId)
         .eq('status', 'ready')
         .order('number', ascending: false)
         .limit(1)
@@ -97,14 +166,6 @@ class SupabaseWorldRepository implements WorldRepository {
     if (row == null) return null;
     return _episodeFromRow(row);
   }
-
-  @override
-  Future<void> recordChoice(String episodeId, ChoiceOption option) =>
-      _client.functions.invoke('record-choice', body: {
-        'episode_id': episodeId,
-        'option_id': option.id,
-        'seed_summary': option.seedSummary,
-      },);
 
   @override
   Future<void> saveBookmark(String episodeId, SleepBookmark b) =>
@@ -125,7 +186,7 @@ class SupabaseWorldRepository implements WorldRepository {
     final rows = await _client
         .from('narrative_seeds')
         .select()
-        .eq('child_id', childId)
+        .eq('child_id', _childId)
         .isFilter('harvested_at', null)
         .order('planted_at');
     return [
@@ -145,7 +206,7 @@ class SupabaseWorldRepository implements WorldRepository {
     final rows = await _client
         .from('episodes')
         .select('*, scenes(*)')
-        .eq('child_id', childId)
+        .eq('child_id', _childId)
         .eq('status', 'told')
         .order('number', ascending: false)
         .limit(limit);
@@ -168,23 +229,8 @@ class SupabaseWorldRepository implements WorldRepository {
             text: s['text'] as String,
             illustrationUrl: s['illustration_url'] as String?,
             audioUrl: s['audio_url'] as String?,
-            choice: _choiceFromJson(s['choice'] as Map<String, dynamic>?),
-          ),
-      ],
-    );
-  }
-
-  StoryChoice? _choiceFromJson(Map<String, dynamic>? json) {
-    if (json == null) return null;
-    return StoryChoice(
-      prompt: json['prompt'] as String,
-      options: [
-        for (final o in json['options'] as List)
-          ChoiceOption(
-            id: o['id'] as String,
-            label: o['label'] as String,
-            seedSummary: o['seed_summary'] as String,
-            iconUrl: o['icon_url'] as String?,
+            // Tag de bruitage posé par le conteur (docs/04-AUDIO.md).
+            sfx: (s['sfx'] as String?) ?? 'silence',
           ),
       ],
     );

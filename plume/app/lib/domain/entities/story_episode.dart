@@ -46,6 +46,9 @@ class StoryEpisode {
       );
 }
 
+/// Une scène du feuilleton. Aucune interaction : le récit se déroule seul,
+/// comme une histoire qu'on écoute (décision produit — voir
+/// docs/03-ARCHITECTURE.md §2, règle « aucune interaction »).
 @immutable
 class StoryScene {
   const StoryScene({
@@ -53,7 +56,7 @@ class StoryScene {
     required this.text,
     this.illustrationUrl,
     this.audioUrl,
-    this.choice,
+    this.sfx = 'silence',
   });
 
   final int index;
@@ -61,42 +64,20 @@ class StoryScene {
   final String? illustrationUrl;
   final String? audioUrl;
 
-  /// Choix proposé à la fin de la scène, s'il y en a un.
-  final StoryChoice? choice;
+  /// Tag de bruitage choisi par le conteur (`feuilles`, `craquement`, `eau`,
+  /// `nuit`, `silence`… voir docs/04-AUDIO.md). Le mixeur y associera le clip.
+  final String sfx;
 
-  /// ~140 mots/min en narration calme du soir.
+  /// Débit de narration du soir : [wordsPerMinute] mots/min.
   Duration get estimatedDuration {
     final words = text.split(RegExp(r'\s+')).length;
-    return Duration(seconds: (words / 140 * 60).round());
+    return Duration(seconds: (words / wordsPerMinute * 60).round());
   }
 }
 
-/// Un choix de l'enfant : 2-3 options illustrées, dicibles à voix haute.
-/// Chaque option plante une graine narrative à longue portée.
-@immutable
-class StoryChoice {
-  const StoryChoice({required this.prompt, required this.options});
-
-  final String prompt;
-  final List<ChoiceOption> options;
-}
-
-@immutable
-class ChoiceOption {
-  const ChoiceOption({
-    required this.id,
-    required this.label,
-    required this.seedSummary,
-    this.iconUrl,
-  });
-
-  final String id;
-  final String label;
-
-  /// Ce que ce choix plantera dans le monde (résumé canonique).
-  final String seedSummary;
-  final String? iconUrl;
-}
+/// Débit de référence de la narration du soir — unique dans tout le produit
+/// (app, `generate-episode`, docs/04-AUDIO.md). Voix grave, rythme lent.
+const int wordsPerMinute = 115;
 
 /// « Endormi à 20 h 21, scène 4, mot 213. » Le monde attend l'enfant.
 @immutable

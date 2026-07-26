@@ -15,12 +15,10 @@
 // utilisée seulement si la clé est fournie.
 //   supabase secrets set ELEVENLABS_API_KEY=... ELEVENLABS_VOICE_ID=...
 
-import { createClient } from "npm:@supabase/supabase-js@2";
+import { guardEpisodeAccess, serviceClient } from "../_shared/guard.ts";
 
-const supabase = createClient(
-  Deno.env.get("SUPABASE_URL")!,
-  Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
-);
+// Clé service (RLS court-circuitée) : la garde tourne avant toute action.
+const supabase = serviceClient();
 
 const PIPER_URL = Deno.env.get("TTS_SERVER_URL"); // gratuit, par défaut
 const ELEVEN_KEY = Deno.env.get("ELEVENLABS_API_KEY"); // optionnel
@@ -29,10 +27,19 @@ const VOICE_ID = Deno.env.get("ELEVENLABS_VOICE_ID");
 const ELEVEN_URL = (voiceId: string) =>
   `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}?output_format=mp3_44100_64`;
 
+// 30 jours : largement plus qu'un cycle veille/génération, sans être éternelle.
+const SIGNED_URL_TTL_SECONDS = 60 * 60 * 24 * 30;
+
 Deno.serve(async (req) => {
   try {
     const { episode_id } = await req.json();
     if (!episode_id) return json({ error: "episode_id requis" }, 400);
+
+    // Sécurité : narrer un épisode consomme du TTS et expose son texte.
+    // On remonte à l'enfant et on vérifie qu'il appartient à l'appelant
+    // (parent authentifié) ou que l'appel vient de pg_cron.
+    const guard = await guardEpisodeAccess(req, episode_id, supabase);
+    if (!guard.ok) return guard.response;
 
     const { data: scenes, error } = await supabase
       .from("scenes")
@@ -53,9 +60,16 @@ Deno.serve(async (req) => {
         .upload(path, audio, { contentType: "audio/mpeg", upsert: true });
       if (upErr) throw upErr;
 
-      const { data: pub } = supabase.storage.from("narration").getPublicUrl(path);
+      // Bucket privé : une URL signée, pas une URL publique — la voix
+      // personnalisée d'un enfant ne doit pas être accessible par un uuid
+      // deviné. Longue durée de vie : l'app la met en cache pour le soir.
+      const { data: signed, error: signErr } = await supabase.storage
+        .from("narration")
+        .createSignedUrl(path, SIGNED_URL_TTL_SECONDS);
+      if (signErr) throw signErr;
+
       await supabase.from("scenes")
-        .update({ audio_url: pub.publicUrl })
+        .update({ audio_url: signed.signedUrl })
         .eq("id", scene.id);
     }
 
@@ -66,48 +80,67 @@ Deno.serve(async (req) => {
   }
 });
 
+/// Piper d'abord (gratuit), ElevenLabs en repli. Le repli était inatteignable :
+/// un Piper en panne faisait `throw` au lieu de basculer, et la narration
+/// échouait alors même qu'une clé premium était configurée.
 async function synthesize(text: string): Promise<Uint8Array> {
+  if (!PIPER_URL && !(ELEVEN_KEY && VOICE_ID)) {
+    throw new Error(
+      "aucun fournisseur TTS configuré (TTS_SERVER_URL ou ELEVENLABS_API_KEY)",
+    );
+  }
+
   // 1. Piper auto-hébergé : gratuit, illimité, hors des API payantes.
   if (PIPER_URL) {
-    const response = await fetch(PIPER_URL, {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({
-        text,
-        voice: "fr_FR-tom-medium", // homme, calme ; siwis-medium pour femme
-        length_scale: 1.2, // débit du soir
-        sentence_silence: 0.45,
-      }),
-    });
-    if (!response.ok) {
-      throw new Error(`Piper ${response.status}: ${await response.text()}`);
+    try {
+      return await synthesizeWithPiper(text);
+    } catch (piperError) {
+      // Pas de clé premium : rien à tenter de plus, on remonte l'échec.
+      if (!(ELEVEN_KEY && VOICE_ID)) throw piperError;
+      console.warn("Piper indisponible, repli sur ElevenLabs:", piperError);
     }
-    return new Uint8Array(await response.arrayBuffer());
   }
 
-  // 2. Option premium ElevenLabs, seulement si la clé est configurée.
-  if (ELEVEN_KEY && VOICE_ID) {
-    const response = await fetch(ELEVEN_URL(VOICE_ID), {
-      method: "POST",
-      headers: { "xi-api-key": ELEVEN_KEY, "content-type": "application/json" },
-      body: JSON.stringify({
-        text,
-        model_id: "eleven_multilingual_v2",
-        voice_settings: {
-          stability: 0.65, // posé, sans monotonie
-          similarity_boost: 0.8,
-          style: 0.25, // légère intention de conteur, jamais théâtral
-          speed: 0.9, // débit du soir
-        },
-      }),
-    });
-    if (!response.ok) {
-      throw new Error(`TTS ${response.status}: ${await response.text()}`);
-    }
-    return new Uint8Array(await response.arrayBuffer());
-  }
+  // 2. Option premium ElevenLabs : repli, ou fournisseur unique.
+  return await synthesizeWithElevenLabs(text);
+}
 
-  throw new Error("aucun fournisseur TTS configuré (TTS_SERVER_URL ou ELEVENLABS_API_KEY)");
+async function synthesizeWithPiper(text: string): Promise<Uint8Array> {
+  const response = await fetch(PIPER_URL!, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      text,
+      voice: "fr_FR-tom-medium", // homme, calme ; siwis-medium pour femme
+      length_scale: 1.2, // débit du soir
+      sentence_silence: 0.45,
+    }),
+  });
+  if (!response.ok) {
+    throw new Error(`Piper ${response.status}: ${await response.text()}`);
+  }
+  return new Uint8Array(await response.arrayBuffer());
+}
+
+async function synthesizeWithElevenLabs(text: string): Promise<Uint8Array> {
+  const response = await fetch(ELEVEN_URL(VOICE_ID!), {
+    method: "POST",
+    headers: { "xi-api-key": ELEVEN_KEY!, "content-type": "application/json" },
+    body: JSON.stringify({
+      text,
+      model_id: "eleven_multilingual_v2",
+      voice_settings: {
+        stability: 0.65, // posé, sans monotonie
+        similarity_boost: 0.8,
+        style: 0.25, // légère intention de conteur, jamais théâtral
+        speed: 0.9, // débit du soir
+      },
+    }),
+  });
+  if (!response.ok) {
+    throw new Error(`ElevenLabs ${response.status}: ${await response.text()}`);
+  }
+  return new Uint8Array(await response.arrayBuffer());
 }
 
 const json = (body: unknown, status = 200) =>

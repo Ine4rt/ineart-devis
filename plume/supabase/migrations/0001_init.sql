@@ -83,6 +83,11 @@ create table world_events (
 );
 
 -- Les graines narratives : promesses à longue portée (#4, #7, #9, #11).
+-- Elles ne viennent plus d'un choix tapé par l'enfant (il n'y a plus aucune
+-- interaction pendant l'histoire) : c'est `generate-episode` qui les plante,
+-- depuis le canon, la météo émotionnelle du jour et les moments de vie.
+-- Le kind « choiceConsequence » désigne donc la conséquence d'un geste posé
+-- dans le récit, pas d'un bouton pressé.
 create table narrative_seeds (
   id uuid primary key default gen_random_uuid(),
   child_id uuid not null references children (id) on delete cascade,
@@ -121,10 +126,14 @@ create table episodes (
   status text not null default 'generating'
     check (status in ('generating', 'ready', 'told', 'failed')),
   bookmark jsonb, -- { scene_index, word_index, fell_asleep_at } (#19)
-  planned_minutes int not null default 9,
+  -- Durée demandée pour ce soir (Pacte de sommeil) : écrite par
+  -- generate-episode ; le défaut suit celui de children.story_minutes.
+  planned_minutes int not null default 5,
   unique (child_id, number)
 );
 
+-- Une scène est un pur bloc de récit : AUCUNE interaction pendant l'histoire
+-- (décision produit). Pas de colonne de choix — le feuilleton se déroule seul.
 create table scenes (
   id uuid primary key default gen_random_uuid(),
   episode_id uuid not null references episodes (id) on delete cascade,
@@ -132,9 +141,11 @@ create table scenes (
   text text not null,
   -- Tag de bruitage choisi par le conteur (voir docs/04-AUDIO.md).
   sfx text not null default 'silence',
+  -- Consigne pour le pipeline d'illustrations (TODO — voir generate-episode) :
+  -- produite par le conteur à chaque scène, elle restait jusqu'ici jetée.
+  illustration_brief text,
   illustration_url text,
   audio_url text,
-  choice jsonb, -- { prompt, options: [{ id, label, seed_summary }] }
   unique (episode_id, index)
 );
 
@@ -210,3 +221,15 @@ create index idx_seeds_harvest on narrative_seeds (child_id, germinate_after)
   where harvested_at is null;
 create index idx_episodes_child on episodes (child_id, number desc);
 create index idx_events_world on world_events (world_id, created_at desc);
+
+-- ─── Storage : narrations audio ──────────────────────────────────────────────
+-- `narrate-episode` écrivait dans un bucket jamais créé (premier appel en
+-- échec) et appelait getPublicUrl(), ce qui aurait exposé les voix
+-- personnalisées d'un enfant à toute URL devinée — incohérent avec le reste
+-- de la base, verrouillée par RLS. Le bucket est privé ; `narrate-episode`
+-- (clé service, donc hors RLS) génère à la place une URL signée à durée
+-- longue. Aucune policy `storage.objects` n'est nécessaire : par défaut,
+-- sans policy, l'accès direct est refusé — seule l'URL signée fait foi.
+insert into storage.buckets (id, name, public)
+values ('narration', 'narration', false)
+on conflict (id) do nothing;

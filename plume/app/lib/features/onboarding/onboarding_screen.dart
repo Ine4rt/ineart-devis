@@ -69,11 +69,16 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       setState(() => _bornDna = dna);
 
       final repo = ref.read(worldRepositoryProvider);
+      // On ne demande pas la date de naissance exacte à un enfant de 4 ans.
+      // On la dérive du jour courant plutôt que du 1er janvier : l'âge est
+      // alors juste aujourd'hui, au lieu de dériver d'un semestre.
+      // (Le parent peut l'affiner ensuite depuis la Lune.)
+      final now = DateTime.now();
       await repo.saveProfile(
         ChildProfile(
           id: childId,
           firstName: _nameController.text.trim(),
-          birthDate: DateTime(DateTime.now().year - _age),
+          birthDate: DateTime(now.year - _age, now.month, now.day),
           passions: _passions.toList(),
         ),
       );

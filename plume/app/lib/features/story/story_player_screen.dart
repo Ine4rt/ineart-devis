@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -13,8 +11,12 @@ import '../../domain/entities/story_episode.dart';
 import '../../providers.dart';
 
 /// Le Théâtre de l'Histoire — l'écran le plus important de Plume.
-/// Plein écran, une scène à la fois, texte en karaoké doux, choix illustrés.
+/// Plein écran, une scène à la fois, texte en karaoké doux.
 /// L'écran s'assombrit scène après scène : l'app accompagne l'endormissement.
+///
+/// AUCUNE INTERACTION pendant l'histoire (décision produit) : pas de choix,
+/// pas de question posée à l'enfant. La seule commande est « avancer » —
+/// c'est le canon et les journées réelles de l'enfant qui font l'histoire.
 class StoryPlayerScreen extends ConsumerStatefulWidget {
   const StoryPlayerScreen({super.key});
 
@@ -24,7 +26,6 @@ class StoryPlayerScreen extends ConsumerStatefulWidget {
 
 class _StoryPlayerScreenState extends ConsumerState<StoryPlayerScreen> {
   int _sceneIndex = 0;
-  String? _pendingChoiceId;
 
   @override
   void initState() {
@@ -74,17 +75,10 @@ class _StoryPlayerScreenState extends ConsumerState<StoryPlayerScreen> {
                         .fadeIn(duration: 900.ms, curve: Curves.easeOutCubic)
                         .slideY(begin: .04),
                     const Spacer(),
-                    if (scene.choice != null)
-                      _ChoiceRow(
-                        choice: scene.choice!,
-                        selectedId: _pendingChoiceId,
-                        onSelect: (option) => _onChoice(episode, option),
-                      )
-                    else
-                      _NextSceneButton(
-                        isLast: _sceneIndex == episode.scenes.length - 1,
-                        onTap: () => _advance(episode),
-                      ),
+                    _NextSceneButton(
+                      isLast: _sceneIndex == episode.scenes.length - 1,
+                      onTap: () => _advance(episode),
+                    ),
                     const SizedBox(height: 24),
                   ],
                 ),
@@ -96,23 +90,9 @@ class _StoryPlayerScreenState extends ConsumerState<StoryPlayerScreen> {
     );
   }
 
-  Future<void> _onChoice(StoryEpisode episode, ChoiceOption option) async {
-    setState(() => _pendingChoiceId = option.id);
-    HapticFeedback.lightImpact();
-    // Le choix plante une graine narrative dans le canon — pour toujours.
-    unawaited(
-      ref.read(worldRepositoryProvider).recordChoice(episode.id, option),
-    );
-    await Future<void>.delayed(const Duration(milliseconds: 650));
-    if (mounted) _advance(episode);
-  }
-
   void _advance(StoryEpisode episode) {
     if (_sceneIndex < episode.scenes.length - 1) {
-      setState(() {
-        _sceneIndex++;
-        _pendingChoiceId = null;
-      });
+      setState(() => _sceneIndex++);
     } else {
       // Fin d'épisode : retour au monde, qui aura changé demain.
       context.pop();
@@ -150,100 +130,7 @@ class _EpisodeHeader extends StatelessWidget {
   }
 }
 
-class _ChoiceRow extends StatelessWidget {
-  const _ChoiceRow({
-    required this.choice,
-    required this.selectedId,
-    required this.onSelect,
-  });
-
-  final StoryChoice choice;
-  final String? selectedId;
-  final ValueChanged<ChoiceOption> onSelect;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context).textTheme;
-    return Column(
-      children: [
-        Text(choice.prompt,
-            style: theme.titleLarge?.copyWith(color: AppColors.lanternGold),),
-        const SizedBox(height: 16),
-        Wrap(
-          spacing: 14,
-          runSpacing: 14,
-          alignment: WrapAlignment.center,
-          children: [
-            for (final option in choice.options)
-              _ChoiceMedallion(
-                option: option,
-                selected: option.id == selectedId,
-                dimmed: selectedId != null && option.id != selectedId,
-                onTap: () => onSelect(option),
-              ),
-          ],
-        ),
-      ],
-    ).animate().fadeIn(delay: 600.ms, duration: 500.ms);
-  }
-}
-
-/// Médaillon de choix : flotte doucement, s'illumine quand choisi,
-/// les autres s'estompent. Cible ≥ 64 px.
-class _ChoiceMedallion extends StatelessWidget {
-  const _ChoiceMedallion({
-    required this.option,
-    required this.selected,
-    required this.dimmed,
-    required this.onTap,
-  });
-
-  final ChoiceOption option;
-  final bool selected;
-  final bool dimmed;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedOpacity(
-      opacity: dimmed ? .3 : 1,
-      duration: const Duration(milliseconds: 300),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeOutCubic,
-        constraints: const BoxConstraints(minHeight: 64),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(32),
-          color: selected
-              ? AppColors.lanternGold
-              : AppColors.nightCard.withOpacity(.85),
-          border: Border.all(
-            color: AppColors.lanternGold.withOpacity(selected ? 1 : .35),
-          ),
-          boxShadow:
-              selected ? AppColors.glow(AppColors.lanternGold, opacity: .5) : null,
-        ),
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            borderRadius: BorderRadius.circular(32),
-            onTap: dimmed ? null : onTap,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
-              child: Text(
-                option.label,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: selected ? AppColors.abyss : AppColors.starWhite,
-                    ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
+/// La seule commande de l'écran : avancer d'une scène, puis s'endormir.
 class _NextSceneButton extends StatelessWidget {
   const _NextSceneButton({required this.isLast, required this.onTap});
 

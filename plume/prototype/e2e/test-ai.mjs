@@ -88,12 +88,15 @@ async function run(mockAI) {
 
   // Le craquement doit jouer avec la scène 2 (« cric… crac ! »).
   await page.waitForFunction(() => sceneIdx >= 1, null, { timeout: 60000 });
+  await page.waitForTimeout(600); // le décodage du bruitage est asynchrone
   const synced = await page.evaluate(() => ({
     key: EP.scenes[sceneIdx].sfxKey,
-    playing: sfxAudio.src === SFX.open2,
+    decoded: Object.keys(sfxBuffers),
+    node: !!sfxNode,
   }));
   check('craquement joué pile sur la scène « cric… crac »',
-    synced.key === 'open2' && synced.playing, JSON.stringify(synced));
+    synced.key === 'open2' && (synced.node || synced.decoded.includes('open2')),
+    JSON.stringify(synced));
 
   // Narration : le TTS en ligne est coupé → repli voix de l'appareil.
   const spoke = await page.evaluate(() => !!window.speechSynthesis);

@@ -1,5 +1,3 @@
-import 'package:uuid/uuid.dart';
-
 import '../../domain/entities/child_profile.dart';
 import '../../domain/entities/companion.dart';
 import '../../domain/entities/emotion_checkin.dart';
@@ -16,8 +14,6 @@ class DemoWorldRepository implements WorldRepository {
         .generate(childId: 'demo-child', salt: 42, passions: ['espace']);
     _companion = Companion(id: 'demo-companion', name: 'Pipo', dna: dna, bondLevel: 213);
   }
-
-  static const _uuid = Uuid();
 
   ChildProfile _profile = ChildProfile(
     id: 'demo-child',
@@ -67,6 +63,7 @@ class DemoWorldRepository implements WorldRepository {
         scenes: const [
           StoryScene(
             index: 0,
+            sfx: 'feuilles',
             text:
                 'La dernière fois, dans le jardin… Léo avait découvert un '
                 'hérisson sous la haie et lui avait laissé un bol d\'eau. '
@@ -74,6 +71,7 @@ class DemoWorldRepository implements WorldRepository {
           ),
           StoryScene(
             index: 1,
+            sfx: 'oiseau',
             text:
                 'La journée se rangeait doucement. Dans le jardin, la lumière '
                 'était devenue dorée, et le petit renard attendait Léo près de '
@@ -82,6 +80,7 @@ class DemoWorldRepository implements WorldRepository {
           ),
           StoryScene(
             index: 2,
+            sfx: 'craquement',
             text:
                 '« Il lui faut un nom », a murmuré Léo. Et comme le hérisson '
                 'se grattait le bout du nez, le nom est venu tout seul : '
@@ -90,6 +89,7 @@ class DemoWorldRepository implements WorldRepository {
           ),
           StoryScene(
             index: 3,
+            sfx: 'nuit',
             text:
                 'Dedans, la maison sentait le soir. Léo a regardé une dernière '
                 'fois le jardin par la fenêtre : la haie, la nuit bleue, et '
@@ -98,19 +98,6 @@ class DemoWorldRepository implements WorldRepository {
           ),
         ],
       );
-
-  @override
-  Future<void> recordChoice(String episodeId, ChoiceOption option) async {
-    _seeds.add(
-      NarrativeSeed(
-        id: _uuid.v4(),
-        kind: SeedKind.choiceConsequence,
-        summary: option.seedSummary,
-        plantedAt: DateTime.now(),
-        germinateAfter: DateTime.now().add(const Duration(days: 45)),
-      ),
-    );
-  }
 
   @override
   Future<void> saveBookmark(String episodeId, SleepBookmark bookmark) async {}

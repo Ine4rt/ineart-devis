@@ -20,29 +20,54 @@ class RitualScreen extends ConsumerStatefulWidget {
 class _RitualScreenState extends ConsumerState<RitualScreen>
     with SingleTickerProviderStateMixin {
   static const _breathsNeeded = 3;
-  static const _breathDuration = Duration(seconds: 8); // 4 s inspire, 4 s expire
+
+  /// Une respiration complète dure 8 s : une demi-course à l'aller
+  /// (4 s d'inspiration) et une demi-course au retour (4 s d'expiration).
+  static const _halfBreath = Duration(seconds: 4);
 
   late final AnimationController _breath;
   int _breathsDone = 0;
+  bool _leaving = false;
 
   @override
   void initState() {
     super.initState();
-    _breath = AnimationController(vsync: this, duration: _breathDuration)
+    // Surtout pas `repeat(reverse: true)` : il alterne en interne et n'émet
+    // jamais `completed`/`dismissed` — le compteur resterait bloqué à zéro.
+    // On pilote donc le cycle à la main, aller-retour après aller-retour.
+    _breath = AnimationController(vsync: this, duration: _halfBreath)
       ..addStatusListener(_onBreathStatus)
-      ..repeat(reverse: true);
+      ..forward();
   }
 
   void _onBreathStatus(AnimationStatus status) {
-    // Une respiration complète = un aller-retour (fin de l'expiration).
+    if (_leaving) return;
+
+    // Fin de l'inspiration : la lanterne est pleine, on souffle.
+    if (status == AnimationStatus.completed) {
+      _breath.reverse();
+      return;
+    }
+
+    // Fin de l'expiration : une respiration complète de plus.
     if (status == AnimationStatus.dismissed) {
       HapticFeedback.lightImpact();
       setState(() => _breathsDone++);
       if (_breathsDone >= _breathsNeeded) {
+        _leaving = true;
         _breath.stop();
-        context.pushReplacement(Routes.story);
+        _goToStory();
+      } else {
+        _breath.forward();
       }
     }
+  }
+
+  /// Le seuil est franchi : on entre dans l'histoire. Garde `mounted` —
+  /// un listener d'animation peut survivre à la sortie de l'écran.
+  void _goToStory() {
+    if (!mounted) return;
+    context.pushReplacement(Routes.story);
   }
 
   @override
@@ -134,7 +159,12 @@ class _RitualScreenState extends ConsumerState<RitualScreen>
                 ),
               ),
               TextButton(
-                onPressed: () => context.pushReplacement(Routes.story),
+                onPressed: () {
+                  if (_leaving) return;
+                  _leaving = true;
+                  _breath.stop();
+                  _goToStory();
+                },
                 child: Text('Passer', style: theme.bodySmall),
               ),
               const SizedBox(height: 8),

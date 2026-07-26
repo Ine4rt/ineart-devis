@@ -355,8 +355,8 @@
         <select class="day-select" id="in-voice" onchange="setAudioVoice(this.value)">
           <option value="onyx">IA réaliste — Onyx, grave et chaleureuse (en ligne, recommandée)</option>
           <option value="fable">IA réaliste — Fable, voix de conteur (en ligne)</option>
-          <option value="homme">Pierre — voix locale, hors-ligne</option>
-          <option value="femme">Femme — voix locale, hors-ligne</option>
+          <option value="homme">Pierre — voix locale (chapitre de démonstration)</option>
+          <option value="femme">Femme — voix locale (chapitre de démonstration)</option>
           <option value="device">Voix de l'appareil (synthèse)</option>
         </select>
         <button class="day-btn" style="margin-top:10px;min-height:44px;background:none;border:1px solid rgba(35,39,61,.25);color:var(--dayink)" onclick="testVoice()">Écouter cette voix</button>
@@ -492,8 +492,8 @@ requestAnimationFrame(drawSky);
 // ─── Navigation ─────────────────────────────────────────────────────────────
 function go(id) {
   stopSpeech();
-  if (typeof fallbackTimer !== 'undefined') clearTimeout(fallbackTimer);
-  if (typeof watchdog !== 'undefined') clearTimeout(watchdog);
+  clearTimeout(fallbackTimer);
+  clearTimeout(watchdog);
   // L'ambiance survit entre rituel et histoire ; tout le reste s'arrête.
   const keepMusic = id === 's-ritual' || id === 's-story' || id === 's-end';
   if (typeof stopAudio === 'function') stopAudio(keepMusic);
@@ -537,46 +537,127 @@ const sfxAudio = new Audio();
 
 // Les niveaux sont déjà gravés dans les mp3 (musique -25 dB, bruitages -19 dB
 // sous la voix) : Safari iOS IGNORE element.volume, on ne peut pas s'y fier.
-// Web Audio, lui, fonctionne partout : il porte le curseur du parent et le
-// ducking (la musique s'efface encore un peu quand la voix parle).
+//
+// Le mixeur décode la musique et les bruitages EN MÉMOIRE (decodeAudioData)
+// puis les joue par des sources de mémoire tampon. On évite volontairement
+// createMediaElementSource : sur iOS, capturer un élément audio (surtout une
+// source `data:`) peut rendre la lecture totalement muette — c'était la cause
+// du « plus de son ni de bruitage ». Ici, les éléments ne servent que de repli
+// quand Web Audio n'existe pas.
 const DUCK_RATIO = 0.45;
 let actx = null, musicGain = null, sfxGain = null;
+let musicBuffer = null, musicNode = null, sfxNode = null;
+const sfxBuffers = Object.create(null);
+let mixerReady = false;
+
+function uriToBuffer(uri) {
+  const bin = atob(String(uri).split(',')[1] || '');
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return bytes.buffer;
+}
+function decodeUri(uri) {
+  return new Promise((resolve, reject) => {
+    // Forme à rappels : la seule acceptée par les vieux Safari.
+    actx.decodeAudioData(uriToBuffer(uri), resolve, reject);
+  });
+}
+
+// À appeler dans un geste utilisateur (exigence iOS).
 function setupMixer() {
-  if (actx) { if (actx.state === 'suspended') actx.resume(); return; }
+  if (actx) {
+    if (actx.state === 'suspended') actx.resume();
+    return;
+  }
   const Ctx = window.AudioContext || window.webkitAudioContext;
-  if (!Ctx) return;
+  if (!Ctx) { applyLevels(); return; } // repli : éléments <audio>
   try {
     actx = new Ctx();
-    musicGain = actx.createGain();
-    sfxGain = actx.createGain();
-    // Seuls la musique et les bruitages passent par le mixeur : la voix en
-    // ligne est cross-origin et serait rendue muette par le CORS.
-    actx.createMediaElementSource(ambience).connect(musicGain).connect(actx.destination);
-    actx.createMediaElementSource(sfxAudio).connect(sfxGain).connect(actx.destination);
+    musicGain = actx.createGain(); musicGain.connect(actx.destination);
+    sfxGain = actx.createGain(); sfxGain.connect(actx.destination);
     applyLevels();
     if (actx.state === 'suspended') actx.resume();
+    if (typeof AMBIENCE !== 'undefined') {
+      decodeUri(AMBIENCE)
+        .then((buf) => { musicBuffer = buf; mixerReady = true; if (musicWanted) playMusic(); })
+        .catch(() => { actx = null; }); // décodage refusé → repli élément
+    }
   } catch (_) { actx = null; }
 }
+
+let musicWanted = false;
+function playMusic() {
+  if (!actx || !musicBuffer) return;
+  stopMusicNode();
+  musicNode = actx.createBufferSource();
+  musicNode.buffer = musicBuffer;
+  musicNode.loop = true;
+  musicNode.connect(musicGain);
+  musicNode.start();
+}
+function stopMusicNode() {
+  if (!musicNode) return;
+  try { musicNode.stop(); } catch (_) { /* déjà arrêtée */ }
+  musicNode.disconnect();
+  musicNode = null;
+}
+function playSfxKey(key) {
+  if (typeof SFX === 'undefined' || !SFX[key]) return;
+  if (!actx) { // repli sans Web Audio
+    sfxAudio.src = SFX[key];
+    sfxAudio.play().catch(() => {});
+    return;
+  }
+  const start = (buffer) => {
+    if (sfxNode) { try { sfxNode.stop(); } catch (_) {} }
+    sfxNode = actx.createBufferSource();
+    sfxNode.buffer = buffer;
+    sfxNode.connect(sfxGain);
+    sfxNode.start();
+  };
+  if (sfxBuffers[key]) { start(sfxBuffers[key]); return; }
+  decodeUri(SFX[key]).then((buf) => { sfxBuffers[key] = buf; start(buf); }).catch(() => {});
+}
+function stopSfx() {
+  if (sfxNode) { try { sfxNode.stop(); } catch (_) {} sfxNode = null; }
+  sfxAudio.pause();
+}
+
 function applyLevels() {
   const level = S.ambienceLevel; // 0 → 1, réglé par le parent
-  if (musicGain) musicGain.gain.value = level;
+  const target = level * (ducked ? DUCK_RATIO : 1);
+  if (musicGain) {
+    if (actx) {
+      const now = actx.currentTime;
+      musicGain.gain.cancelScheduledValues(now);
+      musicGain.gain.setValueAtTime(target, now);
+    } else {
+      musicGain.gain.value = target;
+    }
+  }
   if (sfxGain) sfxGain.gain.value = level;
   // Repli pour les navigateurs sans Web Audio (ignoré par iOS, sans dommage :
   // les mp3 sont déjà mixés bas).
   ambience.volume = level;
   sfxAudio.volume = level;
 }
+
 function fadeMusic(target, ms) {
   if (!musicGain || !actx) return;
   const now = actx.currentTime;
   musicGain.gain.cancelScheduledValues(now);
   musicGain.gain.setValueAtTime(musicGain.gain.value, now);
-  musicGain.gain.linearRampToValueAtTime(Math.max(0.0001, target), now + ms / 1000);
+  musicGain.gain.linearRampToValueAtTime(Math.max(0, target), now + ms / 1000);
 }
-sharedAudio.addEventListener('playing',
-  () => fadeMusic(S.ambienceLevel * DUCK_RATIO, 700));
-sharedAudio.addEventListener('ended',
-  () => fadeMusic(S.ambienceLevel, 1200));
+// Atténuation quand une voix parle, restaurée dès qu'elle se tait — quelle
+// que soit la façon dont elle s'arrête (fin, pause, erreur, changement).
+let ducked = false;
+function duck() { ducked = true; fadeMusic(S.ambienceLevel * DUCK_RATIO, 700); }
+function unduck() { ducked = false; fadeMusic(S.ambienceLevel, 1200); }
+sharedAudio.addEventListener('playing', duck);
+for (const evt of ['ended', 'pause', 'error', 'emptied']) {
+  sharedAudio.addEventListener(evt, unduck);
+}
 let audioUnlocked = false;
 function unlockAudio() {
   // iOS n'autorise l'audio qu'après un geste : on « débloque » l'élément
@@ -589,12 +670,7 @@ function unlockAudio() {
   }).catch(() => { sharedAudio.muted = false; });
   // Pas de déblocage séparé pour la musique : startAmbience() est toujours
   // appelée dans le même geste utilisateur, la lecture directe suffit.
-  if (typeof SFX !== 'undefined') {
-    sfxAudio.muted = true;
-    sfxAudio.src = SFX.amb3;
-    sfxAudio.play().then(() => { sfxAudio.pause(); sfxAudio.muted = false; })
-      .catch(() => { sfxAudio.muted = false; });
-  }
+  // Musique et bruitages passent par le mixeur mémoire : rien à débloquer ici.
 }
 const TEST_PHRASE = 'Bonsoir… Installe-toi bien sous ta couverture. L\'histoire va bientôt commencer.';
 // Voix IA réalistes : service gratuit Pollinations (voix OpenAI), lecture
@@ -623,10 +699,11 @@ function playClip(key, text, onEnd) {
   const baked = key ? NARRATION[S.audioVoice === 'femme' ? 'femme' : 'homme'][key] : null;
 
   if (S.audioVoice === 'onyx' || S.audioVoice === 'fable') {
-    let fellBack = false;
+    let fellBack = false, fallbackCleanup = () => {};
     const fallback = () => { // repli : mp3 pré-généré, sinon voix de l'appareil
       if (fellBack || token !== clipToken) return;
       fellBack = true;
+      fallbackCleanup(); // plus aucun essai réseau ne viendra écraser le repli
       if (baked) {
         sharedAudio.onerror = () => done();
         sharedAudio.src = baked;
@@ -638,20 +715,24 @@ function playClip(key, text, onEnd) {
     // Le service gratuit limite à une requête toutes les 15 s : la génération
     // du chapitre vient d'en consommer une. On réessaie une fois avant de
     // basculer sur une voix locale.
-    let retried = false;
+    let retried = false, failing = false, retryTimer = null;
+    const onFail = () => {
+      // error et le rejet de play() surviennent tous deux : on ne compte qu'une fois.
+      if (failing || token !== clipToken) return;
+      failing = true;
+      if (retried) { fallback(); return; }
+      retried = true;
+      retryTimer = setTimeout(() => { failing = false; attempt(); }, 3500);
+    };
     const attempt = () => {
       if (token !== clipToken) return;
+      failing = false;
       sharedAudio.onended = done;
-      sharedAudio.onerror = () => {
-        if (!retried) { retried = true; setTimeout(attempt, 3500); return; }
-        fallback();
-      };
+      sharedAudio.onerror = onFail;
       sharedAudio.src = onlineUrl(spoken, S.audioVoice);
-      sharedAudio.play().catch(() => {
-        if (!retried) { retried = true; setTimeout(attempt, 3500); return; }
-        fallback();
-      });
+      sharedAudio.play().catch(onFail);
     };
+    fallbackCleanup = () => clearTimeout(retryTimer);
     attempt();
     return;
   }
@@ -666,12 +747,16 @@ function stopAudio(keepMusic = false) {
   sharedAudio.onended = null; sharedAudio.onerror = null;
   sharedAudio.pause();
   try { sharedAudio.currentTime = 0; } catch (_) {}
-  if (!keepMusic) ambience.pause();
-  sfxAudio.pause();
+  if (!keepMusic) {
+    musicWanted = false;
+    stopMusicNode();
+    ambience.pause();
+  }
+  stopSfx();
 }
 function setAudioVoice(v) { S.audioVoice = v; S.voiceChosen = true; persist(); testVoice(); }
 function testVoice() {
-  stopAudio(); stopSpeech();
+  stopAudio(true); stopSpeech(); // on garde le fond pour juger l'équilibre
   if (S.audioVoice !== 'device' && hasNarration()) playClip('test', TEST_PHRASE);
   else speak('Bonsoir. Voici la voix qui racontera l\'histoire, ce soir.', () => {});
 }
@@ -703,12 +788,13 @@ function speak(text, onEnd) {
   if (!('speechSynthesis' in window)) { onEnd && setTimeout(onEnd, textMs(text)); return; }
   speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
+  duck(); // la voix de l'appareil doit elle aussi passer devant la musique
   u.lang = 'fr-FR';
   u.rate = .88;   // calme, sans traîner
   u.pitch = .95;  // quasi naturel : ne pas déformer la voix
   if (voice) u.voice = voice;
-  u.onend = () => { currentUtter = null; onEnd && onEnd(); };
-  u.onerror = () => { currentUtter = null; onEnd && setTimeout(onEnd, textMs(text)); };
+  u.onend = () => { currentUtter = null; unduck(); onEnd && onEnd(); };
+  u.onerror = () => { currentUtter = null; unduck(); onEnd && setTimeout(onEnd, textMs(text)); };
   currentUtter = u;
   speechSynthesis.speak(u);
 }
@@ -757,13 +843,16 @@ function renderHome() {
 }
 
 function startAmbience() {
+  musicWanted = true;
   setupMixer(); // doit être appelé dans un geste utilisateur (iOS)
-  ambience.muted = false;
-  ambience.currentTime = 0;
-  ambience.play().catch(() => {});
-  if (musicGain && actx) {
-    musicGain.gain.setValueAtTime(0.0001, actx.currentTime);
+  if (actx) {
+    if (musicGain) musicGain.gain.setValueAtTime(0.0001, actx.currentTime);
+    if (mixerReady) playMusic();
     fadeMusic(S.ambienceLevel, 1800); // la musique naît, elle n'apparaît pas
+  } else { // repli élément
+    ambience.muted = false;
+    ambience.currentTime = 0;
+    ambience.play().catch(() => {});
   }
 }
 
@@ -811,11 +900,17 @@ function startBreathing() {
 // Elle choisit aussi le bruitage de chaque scène parmi une palette fixe.
 // Service gratuit sans clé (Pollinations) ; repli sur le feuilleton écrit à la
 // main si le réseau ou l'IA fait défaut — l'enfant n'attend jamais.
+// L'IA écrit en français : elle renverra « étoiles » ou « réconfort ».
+// On compare sans accent ni casse pour ne perdre aucun bruitage.
+const normTag = (x) => String(x || '').toLowerCase().trim()
+  .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+const SFX_TAGS_NORM = Object.create(null);
 const SFX_TAGS = {
   feuilles: 'open1', craquement: 'open2', oiseau: 'amb1', pas: 'amb2',
   etoiles: 'amb3', maison: 'amb4', joie: 'victory', reconfort: 'fear',
   eau: 'close2', nuit: 'close3', silence: null,
 };
+for (const [tag, key] of Object.entries(SFX_TAGS)) SFX_TAGS_NORM[normTag(tag)] = key;
 
 function storyPrompt() {
   const words = Math.round(S.minutes * 115);
@@ -894,7 +989,7 @@ async function generateChapter() {
     .filter((s) => s && typeof s.texte === 'string' && s.texte.trim())
     .map((s) => ({
       text: s.texte.trim(),
-      sfxKey: SFX_TAGS[String(s.son || '').toLowerCase()] || null,
+      sfxKey: SFX_TAGS_NORM[normTag(s.son)] ?? null,
     }));
   if (scenes.length < 3) throw new Error('réponse IA trop courte');
   return {
@@ -1158,7 +1253,10 @@ function armWatchdog(text) {
     advance();
   }, ms);
 }
+let storyStarting = false;
 async function startStory() {
+  if (storyStarting) return; // double appui sur « Passer »
+  storyStarting = true;
   breathTimers.forEach(clearTimeout);
 
   if (chapterPromise) {
@@ -1178,6 +1276,7 @@ async function startStory() {
       el('story-title').textContent = EP.title;
       el('voice-btn').setAttribute('aria-pressed', 'true');
       el('voice-label').textContent = 'Pause';
+      storyStarting = false;
       playScene();
       return;
     }
@@ -1207,10 +1306,12 @@ async function startStory() {
   el('voice-label').textContent = 'Pause';
   ambience.currentTime = 0;
   ambience.play().catch(() => {});
+  storyStarting = false;
   go('s-story'); playScene();
 }
 function playScene() {
   if (paused) return; // la pause gagne toujours contre le minuteur
+  stopSpeech(); // aucune voix de la scène précédente ne doit se superposer
   clearTimeout(fallbackTimer);
   const sc = EP.scenes[sceneIdx];
   const t = el('story-text');
@@ -1218,20 +1319,18 @@ function playScene() {
   t.style.animation = 'none'; void t.offsetWidth; t.style.animation = '';
   t.innerHTML = sc.weave ? `<span class="weave">${sc.text}</span>` : sc.text;
   el('story-progress').style.width = ((sceneIdx + 1) / EP.scenes.length * 100) + '%';
-  const sfxKey = sc.sfxKey || sc.key;
-  if (typeof SFX !== 'undefined' && sfxKey && SFX[sfxKey]) {
-    sfxAudio.src = SFX[sfxKey];
-    sfxAudio.play().catch(() => {});
-  }
+  // En démo, la clé de narration sert de clé de bruitage ; close1 n'a pas de
+  // clip propre : c'est le bruit de l'eau qui lui convient.
+  const sfxKey = sc.sfxKey || (sc.key === 'close1' ? 'close2' : sc.key);
+  if (sfxKey) playSfxKey(sfxKey);
+  else stopSfx(); // scène « silence » : on coupe le bruitage précédent
   // Garde-fou : quoi qu'il arrive (voix muette, réseau qui pend, synthèse qui
   // n'annonce jamais sa fin), la scène suivante arrive. Jamais de blocage.
   armWatchdog(sc.text);
   const done = () => { if (!paused) advance(); };
-  // Chapitre IA : narration en ligne sur le texte fraîchement écrit.
-  // Chapitre local du soir 1 : mp3 pré-générés. Sinon : voix de l'appareil.
-  if (EP.fromAI) playClip(null, sc.text, done);
-  else if (EP.audio) playClip(sc.key, sc.text, done);
-  else speak(sc.text, done);
+  // Toute narration passe par le même chemin : voix en ligne d'abord, mp3
+  // pré-généré si la scène en a un, voix de l'appareil en dernier recours.
+  playClip(EP.audio ? sc.key : null, sc.text, done);
 }
 function advance() {
   clearTimeout(fallbackTimer);
@@ -1246,26 +1345,40 @@ function togglePause() {
   paused = !paused;
   el('voice-btn').setAttribute('aria-pressed', String(!paused));
   el('voice-label').textContent = paused ? 'Reprendre' : 'Pause';
-  if (paused) { ambience.pause(); sfxAudio.pause(); }
-  else { ambience.play().catch(() => {}); sfxAudio.play().catch(() => {}); }
-  if (EP && EP.audio) {
-    if (paused) { sharedAudio.pause(); clearTimeout(fallbackTimer); }
-    else if (EP.fromAI && sharedAudio.ended) {
-      if (sceneIdx < EP.scenes.length - 1) { sceneIdx++; playScene(); }
-      else finishStory();
-    }
-    else if (sharedAudio.ended || !sharedAudio.src) {
-      // La scène s'était terminée pendant la pause : suite ou fin.
-      if (sceneIdx < EP.scenes.length - 1) { sceneIdx++; playScene(); }
-      else finishStory();
-    } else { sharedAudio.play().catch(() => playScene()); }
+
+  // Le fond : un seul geste suspend musique ET bruitages.
+  if (actx) { paused ? actx.suspend() : actx.resume(); }
+  else if (paused) { ambience.pause(); sfxAudio.pause(); }
+  else { ambience.play().catch(() => {}); }
+
+  if (paused) {
+    // La voix, quelle que soit sa source : en ligne, mp3 ou appareil.
+    sharedAudio.pause();
+    if ('speechSynthesis' in window) speechSynthesis.pause();
+    clearTimeout(fallbackTimer);
+    clearTimeout(watchdog);
     return;
   }
-  if (!('speechSynthesis' in window)) return;
-  if (paused) { speechSynthesis.pause(); clearTimeout(fallbackTimer); }
-  else if (speechSynthesis.paused) { speechSynthesis.resume(); }
-  else { playScene(); }
+
+  // Reprise : on repart exactement là où la scène en était.
+  const scene = EP && EP.scenes[sceneIdx];
+  if (scene) armWatchdog(scene.text);
+  if ('speechSynthesis' in window && speechSynthesis.paused) {
+    speechSynthesis.resume();
+    return;
+  }
+  if (sharedAudio.src && sharedAudio.currentTime > 0 && !sharedAudio.ended) {
+    sharedAudio.play().catch(() => playScene());
+    return;
+  }
+  if (sharedAudio.ended) { // la scène s'était achevée pendant la pause
+    if (EP && sceneIdx < EP.scenes.length - 1) { sceneIdx++; playScene(); }
+    else finishStory();
+    return;
+  }
+  playScene();
 }
+
 function finishStory() {
   clearTimeout(watchdog);
   stopSpeech();
@@ -1369,6 +1482,10 @@ async function testAI(btn) {
 function setAmbienceLevel(percent) {
   S.ambienceLevel = percent / 100;
   el('amb-val').textContent = percent;
+  // Aperçu immédiat : le parent doit entendre ce qu'il règle.
+  setupMixer();
+  if (actx && mixerReady && !musicNode) { musicWanted = true; playMusic(); }
+  else if (!actx && ambience.paused) ambience.play().catch(() => {});
   applyLevels();
   persist();
 }

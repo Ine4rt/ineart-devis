@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 
 import '../../core/router/app_router.dart';
 import '../../core/theme/app_colors.dart';
+import '../../domain/entities/child_profile.dart';
 import '../../providers.dart';
 
 /// La Lune — l'espace parent (design §4.8). Verrou par appui long (2 s),
@@ -124,11 +125,28 @@ class _ParentLockState extends State<_ParentLock> {
       );
 }
 
-class _ParentDashboard extends ConsumerWidget {
+class _ParentDashboard extends ConsumerStatefulWidget {
   const _ParentDashboard();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_ParentDashboard> createState() => _ParentDashboardState();
+}
+
+class _ParentDashboardState extends ConsumerState<_ParentDashboard> {
+  /// Durée en cours de réglage au doigt (avant persistance au relâchement).
+  int? _draftMinutes;
+
+  Future<void> _saveMinutes(ChildProfile profile, int minutes) async {
+    await ref
+        .read(worldRepositoryProvider)
+        .saveProfile(profile.copyWith(storyMinutes: minutes));
+    if (!mounted) return;
+    setState(() => _draftMinutes = null);
+    ref.invalidate(childProfileProvider);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final profileAsync = ref.watch(childProfileProvider);
     final theme = ThemeData.light(useMaterial3: true).textTheme;
     final now = DateTime.now();
@@ -154,15 +172,22 @@ class _ParentDashboard extends ConsumerWidget {
               ),
             );
           }
-          // Pacte de sommeil : coucher cible 20 h 30 (paramétrable à terme).
-          final target = DateTime(now.year, now.month, now.day, 20, 30);
+          // Pacte de sommeil : heure de coucher du profil, réglable ici.
+          final target = profile.targetSleepTime.onDay(now);
+          // Réglage du parent : brouillon en cours, sinon profil, sinon âge.
+          final requestedMinutes = _draftMinutes ?? profile.storyMinutes;
           final planned = planner.plan(
             ageBand: profile.ageBand(now),
             now: now,
             targetSleepTime: target.isAfter(now)
                 ? target
                 : target.add(const Duration(days: 1)),
+            parentMinutes: requestedMinutes,
           );
+          final sliderMinutes = requestedMinutes ?? planned.inMinutes;
+          final shortened = requestedMinutes != null
+              ? planner.parentNote(planned, Duration(minutes: requestedMinutes))
+              : null;
           return ListView(
             padding: const EdgeInsets.all(20),
             children: [
@@ -179,8 +204,31 @@ class _ParentDashboard extends ConsumerWidget {
                 title: 'Pacte de sommeil',
                 subtitle:
                     'Coucher cible ${DateFormat.Hm().format(target)} — épisode '
-                    'de ce soir calibré à ${planned.inMinutes} min.',
+                    'de ce soir calibré à ${planned.inMinutes} min.'
+                    '${shortened == null ? '' : '\n$shortened'}',
                 theme: theme,
+                // Le curseur du parent : 1 à 10 min, persisté sur le profil
+                // et transmis au conteur (children.story_minutes).
+                extra: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Durée du récit : $sliderMinutes min',
+                      style: theme.titleSmall
+                          ?.copyWith(color: AppColors.dayInk),
+                    ),
+                    Slider(
+                      value: sliderMinutes.toDouble(),
+                      min: 1,
+                      max: 10,
+                      divisions: 9,
+                      label: '$sliderMinutes min',
+                      onChanged: (v) =>
+                          setState(() => _draftMinutes = v.round()),
+                      onChangeEnd: (v) => _saveMinutes(profile, v.round()),
+                    ),
+                  ],
+                ),
               ),
               _card(
                 title: 'Ce que Plume sait de ${profile.firstName}',
@@ -210,6 +258,7 @@ class _ParentDashboard extends ConsumerWidget {
     required TextTheme theme,
     String? action,
     VoidCallback? onTap,
+    Widget? extra,
   }) =>
       Card(
         color: AppColors.dayCard,
@@ -226,6 +275,10 @@ class _ParentDashboard extends ConsumerWidget {
               Text(subtitle,
                   style: theme.bodyMedium
                       ?.copyWith(color: AppColors.dayInk.withOpacity(.7)),),
+              if (extra != null) ...[
+                const SizedBox(height: 10),
+                extra,
+              ],
               if (action != null) ...[
                 const SizedBox(height: 10),
                 FilledButton.tonal(onPressed: onTap, child: Text(action)),

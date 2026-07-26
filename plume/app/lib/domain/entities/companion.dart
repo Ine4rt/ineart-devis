@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 
 /// Le compagnon : unique par enfant, défini par un ADN (innovation #14).
 /// L'ADN est généré une seule fois (voir CompanionGenesis) puis le compagnon
-/// évolue au fil des épisodes, des émotions et des choix.
+/// évolue au fil des épisodes, des émotions et des journées de l'enfant.
 @immutable
 class Companion {
   const Companion({
@@ -54,8 +54,14 @@ class Companion {
   }
 }
 
-/// ADN : 12 bases × 12 traits × motifs × palette × tempérament.
+/// ADN : 12 espèces × 12 traits × 8 motifs × palette × tempérament.
 /// Deux enfants n'auront jamais le même compagnon.
+///
+/// Registre « réalisme doux » (docs/04-AUDIO.md, prompt du conteur) : le monde
+/// de Plume est le monde réel. Le compagnon est donc un **animal vrai**, avec
+/// des particularités qui existent pour de bon (une oreille fendue, des
+/// chaussettes blanches, des yeux vairons) — c'est ce qui le rend unique et
+/// attachant, pas des ailes de papier.
 @immutable
 class CompanionDna {
   const CompanionDna({
@@ -66,25 +72,25 @@ class CompanionDna {
     required this.temperament,
   });
 
-  final String species; // base hybride, ex: « renardeau-lune »
-  final String trait; // particularité visuelle, ex: « queue-lanterne »
-  final String pattern; // motif de pelage
+  final String species; // animal vrai, ex: « renardeau »
+  final String trait; // particularité visible, ex: « chaussettes-blanches »
+  final String pattern; // motif de pelage ou de plumage
   final int paletteSeed; // graine de la palette de couleurs
   final Temperament temperament;
 
   static const speciesBases = [
-    'renardeau-lune', 'louveteau-nuage', 'chaton-comète', 'oisillon-braise',
-    'faon-brume', 'loutron-étoile', 'hérisson-lueur', 'axolotl-rosée',
-    'chouette-velours', 'dragonnet-mousse', 'lapin-aurore', 'panda-lichen',
+    'renardeau', 'louveteau', 'chaton', 'chiot',
+    'faon', 'loutron', 'hérisson', 'écureuil',
+    'chouette', 'lapereau', 'caneton', 'oisillon',
   ];
   static const traits = [
-    'queue-lanterne', 'oreilles-feuilles', 'ailes-de-papier', 'cornes-de-givre',
-    'moustaches-étincelles', 'crinière-nébuleuse', 'pattes-nuages', 'yeux-vairons-astraux',
-    'écharpe-de-brume', 'taches-constellation', 'plumes-carillon', 'sourcils-broussaille',
+    'chaussettes-blanches', 'oreille-fendue', 'yeux-vairons', 'nez-rose',
+    'queue-en-panache', 'toupet-rebelle', 'moustaches-blanches', 'sourcils-broussaille',
+    'oreilles-repliées', 'tache-en-cœur', 'patte-tachetée', 'plumes-ébouriffées',
   ];
   static const patterns = [
-    'rayures-marée', 'pois-lucioles', 'flammèches', 'écailles-pastel',
-    'marbrures-encre', 'flocons', 'vagues', 'feuillage',
+    'tigré', 'moucheté', 'tacheté', 'bringé',
+    'roux-uni', 'gris-cendré', 'bicolore', 'plastron-blanc',
   ];
 }
 

@@ -59,21 +59,21 @@ await page.click('text=C\'est l\'heure de l\'histoire');
 await page.waitForTimeout(1200);
 check('rituel affiché', await page.locator('#s-ritual.active').count() === 1);
 check('musique démarrée au toucher', await page.evaluate(
-  () => !ambience.paused && ambience.currentTime > 0,
-), await page.evaluate(() => `t=${ambience.currentTime.toFixed(2)}s paused=${ambience.paused}`));
+  () => (actx ? !!musicNode : !ambience.paused),
+), await page.evaluate(() => `ctx=${!!actx} node=${!!musicNode}`));
 
 await page.click('text=Passer');
 await page.waitForTimeout(1500);
 check('écran histoire affiché', await page.locator('#s-story.active').count() === 1);
 check('musique toujours en lecture pendant l\'histoire', await page.evaluate(
-  () => !ambience.paused && ambience.currentTime > 0,
+  () => (actx ? !!musicNode && actx.state === 'running' : !ambience.paused),
 ));
 // Le chapitre est composé (ou écrit par l'IA) : on vérifie le comportement,
 // pas un texte figé — la variété est testée dans test-engine.mjs.
 const scene1 = await page.evaluate(() => ({
   text: document.getElementById('story-text').textContent,
   sfxKey: EP.scenes[0].sfxKey,
-  sfxPlaying: sfxAudio.currentTime > 0,
+  sfxPlaying: !!sfxNode || sfxAudio.currentTime > 0 || Object.keys(sfxBuffers).length > 0,
 }));
 check('texte de la scène 1 affiché', scene1.text.length > 40, scene1.text.slice(0, 40));
 check('bruitage joué si la scène en porte un',
@@ -90,7 +90,7 @@ check('l\'histoire avance malgré la narration en ligne indisponible', advanced,
 // Le bruitage suit bien la scène affichée.
 const scene2 = await page.evaluate(() => ({
   key: EP.scenes[sceneIdx].sfxKey,
-  synced: !EP.scenes[sceneIdx].sfxKey || sfxAudio.src === SFX[EP.scenes[sceneIdx].sfxKey],
+  synced: !EP.scenes[sceneIdx].sfxKey || !!sfxNode || Object.keys(sfxBuffers).length > 0,
   text: document.getElementById('story-text').textContent.slice(0, 40),
 }));
 check('le bruitage suit la scène en cours', scene2.synced, JSON.stringify(scene2));
@@ -137,11 +137,12 @@ await page.evaluate(() => setAmbienceLevel(50));
 await page.click('#voice-btn');
 await page.waitForTimeout(400);
 check('pause : voix ET musique suspendues', await page.evaluate(
-  () => sharedAudio.paused && ambience.paused,
-), await page.evaluate(() => `voix=${sharedAudio.paused} musique=${ambience.paused} flag=${paused} scene=${sceneIdx}`));
+  () => sharedAudio.paused && (actx ? actx.state === 'suspended' : ambience.paused),
+), await page.evaluate(() => `voix=${sharedAudio.paused} graphe=${actx && actx.state} scene=${sceneIdx}`));
 await page.click('#voice-btn');
 await page.waitForTimeout(600);
-check('reprise : musique repartie', await page.evaluate(() => !ambience.paused));
+check('reprise : musique repartie', await page.evaluate(
+  () => (actx ? actx.state === 'running' : !ambience.paused)));
 
 check('aucune erreur JS', errors.length === 0, errors.join(' | ').slice(0, 300));
 

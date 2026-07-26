@@ -4,17 +4,27 @@
 // pour les 4-9 ans — l'enfant y pense toute la journée.
 // Déclenchée par pg_cron vers 7 h 30 heure locale de la famille.
 
-import { createClient } from "npm:@supabase/supabase-js@2";
 import Anthropic from "npm:@anthropic-ai/sdk";
 
-const supabase = createClient(
-  Deno.env.get("SUPABASE_URL")!,
-  Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
-);
+import { guardChildAccess, serviceClient } from "../_shared/guard.ts";
+
+// Clé service (RLS court-circuitée) : la garde tourne avant toute lecture.
+const supabase = serviceClient();
 const anthropic = new Anthropic({ apiKey: Deno.env.get("ANTHROPIC_API_KEY")! });
 
 Deno.serve(async (req) => {
   const { child_id } = await req.json();
+  if (!child_id) {
+    return new Response(JSON.stringify({ error: "child_id requis" }), {
+      status: 400,
+      headers: { "content-type": "application/json" },
+    });
+  }
+
+  // Sécurité : le rêve du matin révèle le début de l'épisode du soir d'un
+  // enfant. Sans cette garde, un uuid deviné suffisait à le lire.
+  const guard = await guardChildAccess(req, child_id, supabase);
+  if (!guard.ok) return guard.response;
 
   const [{ data: companion }, { data: episode }] = await Promise.all([
     supabase.from("companions").select("name, dna").eq("child_id", child_id).maybeSingle(),

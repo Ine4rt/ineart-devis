@@ -15,10 +15,11 @@ abstract interface class WorldRepository {
   Future<void> saveCompanion(Companion companion);
 
   /// L'épisode du soir — pré-généré la nuit, téléchargé en avance.
+  ///
+  /// Aucune interaction pendant le récit : il n'existe pas de « choix » à
+  /// enregistrer. Les graines narratives sont désormais plantées côté serveur
+  /// par `generate-episode`, à partir du canon et de la journée de l'enfant.
   Future<StoryEpisode?> tonightEpisode();
-
-  /// Choix de l'enfant → graine narrative plantée dans le canon.
-  Future<void> recordChoice(String episodeId, ChoiceOption option);
 
   /// Marque-page d'endormissement (#19).
   Future<void> saveBookmark(String episodeId, SleepBookmark bookmark);

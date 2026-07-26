@@ -68,35 +68,32 @@ check('écran histoire affiché', await page.locator('#s-story.active').count() 
 check('musique toujours en lecture pendant l\'histoire', await page.evaluate(
   () => !ambience.paused && ambience.currentTime > 0,
 ));
-check('texte de la scène 1 affiché', ((await page.textContent('#story-text')) || '').includes('dorée'));
-check('bruitage de scène en lecture', await page.evaluate(
-  () => sfxAudio.src.startsWith('data:audio') && sfxAudio.currentTime > 0,
-), await page.evaluate(() => `t=${sfxAudio.currentTime.toFixed(2)}s`));
+// Le chapitre est composé (ou écrit par l'IA) : on vérifie le comportement,
+// pas un texte figé — la variété est testée dans test-engine.mjs.
+const scene1 = await page.evaluate(() => ({
+  text: document.getElementById('story-text').textContent,
+  sfxKey: EP.scenes[0].sfxKey,
+  sfxPlaying: sfxAudio.currentTime > 0,
+}));
+check('texte de la scène 1 affiché', scene1.text.length > 40, scene1.text.slice(0, 40));
+check('bruitage joué si la scène en porte un',
+  !scene1.sfxKey || scene1.sfxPlaying, JSON.stringify(scene1.sfxKey));
 
-// Voix : en ligne bloquée ici → un essai de rattrapage, puis repli local.
-// On attend la condition plutôt qu'un délai fixe (le rattrapage prend ~3,5 s).
-const fellBack = await page.waitForFunction(
-  () => sharedAudio.src.startsWith('data:audio') && !sharedAudio.paused
-    && sharedAudio.currentTime > 0,
-  null, { timeout: 30000 },
+// Narration : le service en ligne est coupé ici → repli (mp3 pré-généré ou
+// voix de l'appareil), et surtout l'histoire doit continuer d'avancer.
+const advanced = await page.waitForFunction(
+  () => sceneIdx >= 1, null, { timeout: 90000 },
 ).then(() => true).catch(() => false);
-const voice = await page.evaluate(() => ({
-  src: sharedAudio.src.slice(0, 22),
-  t: sharedAudio.currentTime.toFixed(1),
-}));
-check('narration en lecture (repli local après échec en ligne)',
-  fellBack, JSON.stringify(voice));
+check('l\'histoire avance malgré la narration en ligne indisponible', advanced,
+  'scène ' + await page.evaluate(() => sceneIdx));
 
-// ─── Scène 2 : le craquement arrive AVEC « cric, crac » ────────────────────
-await page.waitForFunction(() => sceneIdx >= 1, null, { timeout: 60000 });
+// Le bruitage suit bien la scène affichée.
 const scene2 = await page.evaluate(() => ({
-  key: EP.scenes[sceneIdx].key,
+  key: EP.scenes[sceneIdx].sfxKey,
+  synced: !EP.scenes[sceneIdx].sfxKey || sfxAudio.src === SFX[EP.scenes[sceneIdx].sfxKey],
   text: document.getElementById('story-text').textContent.slice(0, 40),
-  crackSynced: sfxAudio.src === SFX.open2,
 }));
-check('scène 2 = « cric, crac »', scene2.key === 'open2' && scene2.text.includes('soudain'),
-  JSON.stringify(scene2));
-check('craquement de branche joué pile sur la scène 2', scene2.crackSynced);
+check('le bruitage suit la scène en cours', scene2.synced, JSON.stringify(scene2));
 
 // ─── Mixage : on MESURE le niveau réellement produit ───────────────────────
 // Le piège corrigé ici : Safari iOS ignore element.volume, donc le niveau doit

@@ -345,7 +345,7 @@
     <div class="stack">
       <div class="day-card">
         <b>Durée de l'histoire : <span id="dur-val">5</span> min</b>
-        <p>L'IA écrit le chapitre pour durer exactement ce temps (1 à 10 minutes).</p>
+        <p>Avec l'IA, le chapitre dure exactement ce temps. Hors ligne, Plume compose elle-même jusqu'à environ 6 minutes — la durée réelle est toujours affichée sous le titre.</p>
         <input type="range" class="day-range" min="1" max="10" value="5" id="in-dur" style="width:100%"
           oninput="S.minutes=+this.value; el('dur-val').textContent=S.minutes; persist()">
       </div>
@@ -746,7 +746,7 @@ function renderHome() {
   el('home-sub').textContent = S.episode === 1
     ? `${cap(S.comp.word)} attend dans le jardin. L'aventure commence ce soir.`
     : `L'aventure continue là où elle s'était arrêtée hier soir.`;
-  el('ep-label').textContent = `Chapitre ${S.episode} · ${chapterFor(S.episode).title}`;
+  el('ep-label').textContent = `Chapitre ${S.episode} · ce soir, une histoire neuve`;
   el('dur-label').textContent = `Environ ${S.minutes} minute${S.minutes > 1 ? 's' : ''} — réglable dans l'espace parent`;
   el('lib-count').textContent = S.told.length
     ? `${S.told.length} chapitre${S.told.length > 1 ? 's' : ''} déjà raconté${S.told.length > 1 ? 's' : ''}`
@@ -839,13 +839,57 @@ function storyPrompt() {
   ].filter(Boolean).join('\n');
 }
 
+// Trois façons de joindre le conteur : une URL courte (GET), l'API façon
+// OpenAI (POST), puis un modèle de repli. On garde la première qui répond, et
+// on nomme précisément la cause en cas d'échec (CORS, quota, HTTP, JSON…).
+async function askAI() {
+  const prompt = storyPrompt();
+  const attempts = [
+    async () => {
+      const url = 'https://text.pollinations.ai/' + encodeURIComponent(prompt)
+        + '?model=openai&seed=' + Date.now();
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('GET ' + res.status);
+      return res.text();
+    },
+    async () => {
+      const res = await fetch('https://text.pollinations.ai/openai', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          model: 'openai',
+          messages: [{ role: 'user', content: prompt }],
+          seed: Date.now() % 100000,
+        }),
+      });
+      if (!res.ok) throw new Error('POST ' + res.status);
+      const data = await res.json();
+      return data.choices?.[0]?.message?.content ?? JSON.stringify(data);
+    },
+    async () => {
+      const url = 'https://text.pollinations.ai/' + encodeURIComponent(prompt);
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('GET simple ' + res.status);
+      return res.text();
+    },
+  ];
+  const causes = [];
+  for (const attempt of attempts) {
+    try {
+      return await attempt();
+    } catch (e) {
+      // Un échec réseau depuis un fichier local se présente ainsi.
+      causes.push(e.name === 'TypeError' ? 'appel bloqué par le navigateur' : e.message);
+    }
+  }
+  throw new Error(causes.join(' ; '));
+}
+
 async function generateChapter() {
-  const url = 'https://text.pollinations.ai/' + encodeURIComponent(storyPrompt())
-    + '?model=openai&seed=' + Date.now();
-  const res = await fetch(url);
-  if (!res.ok) throw new Error('IA indisponible (' + res.status + ')');
-  const raw = await res.text();
-  const json = JSON.parse(raw.slice(raw.indexOf('{'), raw.lastIndexOf('}') + 1));
+  const raw = await askAI();
+  const start = raw.indexOf('{'), end = raw.lastIndexOf('}');
+  if (start < 0 || end <= start) throw new Error('réponse non exploitable');
+  const json = JSON.parse(raw.slice(start, end + 1));
   const scenes = (json.scenes || [])
     .filter((s) => s && typeof s.texte === 'string' && s.texte.trim())
     .map((s) => ({
@@ -862,117 +906,242 @@ async function generateChapter() {
   };
 }
 
-// ─── Le feuilleton : chapitres qui se suivent, jamais de retour à zéro ──────
-// Dans l'app finale, Claude écrit chaque chapitre depuis le canon complet.
-// Ici : une trame sérialisée + des scènes d'ambiance pour remplir la durée.
-function chapterFor(n) {
-  const N = () => S.name, C = () => S.comp.word;
-  const chapters = [
+// ─── Le moteur d'histoires hors ligne ───────────────────────────────────────
+// Quand le conteur IA n'est pas joignable (sécurité du navigateur, pas de
+// réseau), Plume compose elle-même le chapitre : un événement du soir tiré
+// d'une réserve, des scènes de découverte et de respiration, la journée de
+// l'enfant tissée dedans, une fin qui mène au sommeil. Chaque soir diffère,
+// la longueur suit le curseur du parent, chaque scène porte son bruitage.
+// Le tirage est semé par le numéro de chapitre : une réécoute redonne le même
+// texte, le soir suivant en donne un autre.
+
+function seeded(seed) {
+  let s = (seed * 2654435761) % 4294967296;
+  return () => {
+    s = (s * 1103515245 + 12345) % 2147483648;
+    return s / 2147483648;
+  };
+}
+
+// Chaque événement : une ouverture, deux à trois développements, une chute,
+// et le résumé qui servira de rappel le lendemain.
+function eveningEvents(N, C) {
+  return [
     {
-      title: 'Le jardin du soir',
-      open: () => `La journée se rangeait doucement. Dans le jardin, la lumière était devenue dorée, et ${C()} attendait ${N()} près de la porte, comme chaque soir. C'est ce soir-là que tout a commencé. Au fond du jardin, la haie s'est mise à remuer. ${cap(C())} s'est arrêté net, une oreille levée. Là, sous les feuilles : un hérisson, tout petit, qui cherchait son chemin.`,
-      close: () => `${N()} a laissé un bol d'eau près de la haie, sans faire de bruit. Le hérisson a attendu, puis il a bu, à petites gorgées. Et quand la nuit est tombée pour de bon, il a disparu sous les feuilles. Reviendrait-il demain ? C'est ce que ${N()} se demandait en s'endormant.`,
-      summary: () => `${N()} a découvert un hérisson sous la haie et lui a laissé de l'eau.`,
-    },
-    {
-      title: 'Le retour du hérisson',
-      open: () => `Ce soir-là, ${N()} est sorti dans le jardin avant même d'avoir fini son verre de lait. Et près de la haie… le bol était vide. Le hérisson était revenu ! ${cap(C())} l'a trouvé le premier, roulé en boule sous les feuilles, et cette fois, il ne s'est pas enfui.`,
-      close: () => `« Il lui faut un nom », a murmuré ${N()}. Et comme le hérisson se grattait le bout du nez, le nom est venu tout seul : Grattouille. Grattouille a mangé une feuille de salade, puis il est reparti par un petit passage, tout au fond de la haie — un passage que ${N()} n'avait jamais vu. Où pouvait-il bien mener ?`,
-      summary: () => `Le hérisson est revenu ; il s'appelle Grattouille, et il connaît un passage secret dans la haie.`,
-    },
-    {
-      title: 'Le passage secret',
-      open: () => `Le passage était là, caché derrière les branches basses, juste assez grand pour un hérisson — ou pour les yeux d'un enfant patient. ${N()} s'est allongé dans l'herbe encore tiède, ${C()} contre son épaule, et il a regardé longtemps.`,
-      close: () => `De l'autre côté de la haie, il y avait un autre jardin, plus ancien, plein de rosiers. Et au milieu, une petite lanterne allumée, posée sur une table de pierre. Quelqu'un, chaque soir, allumait cette lanterne. Mais qui ? Et pour qui ? Demain, peut-être, le jardin le dirait.`,
-      summary: () => `Derrière la haie se cache un vieux jardin où quelqu'un allume une lanterne chaque soir.`,
-    },
-    {
-      title: 'La dame à la lanterne',
-      open: () => `Ce soir-là, ${N()} a enfin vu qui allumait la lanterne. C'était une dame aux cheveux gris, avec un arrosoir vert et une voix douce. Elle s'appelait Madame Lila, et elle parlait aux plantes comme on parle à de vieux amis.`,
-      close: () => `« La lanterne, c'est pour les animaux de la nuit », a expliqué Madame Lila par-dessus la haie. « Pour qu'ils retrouvent leur chemin. » Alors ${N()} a eu une grande idée : et si on construisait, de ce côté-ci, une petite maison pour Grattouille, avant l'hiver ? Il faudrait des feuilles, du bois, et un peu de temps. On commencerait demain.`,
-      summary: () => `Madame Lila allume la lanterne pour guider les animaux de nuit ; ${N()} veut construire une maison pour Grattouille avant l'hiver.`,
-    },
-    {
-      title: 'La cabane de Grattouille',
-      open: () => `Toute la soirée, ${N()} a ramassé des feuilles sèches, les plus grandes, les plus douces. ${cap(C())} apportait des brindilles, très fier, même quand elles étaient trop petites. Petit à petit, contre le mur du jardin, une cabane a poussé.`,
-      close: () => `Quand la cabane fut prête, avec son toit de feuilles et son entrée juste à la bonne taille, Grattouille est venu l'inspecter en reniflant partout. Puis il est entré. Et il n'est pas ressorti. ${N()} a souri dans le noir : cette nuit, pour la première fois, Grattouille dormait dans une maison construite pour lui.`,
-      summary: () => `La cabane est finie : Grattouille y a passé sa première nuit.`,
+      title: 'Le visiteur de la haie',
+      open: [
+        { t: `Ce soir-là, dans le jardin, la lumière était toute dorée… comme du miel.`, s: 'feuilles' },
+        { t: `Et puis, soudain… cric… crac ! La haie s'est mise à bouger ! ${C} a dressé une oreille. Chut…`, s: 'craquement' },
+      ],
+      mid: [
+        { t: `Là, sous les feuilles… un hérisson ! Tout petit, rond comme une brosse, avec deux yeux noirs comme des myrtilles.`, s: 'feuilles' },
+        { t: `Il avait perdu son chemin. Il reniflait à droite, à gauche, et ses petites pattes faisaient trip-trip-trip dans la terre.`, s: 'pas' },
+      ],
+      close: [
+        { t: `Alors, sans faire de bruit, tu as posé un bol d'eau près de la haie. Le hérisson s'est approché… et il a bu ! À toutes petites gorgées.`, s: 'eau' },
+        { t: `Puis la nuit est tombée pour de bon, et il a disparu sous les feuilles, pour faire dodo, lui aussi. Ferme les yeux… Bonne nuit.`, s: 'nuit' },
+      ],
+      summary: `un tout petit hérisson est venu boire dans le jardin`,
     },
     {
       title: 'La nuit des lucioles',
-      open: () => `Ce soir-là, le jardin s'était mis à clignoter. Une lumière, puis deux, puis dix ! Des lucioles, partout, comme si les étoiles avaient glissé dans l'herbe. ${cap(C())} tournait la tête à droite, à gauche, complètement perdu.`,
-      close: () => `${N()} en a attrapé une, tout doucement, dans le creux de ses deux mains. Elle brillait entre ses doigts comme un petit secret. Et puis il a ouvert les mains, et elle est repartie rejoindre les autres. « Reviens l'été prochain », a chuchoté ${N()}. Les lucioles, ça n'oublie jamais une promesse.`,
-      summary: () => `Une nuit de lucioles a illuminé le jardin ; ${N()} en a laissé repartir une, avec une promesse.`,
+      open: [
+        { t: `Ce soir-là, le jardin s'était mis à clignoter. Une lumière… puis deux… puis dix !`, s: 'etoiles' },
+        { t: `Des lucioles ! Partout ! Comme si les étoiles avaient glissé dans l'herbe. ${C} tournait la tête à droite, à gauche, complètement perdu.`, s: 'etoiles' },
+      ],
+      mid: [
+        { t: `Tu en as attrapé une, tout doucement, dans le creux de tes deux mains. Elle brillait entre tes doigts comme un petit secret tiède.`, s: 'silence' },
+        { t: `Les lucioles dansaient au-dessus des fleurs. On aurait dit qu'elles se racontaient leur journée, elles aussi.`, s: 'etoiles' },
+      ],
+      close: [
+        { t: `Alors tu as ouvert les mains, et elle est repartie rejoindre les autres. « Reviens l'été prochain », as-tu chuchoté.`, s: 'silence' },
+        { t: `Les lucioles, ça n'oublie jamais une promesse. Ferme les yeux… Bonne nuit.`, s: 'nuit' },
+      ],
+      summary: `une nuit de lucioles a illuminé le jardin, et tu en as laissé repartir une`,
     },
     {
       title: 'Le jardin sous la pluie',
-      open: () => `Ploc. Ploc. Ploc-ploc-ploc ! La pluie est arrivée d'un coup, et tout le jardin s'est mis à chanter. ${cap(C())} a filé sous la table de pierre, l'air de dire : moi, je n'avais pas prévu ça.`,
-      close: () => `Mais Grattouille, lui, adorait la pluie. Il trottait dans les flaques, splich, splach, comme un tout petit parapluie à l'envers. ${N()} l'a regardé longtemps par la fenêtre, le front contre la vitre fraîche. Dehors, le jardin buvait. Demain, tout serait un peu plus vert.`,
-      summary: () => `Une grande pluie a traversé le jardin ; Grattouille a joué dans les flaques.`,
+      open: [
+        { t: `Ploc. Ploc. Ploc-ploc-ploc ! La pluie est arrivée d'un coup, et tout le jardin s'est mis à chanter.`, s: 'eau' },
+        { t: `${C} a filé sous la table de pierre, l'air de dire : moi, je n'avais pas prévu ça !`, s: 'pas' },
+      ],
+      mid: [
+        { t: `Les gouttes tombaient sur les grandes feuilles : ploc, ploc, comme sur un petit tambour.`, s: 'eau' },
+        { t: `Une flaque est née devant la porte. Puis une deuxième. Puis une flaque si grande qu'on voyait le ciel dedans, à l'envers.`, s: 'eau' },
+      ],
+      close: [
+        { t: `Toi, tu as regardé longtemps par la fenêtre, le front contre la vitre fraîche. Dehors, le jardin buvait.`, s: 'maison' },
+        { t: `Demain, tout serait un peu plus vert. C'est comme ça que poussent les jardins : la nuit, en secret. Ferme les yeux… Bonne nuit.`, s: 'nuit' },
+      ],
+      summary: `une grande pluie a traversé le jardin, et les flaques reflétaient le ciel`,
     },
     {
       title: 'Le premier matin de gel',
-      open: () => `Ce matin-là, le jardin était blanc. Pas de neige : du givre ! Chaque brin d'herbe portait son petit manteau de sucre, et l'herbe faisait crounch-crounch sous les pieds.`,
-      close: () => `${cap(C())} a soufflé un nuage de buée, tout content de faire de la fumée avec son nez. Et devant la cabane de Grattouille, il y avait trois petites traces de pattes qui allaient jusqu'au bol — et qui revenaient. Il était bien là, bien au chaud. Tout allait bien dans le jardin.`,
-      summary: () => `Le premier gel est arrivé ; Grattouille dort au chaud dans sa cabane.`,
+      open: [
+        { t: `Ce soir-là, il faisait si froid que ton souffle faisait de la fumée. Pfff ! Comme un petit dragon — mais un dragon très gentil.`, s: 'silence' },
+        { t: `L'herbe faisait crounch-crounch sous les pieds. Chaque brin portait son manteau de sucre.`, s: 'pas' },
+      ],
+      mid: [
+        { t: `${C} avançait à petits pas prudents, les coussinets tout surpris par le froid.`, s: 'pas' },
+        { t: `Sur la table de pierre, le givre dessinait des fleurs. Des fleurs en glace, que personne n'avait plantées.`, s: 'silence' },
+      ],
+      close: [
+        { t: `Devant la haie, il y avait trois petites traces de pattes qui allaient jusqu'au bol… et qui revenaient.`, s: 'feuilles' },
+        { t: `Le hérisson était bien là, bien au chaud sous ses feuilles. Tout allait bien dans le jardin. Ferme les yeux… Bonne nuit.`, s: 'nuit' },
+      ],
+      summary: `le premier gel est arrivé, et le hérisson dormait bien au chaud`,
     },
     {
-      title: 'Les nouvelles du vent',
-      open: () => `L'automne arrivait doucement. Les feuilles tombaient une à une, comme des lettres que les arbres s'envoyaient. ${N()} et ${C()} faisaient leur tournée du soir : le bol d'eau, la cabane, un salut de loin à la lanterne de Madame Lila.`,
-      close: () => `Ce soir-là, un rouge-gorge s'est posé sur la haie et a chanté longtemps, comme s'il racontait des nouvelles de très loin. ${N()} n'a pas tout compris, bien sûr. Mais ${C()} écoutait, très sérieux, et quelque chose disait que demain, le jardin aurait encore une histoire à raconter.`,
-      summary: () => `L'automne est arrivé ; un rouge-gorge a apporté des nouvelles mystérieuses.`,
+      title: 'La lettre du merle',
+      open: [
+        { t: `Tiu-tiu-tiu ! Le merle chantait plus fort que d'habitude, tout en haut du pommier.`, s: 'oiseau' },
+        { t: `${C} s'est assis dans l'herbe pour écouter. Toi aussi. On aurait dit qu'il racontait quelque chose.`, s: 'oiseau' },
+      ],
+      mid: [
+        { t: `Il chantait des nouvelles de très loin : d'un fleuve, d'une forêt, d'un toit rouge avec une cheminée.`, s: 'oiseau' },
+        { t: `Tu ne comprenais pas tous les mots, bien sûr. Mais tu comprenais la musique. Et parfois, la musique suffit.`, s: 'silence' },
+      ],
+      close: [
+        { t: `Quand il a fini, le merle a incliné la tête vers toi. Puis il est parti dormir, lui aussi, dans son lit de branches.`, s: 'feuilles' },
+        { t: `Demain, il aura d'autres nouvelles. Il en a toujours. Ferme les yeux… Bonne nuit.`, s: 'nuit' },
+      ],
+      summary: `le merle a chanté des nouvelles venues de très loin`,
+    },
+    {
+      title: 'La cabane de feuilles',
+      open: [
+        { t: `Ce soir-là, tu avais une grande idée : construire une maison. Une toute petite maison, pour un tout petit habitant.`, s: 'silence' },
+        { t: `Alors tu as ramassé des feuilles. Les plus grandes, les plus douces. Une… deux… trois… et vingt !`, s: 'feuilles' },
+      ],
+      mid: [
+        { t: `${C} apportait des brindilles, très fier, même quand elles étaient beaucoup trop petites. C'était l'intention qui comptait.`, s: 'pas' },
+        { t: `Peu à peu, contre le mur du jardin, la cabane a poussé. Avec un toit. Et même une entrée, juste à la bonne taille.`, s: 'feuilles' },
+      ],
+      close: [
+        { t: `Le hérisson est venu l'inspecter en reniflant partout. Puis il est entré… et il n'est pas ressorti.`, s: 'reconfort' },
+        { t: `Cette nuit, pour la première fois, il dormait dans une maison construite pour lui. Ferme les yeux… Bonne nuit.`, s: 'nuit' },
+      ],
+      summary: `tu as construit une cabane de feuilles, et le hérisson y a dormi`,
+    },
+    {
+      title: 'La dame de l\'autre côté',
+      open: [
+        { t: `De l'autre côté de la haie, une petite lumière s'est allumée. Une lanterne, posée sur une table de pierre.`, s: 'maison' },
+        { t: `${C} a pointé le museau entre les branches. Qui pouvait bien allumer cette lanterne, chaque soir ?`, s: 'feuilles' },
+      ],
+      mid: [
+        { t: `C'était Madame Lila, avec ses cheveux gris et son arrosoir vert. Elle parlait à ses plantes comme à de vieilles amies.`, s: 'silence' },
+        { t: `« La lanterne, c'est pour les animaux de la nuit », a-t-elle expliqué par-dessus la haie. « Pour qu'ils retrouvent leur chemin. »`, s: 'maison' },
+      ],
+      close: [
+        { t: `Alors, avant de rentrer, tu as regardé la petite flamme veiller dans le noir. Elle avait l'air de savoir ce qu'elle faisait.`, s: 'etoiles' },
+        { t: `Cette nuit-là, personne ne s'est perdu dans le jardin. Ferme les yeux… Bonne nuit.`, s: 'nuit' },
+      ],
+      summary: `Madame Lila allume chaque soir une lanterne pour guider les animaux de la nuit`,
+    },
+    {
+      title: 'Le vent qui déménage',
+      open: [
+        { t: `Woooosh ! Le vent s'est levé, et le jardin s'est mis à bouger tout entier.`, s: 'feuilles' },
+        { t: `Les feuilles partaient en tourbillon, comme une bande d'oiseaux pressés. ${C} courait après, sans jamais en attraper une.`, s: 'pas' },
+      ],
+      mid: [
+        { t: `Le vent a emporté un chapeau de paille, deux pétales et un morceau de nuage.`, s: 'feuilles' },
+        { t: `Il s'est faufilé sous la porte : hoooou ! Puis il est ressorti par la cheminée, tout content de son passage.`, s: 'maison' },
+      ],
+      close: [
+        { t: `Et puis, d'un coup, il s'est calmé. Comme s'il avait fini son travail. Le jardin s'est reposé.`, s: 'silence' },
+        { t: `Demain, tout sera rangé autrement. C'est ça, le vent : un déménageur qui ne demande jamais la permission. Ferme les yeux… Bonne nuit.`, s: 'nuit' },
+      ],
+      summary: `le vent a tout déplacé dans le jardin avant de se calmer`,
     },
   ];
-  return chapters[(n - 1) % chapters.length];
 }
 
-// Scènes d'ambiance pour remplir la durée choisie (1 à 5 min).
-function ambientBeats() {
-  const N = () => S.name, C = () => S.comp.word;
+// Scènes de respiration : elles étoffent le chapitre jusqu'à la durée voulue.
+function breathingBeats(N, C) {
   return [
-    () => `Le vent du soir passait dans les feuilles, tout doucement, comme pour ne réveiller personne. Quelque part, un merle terminait sa dernière chanson de la journée, et le jardin, peu à peu, baissait la voix.`,
-    () => `${cap(C())} marchait devant, la queue bien droite, en s'arrêtant tous les trois pas pour vérifier que ${N()} suivait. C'était sa façon à lui de dire : je connais le chemin, fais-moi confiance.`,
-    () => `L'herbe sentait la fin du jour, cette odeur verte et fraîche qui n'existe qu'au moment où le soleil s'en va. ${N()} respirait doucement, et plus il respirait doucement, plus le jardin semblait respirer avec lui.`,
-    () => `Au-dessus de la maison, la première étoile venait de s'allumer. Puis une deuxième, discrète, comme si elle attendait d'être invitée. ${N()} les connaissait bien : c'étaient les mêmes qui veillaient chaque nuit.`,
-    () => `Près du vieux pommier, une araignée finissait sa toile pour la nuit, fil après fil, sans se presser. Tout, dans le jardin du soir, prenait son temps. C'est peut-être ça, le secret des soirs tranquilles.`,
-    () => `Un escargot traversait l'allée, à sa vitesse d'escargot, c'est-à-dire très exactement la bonne vitesse pour lui. ${cap(C())} l'a regardé passer avec beaucoup de respect. Dans le jardin, chacun va à son pas.`,
-    () => `La lumière des fenêtres de la maison dessinait des carrés dorés sur la pelouse. Dedans, on entendait les petits bruits du soir : une casserole, une chaise, une voix. Les bruits d'une maison qui se prépare à dormir.`,
-    () => `${cap(C())} s'est arrêté soudain, les oreilles dressées. Rien de grave : juste une souris pressée qui rentrait chez elle, les bras chargés de graines, comme quelqu'un qui a fait ses courses trop tard.`,
+    { t: `Le vent du soir passait dans les feuilles, tout doucement… comme un long chuchotement. On aurait dit que le jardin murmurait une berceuse.`, s: 'feuilles' },
+    { t: `${C} marchait devant, fier comme un capitaine. Un pas… deux pas… trois pas… et hop ! Il se retournait pour vérifier que tu suivais bien.`, s: 'pas' },
+    { t: `Dans le ciel, la première étoile venait de s'allumer. Puis une deuxième. Puis une troisième. Elles clignotaient, comme pour dire bonsoir.`, s: 'etoiles' },
+    { t: `Dans la maison, les fenêtres faisaient des carrés de lumière dorée sur l'herbe. On entendait une casserole… une chaise… une voix douce.`, s: 'maison' },
+    { t: `Près du vieux pommier, une araignée finissait sa toile pour la nuit. Fil après fil, sans se presser. Dans le jardin du soir, tout prend son temps.`, s: 'silence' },
+    { t: `Un escargot traversait l'allée, à sa vitesse d'escargot — c'est-à-dire très exactement la bonne vitesse pour lui.`, s: 'silence' },
+    { t: `Le merle a chanté sa toute dernière chanson. Celle qu'il garde pour le dodo. Tiu… tiu… tiu…`, s: 'oiseau' },
+    { t: `L'herbe sentait la fin du jour. Cette odeur verte et fraîche qui n'existe qu'au moment où le soleil s'en va.`, s: 'feuilles' },
+    { t: `Quelque part sous la haie, on entendait des petits bruits : frou, frou. C'était la nuit qui s'installait, à sa façon.`, s: 'feuilles' },
+    { t: `Une chouette a hululé, très loin. Hou-hou ! ${C} a dressé les oreilles, puis il a haussé les épaules : ce n'était qu'une voisine.`, s: 'silence' },
+    { t: `Sur la fenêtre de la cuisine, un papillon de nuit tapotait contre la vitre. Toc, toc, toc. Il voulait voir la lumière de plus près, alors ${N} a éteint la lampe, tout doucement, pour qu'il puisse aller se coucher lui aussi.`, s: 'maison' },
+    { t: `Une pomme est tombée du pommier. Poum ! Elle a roulé dans l'herbe, s'est arrêtée juste devant ${C}, qui l'a reniflée longtemps avant de décider que non, décidément, ce n'était pas pour lui.`, s: 'feuilles' },
+    { t: `Le chat des voisins est passé sur le mur, tout en haut, sans faire le moindre bruit. Il marchait comme s'il était en retard à un rendez-vous très important. Peut-être que c'était vrai.`, s: 'pas' },
+    { t: `La dernière abeille de la journée a fait un tour du massif de lavande. Bzzz… Puis elle est repartie vers sa maison, les pattes toutes jaunes de pollen. Elle avait bien travaillé.`, s: 'feuilles' },
+    { t: `La lune s'est cachée derrière un nuage, puis elle est ressortie de l'autre côté. On aurait dit qu'elle jouait à cache-cache avec le jardin, et qu'elle perdait toujours.`, s: 'etoiles' },
+    { t: `L'arrosoir vert était resté dehors, plein d'eau de pluie. Dedans, il y avait un morceau de ciel et une étoile qui tremblait un peu. ${N} a soufflé dessus, et l'étoile a dansé.`, s: 'eau' },
+    { t: `Sous la pierre plate, une grenouille faisait des bulles. Ploup… ploup… Elle ne se pressait pas. Les grenouilles ne se pressent jamais, et c'est peut-être leur plus grand secret.`, s: 'eau' },
+    { t: `Tout au fond du jardin, la balançoire bougeait toute seule, très lentement. Ce n'était que le vent. Mais on aurait dit que quelqu'un venait juste de partir.`, s: 'silence' },
+    { t: `Une étoile filante a traversé le ciel — flouch ! — si vite que ${N} a failli la rater. Il paraît qu'il faut faire un vœu. Alors ${N} en a fait un, tout bas, rien que pour lui.`, s: 'etoiles' },
+    { t: `Dans la maison, quelqu'un a monté l'escalier. Une marche… deux marches… la marche qui grince toujours. C'est le bruit qui veut dire : bientôt, ce sera l'heure.`, s: 'maison' },
   ];
 }
 
-// Tissage du jour : subtil mais compréhensible pour l'enfant.
-function weaveBeats() {
-  const N = () => S.name, C = () => S.comp.word;
+// Le tissage de la journée : ce que le parent a noté, dit par l'histoire.
+function dayBeats(N, C) {
   const beats = [];
-  const fear = S.checkin.fear.trim(), victory = S.checkin.victory.trim();
-  if (victory) beats.push({ weave: true, text:
-    `En passant devant la cabane, ${C()} s'est retourné vers ${N()} avec un air très fier. Il faut dire que dans le jardin, tout le monde était au courant : aujourd'hui, ${N()} avait réussi quelque chose de difficile. Les nouvelles comme ça, dans un jardin, voyagent vite — de la haie au pommier, du pommier aux étoiles. Et les étoiles, ce soir, brillaient un peu plus fort que d'habitude.` });
-  if (fear) beats.push({ weave: true, text:
-    `Près de la haie, Grattouille semblait un peu inquiet, roulé presque en boule. ${N()} s'est accroupi tout près. « Tu sais », lui a-t-il dit doucement, « demain il y a quelque chose qui me fait un peu peur, à moi aussi. Mais j'ai remarqué un truc : quand on y va quand même, après, on est drôlement fier. Et presque toujours, c'était moins terrible que ce qu'on imaginait. » Grattouille a sorti le bout de son nez. Ça voulait dire d'accord.` });
+  if (S.checkin.victory.trim()) {
+    beats.push({ t: `Et tu sais quoi ? Dans le jardin, tout le monde était déjà au courant : `
+      + `aujourd'hui, tu as réussi quelque chose de difficile. Bravo ! Le merle l'a chanté au `
+      + `pommier. Le pommier l'a murmuré aux étoiles. Et les étoiles, ce soir, brillaient un `
+      + `petit peu plus fort. Rien que pour toi.`, s: 'joie', weave: true });
+  }
+  if (S.checkin.fear.trim()) {
+    beats.push({ t: `Près de la haie, le petit hérisson semblait inquiet, roulé en boule comme `
+      + `un caillou. Alors tu t'es approché tout doucement, et tu lui as dit : « Tu sais, moi `
+      + `aussi, parfois, j'ai un peu peur. Mais quand on y va quand même… après, on est `
+      + `drôlement fier. Et presque toujours, c'était moins difficile qu'on croyait. » Le `
+      + `hérisson a sorti le tout petit bout de son nez. Ça voulait dire : d'accord. J'essaierai.`,
+      s: 'reconfort', weave: true });
+  }
   return beats;
 }
 
-// Assemble le chapitre pour la durée demandée (~115 mots/min à ce débit).
-function buildEpisode(n = S.episode) {
-  const ch = chapterFor(n);
-  const budget = S.minutes * 115;
+// Composition du chapitre : événement du soir + respirations, jusqu'à la durée
+// demandée. Le tirage dépend du numéro de chapitre : chaque soir est nouveau.
+function composeChapter(n) {
+  const N = S.name, C = cap(S.comp ? S.comp.word : 'le chat');
+  const rand = seeded(n * 7919 + S.name.length);
+  const events = eveningEvents(N, C);
+  const event = events[Math.floor(rand() * events.length)];
+  const breathers = breathingBeats(N, C).slice().sort(() => rand() - 0.5);
+
   const scenes = [];
-  if (n === S.episode && S.episode > 1 && S.lastSummary) {
-    scenes.push({ recap: true, text: `La dernière fois, dans le jardin… ${S.lastSummary} Et ce soir, l'histoire continue.` });
+  if (n > 1 && S.lastSummary) {
+    scenes.push({ text: `La dernière fois, dans le jardin… ${S.lastSummary}. Et ce soir, l'histoire continue.`,
+      recap: true, sfxKey: null });
   }
-  scenes.push({ text: ch.open() });
-  let words = scenes.reduce((n, s) => n + s.text.split(/\s+/).length, 0)
-    + ch.close().split(/\s+/).length;
-  for (const b of weaveBeats()) { scenes.push(b); words += b.text.split(/\s+/).length; }
-  const pool = ambientBeats();
-  const start = (S.episode * 3) % pool.length; // varie d'un soir à l'autre
-  for (let i = 0; i < pool.length && words < budget; i++) {
-    const text = pool[(start + i) % pool.length]();
-    scenes.push({ text }); words += text.split(/\s+/).length;
-  }
-  scenes.push({ text: ch.close() });
-  return { n, title: ch.title, scenes, summary: ch.summary() };
+  const push = (beat) => scenes.push({
+    text: beat.t, sfxKey: SFX_TAGS[beat.s] ?? null, weave: !!beat.weave,
+  });
+
+  event.open.forEach(push);
+  const budget = S.minutes * 115;
+  const words = () => scenes.reduce((sum, s) => sum + s.text.split(/\s+/).length, 0);
+  const tail = event.mid.concat(event.close).reduce((sum, b) => sum + b.t.split(/\s+/).length, 0);
+
+  // On intercale des respirations tant qu'il reste de la place avant la chute.
+  let i = 0;
+  while (words() + tail < budget && i < breathers.length) push(breathers[i++]);
+  event.mid.forEach(push);
+  while (words() + tail / 2 < budget && i < breathers.length) push(breathers[i++]);
+  dayBeats(N, C).forEach(push);
+  event.close.forEach(push);
+
+  return {
+    n,
+    title: event.title,
+    scenes,
+    summary: event.summary,
+    composed: true,
+  };
 }
 
 // ─── Lecture : la voix mène, aucune interaction ─────────────────────────────
@@ -1014,8 +1183,8 @@ async function startStory() {
     }
   }
 
-  if (audioMode()) {
-    // Chapitre 1 : narration en voix humaine pré-générée (Piper).
+  if (replaying === 1 && audioMode()) {
+    // Réécoute du chapitre 1 de démonstration : narration humaine pré-générée.
     EP = {
       n: 1, title: 'Le jardin du soir', audio: true,
       scenes: audioSequence().map(key => ({
@@ -1024,12 +1193,15 @@ async function startStory() {
       summary: 'Tu as découvert un hérisson sous la haie et tu lui as laissé un bol d\'eau.',
     };
   } else {
-    EP = buildEpisode(replaying ?? S.episode);
+    EP = composeChapter(replaying ?? S.episode);
   }
   sceneIdx = 0; paused = false;
   el('story-ep').textContent = `Chapitre ${EP.n}`;
-  el('story-source').textContent =
-    `chapitre écrit d'avance (IA injoignable) · ${EP.scenes.length} scènes`;
+  const spoken = EP.scenes.reduce((n, s) => n + s.text.split(/\s+/).length, 0);
+  el('story-source').textContent = EP.composed
+    ? `composé hors ligne par Plume · ${EP.scenes.length} scènes · `
+      + `~${Math.max(1, Math.round(spoken / 115))} min`
+    : `chapitre de démonstration · ${EP.scenes.length} scènes`;
   el('story-title').textContent = EP.title;
   el('voice-btn').setAttribute('aria-pressed', 'true');
   el('voice-label').textContent = 'Pause';
@@ -1110,7 +1282,8 @@ function finishStory() {
   persist();
   el('end-text').textContent = EP.fromAI
     ? `Le chapitre ${EP.n} est terminé — écrit ce soir par l'IA, rien que pour ${S.name}. Demain, l'histoire reprendra exactement ici.`
-    : `Le chapitre ${EP.n} est terminé. Demain soir, l'histoire reprendra exactement ici, avec un petit rappel. (Chapitre écrit d'avance : l'IA n'était pas joignable.)`;
+    : `Le chapitre ${EP.n} est terminé — composé hors ligne par Plume, avec un `
+      + `événement du soir tiré au sort. Demain, un autre, dans la suite de l'histoire.`;
   go('s-end');
 }
 function backHome() { renderHome(); go('s-home'); }
@@ -1180,10 +1353,15 @@ async function testAI(btn) {
       + `${chapter.scenes.length} scènes, ${words} mots (~${Math.round(words / 115)} min). `
       + `Le chapitre de ce soir sera écrit en direct.`;
   } catch (e) {
-    out.innerHTML = `✗ L'IA n'est pas joignable (${e.message}). L'app jouera un `
-      + `chapitre écrit d'avance. Si vous avez ouvert le fichier téléchargé, `
-      + `essayez plutôt le lien https — les navigateurs bloquent ces appels `
-      + `depuis un fichier local.`;
+    const blocked = /bloqué par le navigateur/.test(e.message);
+    out.innerHTML = `✗ L'IA n'a pas répondu.<br><b>Cause :</b> ${e.message}.<br>`
+      + (blocked
+        ? `C'est une sécurité du navigateur, pas une panne de Plume : une page `
+          + `ne peut pas appeler un service extérieur dans ce contexte. `
+          + `L'app compose alors elle-même un chapitre neuf, hors ligne.`
+        : `L'app compose elle-même un chapitre neuf, hors ligne.`)
+      + `<br><br>Dans l'application finale, cet appel part du serveur Plume : `
+      + `aucune de ces limites ne s'applique.`;
   }
   btn.disabled = false;
 }

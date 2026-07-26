@@ -21,6 +21,8 @@ create table children (
   pets text[] not null default '{}',
   reading_level text not null default 'listener',
   target_sleep_time time not null default '20:30',
+  -- Durée du récit choisie par le parent : 1 à 5 minutes.
+  story_minutes int not null default 3 check (story_minutes between 1 and 5),
   created_at timestamptz not null default now()
 );
 
@@ -114,6 +116,8 @@ create table episodes (
   title text not null,
   episode_date date not null default current_date,
   emotional_thread text, -- le fil du jour, jamais montré à l'enfant
+  -- Feuilleton : le rappel « La dernière fois… » que lira l'épisode suivant.
+  next_recap text,
   status text not null default 'generating'
     check (status in ('generating', 'ready', 'told', 'failed')),
   bookmark jsonb, -- { scene_index, word_index, fell_asleep_at } (#19)

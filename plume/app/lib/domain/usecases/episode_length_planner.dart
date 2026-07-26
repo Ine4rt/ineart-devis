@@ -1,45 +1,54 @@
 import '../entities/child_profile.dart';
 
-/// Le Pacte de sommeil (innovation #34) : Plume protège l'heure du coucher.
-/// L'app calcule la durée idéale de l'épisode pour que l'enfant s'endorme
-/// à l'heure cible — quitte à raccourcir l'histoire. La confiance des
+/// Le Pacte de sommeil (innovation #34) : le parent choisit la durée du
+/// récit (1 à 5 minutes) ; à défaut, une durée par âge s'applique. L'app
+/// raccourcit encore si l'heure du coucher approche — la confiance des
 /// parents est le moteur de la rétention.
 class EpisodeLengthPlanner {
   const EpisodeLengthPlanner();
 
-  /// Durée cible par tranche d'âge (narration calme).
-  static const Map<AgeBand, Duration> _idealByAge = {
-    AgeBand.tiny: Duration(minutes: 6),
-    AgeBand.explorer: Duration(minutes: 9),
-    AgeBand.hero: Duration(minutes: 12),
-    AgeBand.legend: Duration(minutes: 15),
+  /// Bornes produit : jamais moins de 1 min, jamais plus de 5 min.
+  static const Duration minimum = Duration(minutes: 1);
+  static const Duration maximum = Duration(minutes: 5);
+
+  /// Durée par défaut par tranche d'âge, si le parent n'a rien choisi.
+  static const Map<AgeBand, Duration> _defaultByAge = {
+    AgeBand.tiny: Duration(minutes: 2),
+    AgeBand.explorer: Duration(minutes: 3),
+    AgeBand.hero: Duration(minutes: 4),
+    AgeBand.legend: Duration(minutes: 5),
   };
 
-  static const Duration _minimum = Duration(minutes: 4);
-
   /// Marge entre la fin de l'histoire et l'heure cible d'endormissement
-  /// (respirations, bisou, extinction).
+  /// (bisou, extinction).
   static const Duration _windDown = Duration(minutes: 3);
 
   Duration plan({
     required AgeBand ageBand,
     required DateTime now,
     required DateTime targetSleepTime,
+    int? parentMinutes,
   }) {
-    final ideal = _idealByAge[ageBand]!;
+    final ideal = _clamp(
+      parentMinutes != null
+          ? Duration(minutes: parentMinutes)
+          : _defaultByAge[ageBand]!,
+    );
     final available = targetSleepTime.difference(now) - _windDown;
 
     if (available >= ideal) return ideal;
-    if (available <= _minimum) return _minimum; // jamais d'histoire au rabais
+    if (available <= minimum) return minimum; // jamais d'histoire au rabais
     return available;
   }
 
+  Duration _clamp(Duration d) =>
+      d < minimum ? minimum : (d > maximum ? maximum : d);
+
   /// Message honnête au parent quand l'histoire a été raccourcie.
-  String? parentNote(Duration planned, AgeBand ageBand) {
-    final ideal = _idealByAge[ageBand]!;
-    if (planned >= ideal) return null;
+  String? parentNote(Duration planned, Duration requested) {
+    if (planned >= requested) return null;
     final m = planned.inMinutes;
     return 'Épisode raccourci à $m min ce soir pour protéger l\'heure du coucher. '
-        'Le monde reprendra exactement ici demain.';
+        'Le récit reprendra exactement ici demain.';
   }
 }

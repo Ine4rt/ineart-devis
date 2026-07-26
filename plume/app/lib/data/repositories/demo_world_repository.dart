@@ -62,45 +62,39 @@ class DemoWorldRepository implements WorldRepository {
         date: DateTime.now(),
         emotionalThread: 'courage après une journée difficile',
         isDownloaded: true,
+        // Aucune interaction pendant le récit : le feuilleton se déroule
+        // seul, ouvert par un court rappel de l'épisode précédent.
         scenes: const [
           StoryScene(
             index: 0,
             text:
-                'La journée se rangeait doucement. Dans le jardin, la lumière '
-                'était devenue dorée, et le petit renard attendait Léo près de '
-                'la porte, comme chaque soir.',
+                'La dernière fois, dans le jardin… Léo avait découvert un '
+                'hérisson sous la haie et lui avait laissé un bol d\'eau. '
+                'Et ce soir, l\'histoire continue.',
           ),
           StoryScene(
             index: 1,
             text:
-                'Au fond du jardin, la haie s\'est mise à remuer. Le petit renard '
-                's\'est arrêté net, une oreille levée. Là, sous les feuilles : un '
-                'hérisson, tout petit, qui cherchait son chemin.',
-            choice: StoryChoice(
-              prompt: 'Que fait Léo ?',
-              options: [
-                ChoiceOption(
-                  id: 'opt-water',
-                  label: 'Lui laisser un bol d\'eau',
-                  seedSummary:
-                      'Le hérisson reviendra boire chaque soir de l\'été.',
-                ),
-                ChoiceOption(
-                  id: 'opt-watch',
-                  label: 'L\'observer sans faire de bruit',
-                  seedSummary:
-                      'Léo connaît maintenant le passage secret de la haie.',
-                ),
-              ],
-            ),
+                'La journée se rangeait doucement. Dans le jardin, la lumière '
+                'était devenue dorée, et le petit renard attendait Léo près de '
+                'la porte, comme chaque soir. Près de la haie… le bol était '
+                'vide. Le hérisson était revenu !',
           ),
           StoryScene(
             index: 2,
             text:
+                '« Il lui faut un nom », a murmuré Léo. Et comme le hérisson '
+                'se grattait le bout du nez, le nom est venu tout seul : '
+                'Grattouille. Grattouille a mangé une feuille de salade, puis '
+                'il est reparti par un petit passage, tout au fond de la haie.',
+          ),
+          StoryScene(
+            index: 3,
+            text:
                 'Dedans, la maison sentait le soir. Léo a regardé une dernière '
                 'fois le jardin par la fenêtre : la haie, la nuit bleue, et '
-                'quelque part là-dessous, un hérisson qui s\'endormait aussi. '
-                'Demain, le jardin s\'en souviendrait.',
+                'quelque part là-dessous, Grattouille qui s\'endormait aussi. '
+                'Où menait ce passage secret ? Demain soir, le jardin le dirait.',
           ),
         ],
       );

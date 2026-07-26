@@ -28,13 +28,10 @@ interface EpisodePlan {
   scenes: {
     text: string;
     illustration_brief: string;
-    choice?: {
-      prompt: string;
-      options: { label: string; seed_summary: string }[];
-    };
   }[];
   world_events: string[]; // ce qui devient canonique ce soir
   harvested_seed_ids: string[]; // promesses tenues ce soir
+  next_recap: string; // « la dernière fois… » du prochain épisode
 }
 
 Deno.serve(async (req) => {
@@ -69,7 +66,8 @@ async function assembleContext(childId: string) {
     many("family_cast", "child_id", childId),
     supabase.from("emotion_checkins").select("*").eq("child_id", childId)
       .eq("date", today()).maybeSingle().then((r) => r.data),
-    supabase.from("episodes").select("number, title").eq("child_id", childId)
+    supabase.from("episodes").select("number, title, next_recap")
+      .eq("child_id", childId)
       .order("number", { ascending: false }).limit(1).maybeSingle()
       .then((r) => r.data),
   ]);
@@ -103,6 +101,7 @@ async function assembleContext(childId: string) {
     child, companion, world, cast, checkin, ripeSeeds,
     events: events ?? [], entities: entities ?? [],
     age, nextNumber: (lastEpisode?.number ?? 0) + 1,
+    previousRecap: lastEpisode?.next_recap ?? null,
   };
 }
 
@@ -134,11 +133,17 @@ persistant et unique appartenant à un enfant. Règles absolues :
 4. ÂGE — vocabulaire, rythme et thèmes calibrés à l'âge indiqué. Fin TOUJOURS
    apaisante : l'épisode conduit au sommeil. Aucune violence, aucune peur non
    résolue, aucun contenu inadapté.
-5. CHOIX — exactement une scène contient un choix à 2 options ; chaque option a un
-   seed_summary : la conséquence qui sera plantée dans le canon (germera dans
-   plusieurs semaines).
-6. Longueur totale ≈ ${wordsForMinutes(plannedMinutes(ctx.age))} mots,
-   répartis en 4 à 6 scènes. Chaque scène a un illustration_brief (une phrase,
+5. AUCUNE INTERACTION — jamais de choix, jamais de question posée à l'enfant.
+   Le récit se déroule seul, comme un feuilleton qu'on écoute. C'est le canon
+   (et les journées réelles de l'enfant) qui fait avancer l'histoire.
+6. FEUILLETON — l'épisode COMMENCE par un court rappel (2 phrases maximum,
+   « La dernière fois… ») qui reprend le résumé fourni, puis CONTINUE le récit
+   là où il s'était arrêté. Il se termine par une note douce qui donne envie
+   de demain, jamais un suspense angoissant. Fournis aussi next_recap : le
+   rappel que lira l'épisode suivant.
+7. DURÉE — le parent a demandé ${plannedMinutes(ctx)} minute(s) : longueur
+   totale ≈ ${wordsForMinutes(plannedMinutes(ctx))} mots, répartis en 3 à 7
+   scènes. Chaque scène a un illustration_brief (une phrase,
    style: ${JSON.stringify(ctx.world?.style_bible ?? {})}).
 Réponds UNIQUEMENT avec le JSON demandé.`;
 
@@ -165,17 +170,15 @@ Réponds UNIQUEMENT avec le JSON demandé.`;
       }
       : null,
     graines_a_recolter: ctx.ripeSeeds.map((s) => ({ id: s.id, resume: s.summary })),
+    rappel_du_dernier_episode: ctx.previousRecap,
     numero_episode: ctx.nextNumber,
     format_attendu: {
       title: "string",
       emotional_thread: "string|null — résumé du filigrane, pour le parent",
-      scenes: [{
-        text: "string",
-        illustration_brief: "string",
-        choice: "optionnel: { prompt, options: [{ label, seed_summary }] }",
-      }],
+      scenes: [{ text: "string", illustration_brief: "string" }],
       world_events: ["résumés canoniques de ce qui s'est passé ce soir"],
       harvested_seed_ids: ["ids des graines tenues ce soir"],
+      next_recap: "le rappel « La dernière fois… » du prochain épisode",
     },
   };
 
@@ -194,8 +197,7 @@ Réponds UNIQUEMENT avec le JSON demandé.`;
 function validate(plan: EpisodePlan, ctx: { ripeSeeds: { id: string }[] }) {
   if (!plan.title || !plan.scenes?.length) throw new Error("plan incomplet");
   if (plan.scenes.length > 8) throw new Error("trop de scènes");
-  const choices = plan.scenes.filter((s) => s.choice);
-  if (choices.length !== 1) throw new Error("il faut exactement un choix");
+  if (!plan.next_recap) throw new Error("next_recap manquant (feuilleton)");
   const knownSeeds = new Set(ctx.ripeSeeds.map((s) => s.id));
   for (const id of plan.harvested_seed_ids ?? []) {
     if (!knownSeeds.has(id)) throw new Error(`graine inconnue récoltée: ${id}`);
@@ -216,6 +218,7 @@ async function commit(
       number: ctx.nextNumber,
       title: plan.title,
       emotional_thread: plan.emotional_thread,
+      next_recap: plan.next_recap,
       status: "ready",
     })
     .select("id").single();
@@ -226,16 +229,6 @@ async function commit(
       episode_id: episode.id,
       index,
       text: scene.text,
-      choice: scene.choice
-        ? {
-          prompt: scene.choice.prompt,
-          options: scene.choice.options.map((o, i) => ({
-            id: `${episode.id}-opt-${i}`,
-            label: o.label,
-            seed_summary: o.seed_summary,
-          })),
-        }
-        : null,
     })),
   );
 
@@ -264,9 +257,14 @@ async function commit(
 
 const prio = (p: string) => ({ low: 0, normal: 1, high: 2 }[p] ?? 1);
 const today = () => new Date().toISOString().slice(0, 10);
-const wordsForMinutes = (min: number) => Math.round(min * 140); // narration calme
-// Durée idéale par âge — miroir serveur du Pacte de sommeil de l'app.
-const plannedMinutes = (age: number) => age <= 4 ? 6 : age <= 7 ? 9 : age <= 9 ? 12 : 15;
+const wordsForMinutes = (min: number) => Math.round(min * 120); // voix grave, débit lent
+// Durée : choix du parent (children.story_minutes, borné 1-5 min),
+// sinon durée par défaut selon l'âge — miroir du Pacte de sommeil de l'app.
+const plannedMinutes = (ctx: { child: { story_minutes?: number }; age: number }) => {
+  const parent = ctx.child.story_minutes;
+  if (parent) return Math.min(5, Math.max(1, parent));
+  return ctx.age <= 4 ? 2 : ctx.age <= 7 ? 3 : ctx.age <= 9 ? 4 : 5;
+};
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), {
     status,

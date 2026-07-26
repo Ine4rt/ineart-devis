@@ -35,10 +35,12 @@ Pipeline production : le moteur narratif tague chaque scène
 (`feuilles`, `oiseau`, `pas`, `eau`, `carillon`…) → `narrate-episode`
 mixe voix + tag SFX + musique (pistes séparées, ducking -12 dB sous la voix).
 
-## Mixage (validé en test v13)
+## Mixage (validé en test v14)
 
-- musique : volume élément **0,22**, boucle sans couture, démarre dans le
-  geste utilisateur (jamais en autoplay différé — leçon du bug v11) ;
-- bruitages : **0,20**, un par scène, déclenchés au début de scène ;
+- musique : volume de base **0,09**, **ducking à 0,05 pendant la voix**
+  (remontée en fondu de 1,2 s dans les silences), entrée en fondu de 1,8 s,
+  boucle sans couture, démarre dans le geste utilisateur (jamais en
+  autoplay différé — leçon du bug v11) ;
+- bruitages : **0,11**, un par scène, déclenchés au début de scène ;
 - voix : plein niveau ; pause globale = voix + musique + bruitages,
   et la pause gagne toujours contre les minuteurs d'enchaînement.

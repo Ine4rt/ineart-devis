@@ -480,10 +480,28 @@ const audioMode = () => S.audioVoice !== 'device' && hasNarration() && (replayin
 const sharedAudio = new Audio();
 // Ambiance de soir d'été (grillons + nappe), en boucle sous la narration.
 const ambience = new Audio(typeof AMBIENCE !== 'undefined' ? AMBIENCE : '');
-ambience.loop = true; ambience.volume = 0.22;
+ambience.loop = true;
+// Mixage livre audio : musique discrète, encore abaissée quand la voix
+// parle (ducking), remontée en douceur dans les silences.
+const MUSIC_VOL = 0.09, MUSIC_DUCK = 0.05;
+ambience.volume = MUSIC_VOL;
+let musicFade = null;
+function fadeMusic(target, ms = 900) {
+  clearInterval(musicFade);
+  const step = (target - ambience.volume) / Math.max(1, ms / 50);
+  if (Math.abs(step) < 1e-4) { ambience.volume = target; return; }
+  musicFade = setInterval(() => {
+    const v = ambience.volume + step;
+    if ((step > 0 && v >= target) || (step < 0 && v <= target)) {
+      ambience.volume = target; clearInterval(musicFade);
+    } else { ambience.volume = Math.min(1, Math.max(0, v)); }
+  }, 50);
+}
 // Bruitages scénarisés (feuilles, merle, pas, carillon…), un par scène.
 const sfxAudio = new Audio();
-sfxAudio.volume = 0.20;
+sfxAudio.volume = 0.11;
+sharedAudio.addEventListener('playing', () => fadeMusic(MUSIC_DUCK, 700));
+sharedAudio.addEventListener('ended', () => fadeMusic(MUSIC_VOL, 1200));
 let audioUnlocked = false;
 function unlockAudio() {
   // iOS n'autorise l'audio qu'après un geste : on « débloque » l'élément
@@ -647,7 +665,9 @@ function renderHome() {
 function startAmbience() {
   ambience.muted = false;
   ambience.currentTime = 0;
+  ambience.volume = 0;
   ambience.play().catch(() => {});
+  fadeMusic(MUSIC_VOL, 1800);
 }
 
 // Réécoute d'un chapitre déjà raconté : ne touche pas à la progression.

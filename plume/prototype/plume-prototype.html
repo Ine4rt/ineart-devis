@@ -393,6 +393,7 @@
           <option value="device">Voix de l'appareil (synthèse)</option>
         </select>
         <button class="day-btn" style="margin-top:10px;min-height:44px;background:none;border:1px solid rgba(35,39,61,.25);color:var(--dayink)" onclick="testVoice()">Écouter cette voix</button>
+        <p class="lede" id="voice-test-status" style="display:none;margin-top:10px"></p>
       </div>
       <div class="day-card">
         <b>Ambiance sonore : <span id="amb-val">65</span> %</b>
@@ -725,11 +726,24 @@ const NARR_LABELS = {
   baked: 'Voix douce',
   device: 'Voix de l\'appareil',
 };
+// Confirmation en clair, affichée dans l'espace parent lors du bouton
+// « Écouter cette voix » — la même preuve, mais au moment où le parent
+// règle les choses, pas seulement pendant l'histoire.
+const NARR_CONFIRM = {
+  loading: 'Connexion de la voix d\'essai…',
+  online: '✓ La voix en ligne répond : c\'est elle que Plume utilisera ce soir.',
+  baked: '✓ Voix entendue — pré-enregistrée, elle fonctionne même sans réseau.',
+  device: 'Voix de synthèse de l\'appareil : elle peut rester silencieuse sur '
+    + 'iPhone en mode « écran d\'accueil ». Préférez une voix ci-dessus si possible.',
+};
 function setNarrationStatus(state) {
   const box = el('narr-status');
-  if (!box) return;
-  box.dataset.state = state;
-  el('narr-status-text').textContent = NARR_LABELS[state] || '';
+  if (box) { box.dataset.state = state; el('narr-status-text').textContent = NARR_LABELS[state] || ''; }
+  const test = el('voice-test-status');
+  if (test && test.dataset.testing === '1') {
+    test.style.display = 'block';
+    test.textContent = NARR_CONFIRM[state] || '';
+  }
 }
 let clipToken = 0; // invalide les rappels d'un clip interrompu par stopAudio
 // key : clé d'un mp3 pré-généré, ou null pour un texte écrit à l'instant par
@@ -815,8 +829,11 @@ function stopAudio(keepMusic = false) {
 function setAudioVoice(v) { S.audioVoice = v; S.voiceChosen = true; persist(); testVoice(); }
 function testVoice() {
   stopAudio(true); stopSpeech(); // on garde le fond pour juger l'équilibre
-  if (S.audioVoice !== 'device' && hasNarration()) playClip('test', TEST_PHRASE);
-  else speak('Bonsoir. Voici la voix qui racontera l\'histoire, ce soir.', () => {});
+  const test = el('voice-test-status');
+  if (test) { test.dataset.testing = '1'; test.style.display = 'block'; test.textContent = NARR_CONFIRM.loading; }
+  if (S.audioVoice !== 'device' && hasNarration()) { playClip('test', TEST_PHRASE); return; }
+  setNarrationStatus('device');
+  speak('Bonsoir. Voici la voix qui racontera l\'histoire, ce soir.', () => {});
 }
 
 // Textes affichés pendant la narration humaine (identiques aux mp3).

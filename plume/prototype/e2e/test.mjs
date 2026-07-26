@@ -144,6 +144,20 @@ await page.waitForTimeout(600);
 check('reprise : musique repartie', await page.evaluate(
   () => (actx ? actx.state === 'running' : !ambience.paused)));
 
+// ─── Confirmation de voix dans l'espace parent ─────────────────────────────
+// Le parent doit pouvoir vérifier le son AVANT le soir, pas seulement le
+// deviner pendant l'histoire : le bouton « Écouter cette voix » doit
+// afficher une confirmation en clair (✓ / cause), pas juste jouer un son
+// dans le vide.
+await page.evaluate(() => go('s-checkin'));
+await page.waitForTimeout(150);
+const beforeTest = await page.evaluate(() => document.getElementById('voice-test-status').style.display);
+check('confirmation de voix masquée avant tout essai', beforeTest !== 'block', beforeTest);
+await page.click('text=Écouter cette voix');
+await page.waitForTimeout(4200); // laisse le repli en ligne → pré-enregistré s'exécuter
+const voiceTest = await page.evaluate(() => document.getElementById('voice-test-status').textContent);
+check('confirmation de voix affichée après l\'essai', voiceTest.startsWith('✓'), voiceTest);
+
 check('aucune erreur JS', errors.length === 0, errors.join(' | ').slice(0, 300));
 
 await browser.close();

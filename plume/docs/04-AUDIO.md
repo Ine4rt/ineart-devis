@@ -1,5 +1,27 @@
 # PLUME — Chaîne audio
 
+## Le conteur IA (prototype v17)
+
+Le prototype ne récite plus un texte figé : à chaque soirée, **l'IA écrit le
+chapitre**. La génération est lancée au début des trois respirations — l'attente
+devient le rituel — et le repli sur le feuilleton écrit à la main garantit que
+l'enfant n'attend jamais.
+
+Ce que reçoit le conteur : prénom, âge, compagnon, rappel du chapitre
+précédent, réussite et inquiétude du jour, durée demandée (1-10 min →
+~115 mots/min), et la palette de bruitages. Ce qu'il rend un JSON
+`{titre, scenes:[{texte, son}], rappel_suivant}`.
+
+Consignes d'écriture (identiques prototype ↔ production) : ton album jeunesse
+(phrases courtes, onomatopées, répétitions, images concrètes, tutoiement),
+monde réel uniquement, journée de l'enfant tissée sans jamais la nommer, fin
+qui conduit au sommeil.
+
+| Contexte | Modèle | Coût |
+|---|---|---|
+| Prototype | Pollinations (`text.pollinations.ai`, OpenAI-compatible, sans clé) | Gratuit |
+| Production | Claude via `generate-episode` | à l'usage |
+
 ## Voix de narration
 
 | Contexte | Solution | Coût |
@@ -14,6 +36,11 @@ durées de pause ; l'audio est assemblé phrase par phrase (validé en v9,
 pauses ×0,6 après retour client).
 
 ## Musique & bruitages
+
+**Tags de bruitage** (choisis par l'IA, un par scène) : `feuilles`,
+`craquement`, `oiseau`, `pas`, `etoiles`, `maison`, `joie`, `reconfort`,
+`eau`, `nuit`, `silence`. Validés côté serveur (`SFX_TAGS`) et mappés côté
+client sur les clips du mixeur.
 
 **Prototype** : tout est synthétisé sur mesure (`prototype/build_soundscape.py`)
 — berceuse de boîte à musique, craquement de branche à micro-fractures,

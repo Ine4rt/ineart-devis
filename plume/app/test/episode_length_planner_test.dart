@@ -7,7 +7,7 @@ void main() {
   final now = DateTime(2026, 7, 25, 20, 0);
 
   group('EpisodeLengthPlanner — le Pacte de sommeil', () {
-    test('respecte la durée choisie par le parent (1 à 5 min)', () {
+    test('respecte la durée choisie par le parent (1 à 10 min)', () {
       final planned = planner.plan(
         ageBand: AgeBand.explorer,
         now: now,
@@ -17,12 +17,12 @@ void main() {
       expect(planned, const Duration(minutes: 4));
     });
 
-    test('borne la demande parent à 5 min maximum', () {
+    test('borne la demande parent à 10 min maximum', () {
       final planned = planner.plan(
         ageBand: AgeBand.legend,
         now: now,
-        targetSleepTime: now.add(const Duration(minutes: 30)),
-        parentMinutes: 12,
+        targetSleepTime: now.add(const Duration(minutes: 40)),
+        parentMinutes: 25,
       );
       expect(planned, EpisodeLengthPlanner.maximum);
     });
@@ -33,7 +33,7 @@ void main() {
         now: now,
         targetSleepTime: now.add(const Duration(minutes: 30)),
       );
-      expect(planned, const Duration(minutes: 3));
+      expect(planned, const Duration(minutes: 5));
     });
 
     test('raccourcit l\'épisode quand le coucher approche', () {

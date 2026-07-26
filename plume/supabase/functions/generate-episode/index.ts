@@ -22,12 +22,19 @@ const anthropic = new Anthropic({ apiKey: Deno.env.get("ANTHROPIC_API_KEY")! });
 
 const MODEL = "claude-sonnet-5";
 
+// Palette de bruitages disponible côté client (voir docs/04-AUDIO.md).
+const SFX_TAGS = [
+  "feuilles", "craquement", "oiseau", "pas", "etoiles",
+  "maison", "joie", "reconfort", "eau", "nuit", "silence",
+];
+
 interface EpisodePlan {
   title: string;
   emotional_thread: string | null;
   scenes: {
     text: string;
     illustration_brief: string;
+    sfx: string; // tag de bruitage : voir SFX_TAGS
   }[];
   world_events: string[]; // ce qui devient canonique ce soir
   harvested_seed_ids: string[]; // promesses tenues ce soir
@@ -121,6 +128,15 @@ persistant et unique appartenant à un enfant. Règles absolues :
    maison, saisons, animaux vrais), aucune créature fantastique, aucune magie
    explicite — la magie vient de la mémoire du monde et de la beauté du
    quotidien. Écriture sobre et chaleureuse, jamais mièvre ni « bizarre ».
+0 bis. TON ALBUM JEUNESSE (validé au prototype) — phrases courtes,
+   onomatopées (cric, crac, plouf, tiu-tiu), répétitions rythmées
+   (« Un pas… deux pas… trois pas… et hop ! »), images concrètes d'enfant
+   (« rond comme une brosse », « des yeux noirs comme des myrtilles »),
+   petites adresses directes (« Chut… Regarde, là… »), tutoiement.
+0 ter. SONS — chaque scène porte un tag `sfx` parmi ${SFX_TAGS.join(", ")},
+   celui qui correspond VRAIMENT à l'action de la scène (craquement pour une
+   branche qui casse, eau pour boire, etoiles pour le ciel, nuit pour la
+   dernière scène, silence si rien). Le mixeur y associera le bruitage.
 1. CANON — tu n'inventes jamais rien qui contredise les entités et événements
    fournis. Les personnages se souviennent de tout. Tu peux introduire au plus
    UNE nouvelle entité par épisode.
@@ -142,8 +158,9 @@ persistant et unique appartenant à un enfant. Règles absolues :
    de demain, jamais un suspense angoissant. Fournis aussi next_recap : le
    rappel que lira l'épisode suivant.
 7. DURÉE — le parent a demandé ${plannedMinutes(ctx)} minute(s) : longueur
-   totale ≈ ${wordsForMinutes(plannedMinutes(ctx))} mots, répartis en 3 à 7
-   scènes. Chaque scène a un illustration_brief (une phrase,
+   totale ≈ ${wordsForMinutes(plannedMinutes(ctx))} mots, répartis en
+   ${Math.max(5, Math.min(16, Math.round(plannedMinutes(ctx) * 2.2)))} scènes
+   de deux à cinq phrases. Chaque scène a un illustration_brief (une phrase,
    style: ${JSON.stringify(ctx.world?.style_bible ?? {})}).
 Réponds UNIQUEMENT avec le JSON demandé.`;
 
@@ -175,7 +192,7 @@ Réponds UNIQUEMENT avec le JSON demandé.`;
     format_attendu: {
       title: "string",
       emotional_thread: "string|null — résumé du filigrane, pour le parent",
-      scenes: [{ text: "string", illustration_brief: "string" }],
+      scenes: [{ text: "string", illustration_brief: "string", sfx: "tag" }],
       world_events: ["résumés canoniques de ce qui s'est passé ce soir"],
       harvested_seed_ids: ["ids des graines tenues ce soir"],
       next_recap: "le rappel « La dernière fois… » du prochain épisode",
@@ -196,7 +213,12 @@ Réponds UNIQUEMENT avec le JSON demandé.`;
 
 function validate(plan: EpisodePlan, ctx: { ripeSeeds: { id: string }[] }) {
   if (!plan.title || !plan.scenes?.length) throw new Error("plan incomplet");
-  if (plan.scenes.length > 8) throw new Error("trop de scènes");
+  if (plan.scenes.length > 16) throw new Error("trop de scènes");
+  for (const scene of plan.scenes) {
+    if (scene.sfx && !SFX_TAGS.includes(scene.sfx)) {
+      throw new Error(`tag de bruitage inconnu: ${scene.sfx}`);
+    }
+  }
   if (!plan.next_recap) throw new Error("next_recap manquant (feuilleton)");
   const knownSeeds = new Set(ctx.ripeSeeds.map((s) => s.id));
   for (const id of plan.harvested_seed_ids ?? []) {
@@ -229,6 +251,7 @@ async function commit(
       episode_id: episode.id,
       index,
       text: scene.text,
+      sfx: scene.sfx ?? "silence",
     })),
   );
 
@@ -262,8 +285,8 @@ const wordsForMinutes = (min: number) => Math.round(min * 120); // voix grave, d
 // sinon durée par défaut selon l'âge — miroir du Pacte de sommeil de l'app.
 const plannedMinutes = (ctx: { child: { story_minutes?: number }; age: number }) => {
   const parent = ctx.child.story_minutes;
-  if (parent) return Math.min(5, Math.max(1, parent));
-  return ctx.age <= 4 ? 2 : ctx.age <= 7 ? 3 : ctx.age <= 9 ? 4 : 5;
+  if (parent) return Math.min(10, Math.max(1, parent));
+  return ctx.age <= 4 ? 3 : ctx.age <= 7 ? 5 : ctx.age <= 9 ? 7 : 9;
 };
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), {

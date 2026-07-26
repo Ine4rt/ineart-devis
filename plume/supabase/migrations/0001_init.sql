@@ -21,8 +21,8 @@ create table children (
   pets text[] not null default '{}',
   reading_level text not null default 'listener',
   target_sleep_time time not null default '20:30',
-  -- Durée du récit choisie par le parent : 1 à 5 minutes.
-  story_minutes int not null default 3 check (story_minutes between 1 and 5),
+  -- Durée du récit choisie par le parent : 1 à 10 minutes.
+  story_minutes int not null default 5 check (story_minutes between 1 and 10),
   created_at timestamptz not null default now()
 );
 
@@ -130,6 +130,8 @@ create table scenes (
   episode_id uuid not null references episodes (id) on delete cascade,
   index int not null,
   text text not null,
+  -- Tag de bruitage choisi par le conteur (voir docs/04-AUDIO.md).
+  sfx text not null default 'silence',
   illustration_url text,
   audio_url text,
   choice jsonb, -- { prompt, options: [{ id, label, seed_summary }] }

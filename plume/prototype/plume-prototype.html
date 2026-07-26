@@ -343,9 +343,9 @@
     <div style="height:16px"></div>
     <div class="stack">
       <div class="day-card">
-        <b>Durée de l'histoire : <span id="dur-val">3</span> min</b>
-        <p>Le récit est écrit pour durer exactement ce temps.</p>
-        <input type="range" class="day-range" min="1" max="5" value="3" id="in-dur" style="width:100%"
+        <b>Durée de l'histoire : <span id="dur-val">5</span> min</b>
+        <p>L'IA écrit le chapitre pour durer exactement ce temps (1 à 10 minutes).</p>
+        <input type="range" class="day-range" min="1" max="10" value="5" id="in-dur" style="width:100%"
           oninput="S.minutes=+this.value; el('dur-val').textContent=S.minutes; persist()">
       </div>
       <div class="day-card">
@@ -361,9 +361,9 @@
         <button class="day-btn" style="margin-top:10px;min-height:44px;background:none;border:1px solid rgba(35,39,61,.25);color:var(--dayink)" onclick="testVoice()">Écouter cette voix</button>
       </div>
       <div class="day-card">
-        <b>Ambiance sonore : <span id="amb-val">50</span> %</b>
+        <b>Ambiance sonore : <span id="amb-val">65</span> %</b>
         <p>Musique et bruitages, derrière la voix. À 0 %, la voix seule.</p>
-        <input type="range" class="day-range" min="0" max="100" value="50" id="in-amb" style="width:100%"
+        <input type="range" class="day-range" min="0" max="100" value="65" id="in-amb" style="width:100%"
           oninput="setAmbienceLevel(+this.value)">
       </div>
       <div class="day-card">
@@ -404,11 +404,11 @@ const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 
 // ─── État persistant : l'aventure ne recommence JAMAIS à zéro ───────────────
 const DEFAULTS = {
-  name: '', age: 5, comp: null, minutes: 3,
+  name: '', age: 5, comp: null, minutes: 5,
   episode: 1, lastSummary: '', told: [],
   checkin: { victory: '', fear: '' },
   voiceName: '', audioVoice: 'onyx', // voix IA réaliste (en ligne) par défaut
-  ambienceLevel: 0.5, // curseur « ambiance sonore » de l'espace parent
+  ambienceLevel: 0.65, // curseur « ambiance sonore » de l'espace parent
 };
 let S = { ...DEFAULTS };
 try {
@@ -563,7 +563,9 @@ function onlineUrl(text, voice) {
     + '?model=openai-audio&voice=' + voice;
 }
 let clipToken = 0; // invalide les rappels d'un clip interrompu par stopAudio
-function playClip(key, onEnd) {
+// key : clé d'un mp3 pré-généré, ou null pour un texte écrit à l'instant par
+// l'IA. text : ce qui doit être dit (obligatoire pour les chapitres IA).
+function playClip(key, text, onEnd) {
   // Garde-fous : l'échec réseau déclenche l'événement error ET le rejet de
   // la promesse play() — chaque étape ne doit compter qu'une fois, sinon
   // les scènes défilent en accéléré.
@@ -573,25 +575,30 @@ function playClip(key, onEnd) {
     if (finished || token !== clipToken) return;
     finished = true; onEnd && onEnd();
   };
+  const spoken = text || AUDIO_TEXT[key] || TEST_PHRASE;
+  const baked = key ? NARRATION[S.audioVoice === 'femme' ? 'femme' : 'homme'][key] : null;
+
   if (S.audioVoice === 'onyx' || S.audioVoice === 'fable') {
-    const text = key === 'test' ? TEST_PHRASE : (AUDIO_TEXT[key] || TEST_PHRASE);
     let fellBack = false;
-    const fallback = () => { // repli : voix locale Pierre
+    const fallback = () => { // repli : mp3 pré-généré, sinon voix de l'appareil
       if (fellBack || token !== clipToken) return;
       fellBack = true;
-      sharedAudio.onerror = () => done();
-      sharedAudio.src = NARRATION.homme[key];
-      // Si le parent a mis en pause entre-temps, on attend la reprise.
-      if (!paused) sharedAudio.play().catch(() => done());
+      if (baked) {
+        sharedAudio.onerror = () => done();
+        sharedAudio.src = baked;
+        if (!paused) sharedAudio.play().catch(() => done());
+      } else if (!paused) {
+        speak(spoken, done); // texte IA : aucun mp3 pré-généré possible
+      }
     };
     sharedAudio.onended = done;
     sharedAudio.onerror = fallback;
-    sharedAudio.src = onlineUrl(text, S.audioVoice);
+    sharedAudio.src = onlineUrl(spoken, S.audioVoice);
     sharedAudio.play().catch(fallback);
     return;
   }
-  const bank = NARRATION[S.audioVoice === 'homme' ? 'homme' : 'femme'];
-  sharedAudio.src = bank[key];
+  if (!baked) { speak(spoken, done); return; }
+  sharedAudio.src = baked;
   sharedAudio.onended = done;
   sharedAudio.onerror = () => done();
   sharedAudio.play().catch(() => setTimeout(done, 2000));
@@ -607,7 +614,7 @@ function stopAudio(keepMusic = false) {
 function setAudioVoice(v) { S.audioVoice = v; S.voiceChosen = true; persist(); testVoice(); }
 function testVoice() {
   stopAudio(); stopSpeech();
-  if (S.audioVoice !== 'device' && hasNarration()) playClip('test');
+  if (S.audioVoice !== 'device' && hasNarration()) playClip('test', TEST_PHRASE);
   else speak('Bonsoir. Voici la voix qui racontera l\'histoire, ce soir.', () => {});
 }
 
@@ -723,9 +730,14 @@ function renderLibrary() {
 }
 
 // ─── Rituel ─────────────────────────────────────────────────────────────────
-let breathTimers = [];
+let breathTimers = [], chapterPromise = null;
 function startBreathing() {
   breathTimers.forEach(clearTimeout); breathTimers = [];
+  // L'IA écrit pendant que l'enfant respire : ~12 s de couverture.
+  chapterPromise = replaying !== null ? null : generateChapter().catch((e) => {
+    console.warn('conteur IA indisponible, repli sur le feuilleton local:', e.message);
+    return null;
+  });
   [0, 1, 2].forEach(i => el('bd' + i).classList.remove('lit'));
   const D = 4000;
   for (let i = 0; i < 3; i++) {
@@ -736,6 +748,63 @@ function startBreathing() {
       if (i === 2) breathTimers.push(setTimeout(startStory, 600));
     }, (i + 1) * D));
   }
+}
+
+// ─── Le conteur IA ──────────────────────────────────────────────────────────
+// Chaque soir, l'IA écrit le chapitre : ton album jeunesse, longueur calée sur
+// la durée choisie, suite du feuilleton, journée de l'enfant tissée dedans.
+// Elle choisit aussi le bruitage de chaque scène parmi une palette fixe.
+// Service gratuit sans clé (Pollinations) ; repli sur le feuilleton écrit à la
+// main si le réseau ou l'IA fait défaut — l'enfant n'attend jamais.
+const SFX_TAGS = {
+  feuilles: 'open1', craquement: 'open2', oiseau: 'amb1', pas: 'amb2',
+  etoiles: 'amb3', maison: 'amb4', joie: 'victory', reconfort: 'fear',
+  eau: 'close2', nuit: 'close3', silence: null,
+};
+
+function storyPrompt() {
+  const words = Math.round(S.minutes * 115);
+  const sceneCount = Math.max(5, Math.min(16, Math.round(S.minutes * 2.2)));
+  return [
+    `Tu es le conteur de Plume. Écris le chapitre ${S.episode} du feuilleton du soir de ${S.name}, ${S.age} ans.`,
+    `Son compagnon : ${S.comp.word}.`,
+    S.lastSummary
+      ? `Chapitre précédent : « ${S.lastSummary} » — commence par un rappel de deux phrases (« La dernière fois… ») puis continue l'histoire là où elle s'était arrêtée.`
+      : `C'est le tout premier chapitre : le jardin de la maison, à la tombée du soir.`,
+    S.checkin.victory.trim()
+      ? `Aujourd'hui, ${S.name} a réussi : « ${S.checkin.victory.trim()} ». Fais-le comprendre dans une scène, avec fierté, sans jamais nommer la situation réelle.`
+      : '',
+    S.checkin.fear.trim()
+      ? `Aujourd'hui, quelque chose l'inquiète : « ${S.checkin.fear.trim()} ». Un animal de l'histoire vit la même appréhension et la traverse ; l'enfant comprend, mais tu ne nommes jamais sa situation réelle.`
+      : '',
+    `RÈGLES : monde réel uniquement (jardin, maison, saisons, animaux vrais) — aucune créature fantastique, aucune magie. Ton d'album jeunesse : phrases courtes, onomatopées (cric, crac, plouf), répétitions rythmées, images concrètes d'enfant, petites questions douces, tutoiement. Aucune violence, aucune peur non résolue. La fin conduit au sommeil.`,
+    `LONGUEUR : environ ${words} mots au total, en ${sceneCount} scènes de deux à cinq phrases.`,
+    `SONS : chaque scène reçoit un son parmi ${Object.keys(SFX_TAGS).join(', ')} — celui qui correspond vraiment à ce qui se passe (craquement pour une branche qui casse, eau pour boire, etoiles pour le ciel, nuit pour la fin, silence si rien).`,
+    `Réponds UNIQUEMENT ce JSON, sans rien autour : {"titre":"…","scenes":[{"texte":"…","son":"…"}],"rappel_suivant":"une phrase résumant ce chapitre pour le rappel de demain"}`,
+  ].filter(Boolean).join('\n');
+}
+
+async function generateChapter() {
+  const url = 'https://text.pollinations.ai/' + encodeURIComponent(storyPrompt())
+    + '?model=openai&seed=' + Date.now();
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('IA indisponible (' + res.status + ')');
+  const raw = await res.text();
+  const json = JSON.parse(raw.slice(raw.indexOf('{'), raw.lastIndexOf('}') + 1));
+  const scenes = (json.scenes || [])
+    .filter((s) => s && typeof s.texte === 'string' && s.texte.trim())
+    .map((s) => ({
+      text: s.texte.trim(),
+      sfxKey: SFX_TAGS[String(s.son || '').toLowerCase()] || null,
+    }));
+  if (scenes.length < 3) throw new Error('réponse IA trop courte');
+  return {
+    n: S.episode,
+    title: (json.titre || 'Le chapitre de ce soir').trim(),
+    scenes,
+    summary: (json.rappel_suivant || '').trim() || S.lastSummary,
+    fromAI: true,
+  };
 }
 
 // ─── Le feuilleton : chapitres qui se suivent, jamais de retour à zéro ──────
@@ -835,8 +904,29 @@ function buildEpisode(n = S.episode) {
 
 // ─── Lecture : la voix mène, aucune interaction ─────────────────────────────
 let EP = null, sceneIdx = 0, paused = false, fallbackTimer = null;
-function startStory() {
+async function startStory() {
   breathTimers.forEach(clearTimeout);
+
+  if (chapterPromise) {
+    // Si l'IA n'a pas fini d'écrire, on l'annonce plutôt que d'attendre à vide.
+    el('story-ep').textContent = `Chapitre ${S.episode}`;
+    el('story-title').textContent = 'Plume écrit…';
+    el('story-text').textContent = 'Le conteur termine la page de ce soir…';
+    el('story-progress').style.width = '0%';
+    go('s-story');
+    const ai = await chapterPromise;
+    chapterPromise = null;
+    if (ai) {
+      EP = ai; sceneIdx = 0; paused = false;
+      el('story-ep').textContent = `Chapitre ${EP.n}`;
+      el('story-title').textContent = EP.title;
+      el('voice-btn').setAttribute('aria-pressed', 'true');
+      el('voice-label').textContent = 'Pause';
+      playScene();
+      return;
+    }
+  }
+
   if (audioMode()) {
     // Chapitre 1 : narration en voix humaine pré-générée (Piper).
     EP = {
@@ -867,12 +957,17 @@ function playScene() {
   t.style.animation = 'none'; void t.offsetWidth; t.style.animation = '';
   t.innerHTML = sc.weave ? `<span class="weave">${sc.text}</span>` : sc.text;
   el('story-progress').style.width = ((sceneIdx + 1) / EP.scenes.length * 100) + '%';
-  if (typeof SFX !== 'undefined' && sc.key && SFX[sc.key]) {
-    sfxAudio.src = SFX[sc.key];
+  const sfxKey = sc.sfxKey || sc.key;
+  if (typeof SFX !== 'undefined' && sfxKey && SFX[sfxKey]) {
+    sfxAudio.src = SFX[sfxKey];
     sfxAudio.play().catch(() => {});
   }
-  if (EP.audio) playClip(sc.key, () => { if (!paused) advance(); });
-  else speak(sc.text, () => { if (!paused) advance(); });
+  const done = () => { if (!paused) advance(); };
+  // Chapitre IA : narration en ligne sur le texte fraîchement écrit.
+  // Chapitre local du soir 1 : mp3 pré-générés. Sinon : voix de l'appareil.
+  if (EP.fromAI) playClip(null, sc.text, done);
+  else if (EP.audio) playClip(sc.key, sc.text, done);
+  else speak(sc.text, done);
 }
 function advance() {
   clearTimeout(fallbackTimer);
@@ -890,6 +985,10 @@ function togglePause() {
   else { ambience.play().catch(() => {}); sfxAudio.play().catch(() => {}); }
   if (EP && EP.audio) {
     if (paused) { sharedAudio.pause(); clearTimeout(fallbackTimer); }
+    else if (EP.fromAI && sharedAudio.ended) {
+      if (sceneIdx < EP.scenes.length - 1) { sceneIdx++; playScene(); }
+      else finishStory();
+    }
     else if (sharedAudio.ended || !sharedAudio.src) {
       // La scène s'était terminée pendant la pause : suite ou fin.
       if (sceneIdx < EP.scenes.length - 1) { sceneIdx++; playScene(); }
@@ -915,9 +1014,9 @@ function finishStory() {
   S.episode++;
   S.checkin = { victory: '', fear: '' }; // la journée est consommée
   persist();
-  el('end-text').textContent =
-    `Le chapitre ${EP.n} est terminé. Demain soir, l'histoire reprendra exactement ici, avec un petit rappel. (Pour tester : le chapitre suivant est disponible tout de suite.)` +
-    (EP.audio ? ' Démo : la voix humaine couvre le chapitre 1 ; la suite utilise la voix de l\'appareil. Dans l\'app finale, tous les chapitres sont narrés en voix humaine.' : '');
+  el('end-text').textContent = EP.fromAI
+    ? `Le chapitre ${EP.n} est terminé — écrit ce soir par l'IA, rien que pour ${S.name}. Demain, l'histoire reprendra exactement ici.`
+    : `Le chapitre ${EP.n} est terminé. Demain soir, l'histoire reprendra exactement ici, avec un petit rappel. (Chapitre écrit d'avance : l'IA n'était pas joignable.)`;
   go('s-end');
 }
 function backHome() { renderHome(); go('s-home'); }

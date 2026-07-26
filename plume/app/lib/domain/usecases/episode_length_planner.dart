@@ -1,22 +1,22 @@
 import '../entities/child_profile.dart';
 
 /// Le Pacte de sommeil (innovation #34) : le parent choisit la durée du
-/// récit (1 à 5 minutes) ; à défaut, une durée par âge s'applique. L'app
+/// récit (1 à 10 minutes) ; à défaut, une durée par âge s'applique. L'app
 /// raccourcit encore si l'heure du coucher approche — la confiance des
 /// parents est le moteur de la rétention.
 class EpisodeLengthPlanner {
   const EpisodeLengthPlanner();
 
-  /// Bornes produit : jamais moins de 1 min, jamais plus de 5 min.
+  /// Bornes produit : jamais moins de 1 min, jamais plus de 10 min.
   static const Duration minimum = Duration(minutes: 1);
-  static const Duration maximum = Duration(minutes: 5);
+  static const Duration maximum = Duration(minutes: 10);
 
   /// Durée par défaut par tranche d'âge, si le parent n'a rien choisi.
   static const Map<AgeBand, Duration> _defaultByAge = {
-    AgeBand.tiny: Duration(minutes: 2),
-    AgeBand.explorer: Duration(minutes: 3),
-    AgeBand.hero: Duration(minutes: 4),
-    AgeBand.legend: Duration(minutes: 5),
+    AgeBand.tiny: Duration(minutes: 3),
+    AgeBand.explorer: Duration(minutes: 5),
+    AgeBand.hero: Duration(minutes: 7),
+    AgeBand.legend: Duration(minutes: 9),
   };
 
   /// Marge entre la fin de l'histoire et l'heure cible d'endormissement

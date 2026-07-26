@@ -385,8 +385,14 @@
       <p class="lede" id="checkin-done" style="display:none;text-align:center;width:100%;max-width:none">
         C'est prêt. L'histoire de ce soir en tiendra compte.
       </p>
-      <div style="height:8px"></div>
-      <button class="bare" style="color:rgba(35,39,61,.4);font-size:12px" onclick="resetAll()">Recommencer l'aventure à zéro (efface tout)</button>
+      <div class="day-card">
+        <b>Recommencer l'aventure</b>
+        <p>Repartir au chapitre 1. Le prénom, l'âge et le compagnon sont conservés.</p>
+        <button class="day-btn" id="btn-restart" style="margin-top:10px;background:none;border:1px solid rgba(35,39,61,.25);color:var(--dayink)"
+          onclick="confirmThen(this, 'Repartir au chapitre 1 ?', restartStory)">Reprendre au chapitre 1</button>
+        <button class="day-btn" id="btn-wipe" style="margin-top:8px;min-height:44px;background:none;border:none;color:rgba(35,39,61,.45);font-size:13px"
+          onclick="confirmThen(this, 'Tout effacer, prénom compris ?', resetAll)">Tout effacer et refaire le premier soir</button>
+      </div>
     </div>
   </section>
 </div>
@@ -411,12 +417,47 @@ const DEFAULTS = {
   ambienceLevel: 0.65, // curseur « ambiance sonore » de l'espace parent
 };
 let S = { ...DEFAULTS };
+let replaying = null; // chapitre en cours de réécoute, ou null
 try {
   const saved = JSON.parse(localStorage.getItem('plume-state') || 'null');
   if (saved && saved.name) S = { ...DEFAULTS, ...saved };
   if (!S.voiceChosen && (S.audioVoice === 'femme' || S.audioVoice === 'homme')) S.audioVoice = 'onyx';
 } catch (_) { /* stockage indisponible : session éphémère */ }
 function persist() { try { localStorage.setItem('plume-state', JSON.stringify(S)); } catch (_) {} }
+// Confirmation en deux touchers : le libellé devient la question, un second
+// appui agit. Aucune boîte de dialogue (bloquée dans certains contextes).
+const confirmTimers = new WeakMap();
+function confirmThen(btn, question, action) {
+  if (btn.dataset.armed === '1') {
+    clearTimeout(confirmTimers.get(btn));
+    btn.dataset.armed = '0';
+    btn.textContent = btn.dataset.label;
+    action();
+    return;
+  }
+  btn.dataset.label = btn.dataset.label || btn.textContent;
+  btn.dataset.armed = '1';
+  btn.textContent = question + ' Appuyez à nouveau.';
+  confirmTimers.set(btn, setTimeout(() => {
+    btn.dataset.armed = '0';
+    btn.textContent = btn.dataset.label;
+  }, 5000));
+}
+
+// Repartir au chapitre 1 sans perdre le profil de l'enfant.
+function restartStory() {
+  S.episode = 1;
+  S.lastSummary = '';
+  S.told = [];
+  S.checkin = { victory: '', fear: '' };
+  replaying = null;
+  persist();
+  el('seednote').style.display = 'none';
+  el('booklist').innerHTML = '<p class="lede">Le premier chapitre s\'écrira ce soir.</p>';
+  renderHome();
+  go('s-home');
+}
+
 function resetAll() { try { localStorage.removeItem('plume-state'); } catch (_) {} location.reload(); }
 
 // ─── Ciel ───────────────────────────────────────────────────────────────────
@@ -693,10 +734,8 @@ function renderHome() {
   el('lib-count').textContent = S.told.length
     ? `${S.told.length} chapitre${S.told.length > 1 ? 's' : ''} déjà raconté${S.told.length > 1 ? 's' : ''}`
     : 'Les chapitres déjà racontés';
-  if (S.lastSummary) {
-    el('seednote').style.display = 'block';
-    el('seednote').textContent = `Là où on en est : ${S.lastSummary}`;
-  }
+  el('seednote').style.display = S.lastSummary ? 'block' : 'none';
+  if (S.lastSummary) el('seednote').textContent = `Là où on en est : ${S.lastSummary}`;
   el('replay-btn').style.display = S.episode > 1 ? '' : 'none';
 }
 
@@ -712,7 +751,6 @@ function startAmbience() {
 }
 
 // Réécoute d'un chapitre déjà raconté : ne touche pas à la progression.
-let replaying = null;
 function replayChapter(n) {
   replaying = n;
   unlockAudio();

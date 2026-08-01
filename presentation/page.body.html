@@ -1,14 +1,17 @@
-<title>IneWeb — Conception, hébergement et suivi de sites web</title>
+<title>IneWeb — Votre site web, sur mesure et entretenu</title>
 
 <!--
-THESIS: Une société qui livre des sites finis et les tient en état. La page se
-regarde d'abord et se lit ensuite : elle refuse l'empilement de paragraphes.
-OWN-WORLD: Graphite mat, filets d'un pixel, une seule graisse de grotesque
-menée de 300 à 620. L'orange ne sert qu'à marquer. Aucun aplat plein.
-STORY: Un dirigeant voit des sites défiler sous son pouce, comprend en six mots
-ce qui est pris en charge, et écrit.
-FIRST VIEWPORT: Une phrase, une adresse, et la bannière glissante juste dessous.
-FORM: Signalétique de chantier, distillée, clé dda92f52.
+THESIS: Un studio qui livre des sites finis et les tient en état. La page
+alterne blanc, gris et noir — un fond unique et continu était le défaut de la
+version précédente.
+OWN-WORLD: Base claire. Blanc pur pour le contenu, gris #f5f5f7 pour les bandes
+d'image, un seul bloc noir en ponctuation. Filets d'un pixel, très large
+respiration, une graisse de grotesque menée de 300 à 620. L'orange ne sert qu'à
+marquer l'action.
+STORY: Un dirigeant voit trois sites défiler en grand, lit six mots, et écrit.
+FIRST VIEWPORT: Bandeau gris clair — titre court centré, action, puis les
+maquettes en grand qui glissent au doigt.
+FORM: Signalétique de chantier, éclaircie au registre Apple, clé dda92f52.
 FINISH: unreviewed and undocumented is unfinished; this build ends with the
 finish review, the verdict, and DESIGN.md
 -->
@@ -16,12 +19,13 @@ finish review, the verdict, and DESIGN.md
 <style>
   /* ==========================================================================
      IneWeb — page de présentation
-     Troisième passe : distillation. Deux sections disaient la même chose
-     (l'infrastructure était énumérée deux fois) — elles n'en font plus qu'une.
-     Chaque paragraphe a été coupé, puis recoupé. Les descriptions deviennent
-     des listes : on scanne une liste, on subit un paragraphe.
-     Le carrousel devient glissable au doigt, parce que c'est le geste qu'un
-     téléphone appelle.
+     Quatrième passe. Le défaut corrigé : la page ne faisait qu'un seul bloc
+     sombre du haut en bas. Ici les bandes alternent — gris clair pour les
+     images, blanc pour le contenu, un unique bloc noir en ponctuation. C'est
+     le rythme qui donne la respiration, pas la quantité de marge.
+     Typographie au registre Apple : l'interlettrage se resserre à mesure que le
+     corps grandit, l'interligne se resserre avec lui. Une valeur unique pour
+     toutes les tailles serait fausse quelque part.
      Voix : celle d'une société. « Nous », jamais « je ».
      ========================================================================== */
 
@@ -33,140 +37,170 @@ finish review, the verdict, and DESIGN.md
   }
 
   :root {
-    color-scheme: dark;
+    color-scheme: light;
 
-    --ink-900: #101114;
-    --ink-850: #141519;
+    --white: #ffffff;
+    --grey: #f5f5f7;
+    --grey-deep: #ebebef;
+    --black: #16181c;
+    --black-soft: #1f2228;
 
-    --hair: #24272d;
-    --hair-strong: #33373f;
+    --ink: #1d1d1f;
+    --ink-2: #6e6e73;
+    --hair: #e0e0e4;
 
-    --text: #eceded;
-    --text-2: #a2a8b0;
-    --text-3: #7d838b;
+    --on-black: #f5f5f7;
+    --on-black-2: #a1a1a6;
+    --hair-black: #2c3037;
 
-    --orange: #e8641c;
-    --orange-soft: #f07f3d;
+    --orange: #d2570b;
+    --orange-bright: #f0762a;
 
     --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
-
-    --pad: clamp(1.25rem, 5vw, 4.5rem);
+    --pad: clamp(1.25rem, 5vw, 4rem);
   }
 
   * { box-sizing: border-box; }
 
   body {
     margin: 0;
-    background: var(--ink-900);
-    color: var(--text);
+    background: var(--white);
+    color: var(--ink);
     font-family: "Archivo", ui-sans-serif, system-ui, sans-serif;
-    /* 17 px : en dessous de 16 px sur téléphone, on plisse les yeux. */
     font-size: 1.0625rem;
     font-weight: 400;
-    line-height: 1.6;
+    line-height: 1.55;
     -webkit-font-smoothing: antialiased;
   }
 
-  h1, h2, h3 { margin: 0; font-weight: 500; letter-spacing: -0.025em; line-height: 1.14; text-wrap: balance; }
+  h1, h2, h3 { margin: 0; font-weight: 500; }
   p { margin: 0; }
   a { color: inherit; }
   ul, ol { margin: 0; padding: 0; list-style: none; }
 
   :focus-visible { outline: 2px solid var(--orange); outline-offset: 4px; }
 
-  .wrap { width: min(100% - 2 * var(--pad), 72rem); margin-inline: auto; }
-  .section { padding-block: clamp(3.25rem, 6vw, 5.5rem) clamp(2.25rem, 4vw, 3.25rem); }
-  .hair-top { border-top: 1px solid var(--hair); }
+  .wrap { width: min(100% - 2 * var(--pad), 68rem); margin-inline: auto; }
 
-  /* Un carré de 8 px : tout l'accent d'une section. */
-  .tick { display: block; width: 8px; height: 8px; background: var(--orange); margin-bottom: 1.5rem; }
+  /* --- Bandes : c'est l'alternance qui aère, pas la marge ------------------ */
+  .band--grey { background: var(--grey); }
+  .band--white { background: var(--white); }
+  .band--black { background: var(--black); color: var(--on-black); }
+  .band--black h2 { color: var(--on-black); }
 
-  h2 { font-size: clamp(1.55rem, 1.15rem + 1.7vw, 2.25rem); }
+  .section { padding-block: clamp(3.5rem, 8vw, 7rem); }
 
-  /* --- En-tête ------------------------------------------------------------ */
-  .topbar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-block: 1.25rem; }
-  .brand { display: inline-flex; align-items: baseline; gap: 0.55rem; text-decoration: none; }
-  .brand__name { font-size: 1.0625rem; font-weight: 600; letter-spacing: -0.02em; }
-  .brand__dot { width: 6px; height: 6px; background: var(--orange); }
-  .brand__suffix { font-size: 0.75rem; color: var(--text-3); letter-spacing: 0.08em; text-transform: uppercase; }
-
-  .link {
-    font-size: 0.9375rem; color: var(--text-2); text-decoration: none; padding-bottom: 2px;
-    border-bottom: 1px solid transparent;
-    transition: color 180ms var(--ease-out), border-color 180ms var(--ease-out);
+  /* --- Typographie : l'interlettrage suit le corps ------------------------- */
+  h1 {
+    font-size: clamp(2.15rem, 1.1rem + 4.6vw, 4rem);
+    line-height: 1.04;
+    letter-spacing: -0.035em;
+    font-weight: 500;
   }
-  .link:hover { color: var(--text); border-color: var(--orange); }
+  h2 {
+    font-size: clamp(1.65rem, 1.15rem + 2.1vw, 2.6rem);
+    line-height: 1.1;
+    letter-spacing: -0.028em;
+  }
+  h3 { font-size: 1.125rem; line-height: 1.3; letter-spacing: -0.015em; }
 
-  /* --- Héros --------------------------------------------------------------
-     Une phrase, une promesse, une adresse. Rien d'autre au-dessus du pli. */
-  .hero { padding-block: clamp(3rem, 8vw, 5.5rem) clamp(2rem, 4vw, 3rem); }
-  .hero h1 {
-    font-size: clamp(2.05rem, 1.15rem + 3.5vw, 3.5rem);
-    font-weight: 400;
-    max-width: 17ch;
+  .sub {
+    font-size: clamp(1.0625rem, 1rem + 0.45vw, 1.3125rem);
+    line-height: 1.5;
+    letter-spacing: -0.005em;
+    color: var(--ink-2);
+    font-weight: 300;
   }
-  .hero__row {
-    display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.75rem 2.5rem;
-    margin-top: clamp(1.5rem, 3vw, 2.25rem);
+  .band--black .sub { color: var(--on-black-2); }
+
+  /* --- Barre de navigation : matière translucide, hiérarchie par la profondeur */
+  .nav {
+    position: sticky; top: 0; z-index: 20;
+    background: rgb(245 245 247 / 0.78);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-bottom: 1px solid rgb(0 0 0 / 0.06);
   }
-  .hero__promise { color: var(--text-2); font-weight: 300; max-width: 34ch; }
-  .hero__mail {
-    font-size: 1.0625rem; font-weight: 500; color: var(--text); text-decoration: none;
-    padding-bottom: 3px; border-bottom: 1px solid var(--orange);
-    transition: color 180ms var(--ease-out);
+  .nav__inner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-block: 0.85rem; }
+  .brand { display: inline-flex; align-items: baseline; gap: 0.5rem; text-decoration: none; }
+  .brand__name { font-size: 1.0625rem; font-weight: 600; letter-spacing: -0.03em; }
+  .brand__dot { width: 5px; height: 5px; border-radius: 50%; background: var(--orange); }
+  .brand__suffix { font-size: 0.75rem; color: var(--ink-2); letter-spacing: 0.06em; text-transform: uppercase; }
+
+  /* --- Actions ------------------------------------------------------------- */
+  .pill {
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 0.72rem 1.4rem; border-radius: 980px;
+    font-size: 1rem; font-weight: 500; letter-spacing: -0.01em; text-decoration: none;
+    background: var(--orange); color: #fff;
+    /* Le retour vient à l'appui, pas au relâchement. */
+    transition: background-color 140ms var(--ease-out), transform 100ms var(--ease-out);
   }
-  .hero__mail:hover { color: var(--orange-soft); }
+  .pill:hover { background: #b94a06; }
+  .pill:active { transform: scale(0.97); }
+
+  .quiet {
+    font-size: 1rem; font-weight: 500; color: var(--orange); text-decoration: none;
+    letter-spacing: -0.01em;
+    transition: color 140ms var(--ease-out);
+  }
+  .quiet:hover { color: var(--orange-bright); }
+  .quiet::after { content: " ›"; }
 
   /* ==========================================================================
-     BANNIÈRE GLISSANTE
-     Défilement natif avec accrochage : au doigt sur téléphone, au trackpad sur
-     portable, aux flèches au clavier. Une piste translatée en CSS ne se glisse
-     pas au pouce — et c'est le geste que l'appareil appelle.
+     BANDEAU D'ACCUEIL
+     Message court au-dessus, images en grand dessous — la structure d'une page
+     produit. Le défilement est natif : glissable au doigt, avec inertie et
+     interruptible à tout instant, ce qu'aucune piste translatée en CSS ne sait
+     faire.
      ========================================================================== */
 
-  .banner { border-block: 1px solid var(--hair); background: var(--ink-850); }
-  .banner__viewport {
+  .hero { padding-top: clamp(3rem, 7vw, 5.5rem); text-align: center; }
+  .hero h1 { margin-inline: auto; text-wrap: balance; }
+  /* Retour forcé réservé aux écrans assez larges pour que la ligne tienne. */
+  .br-lg { display: none; }
+  @media (min-width: 34rem) { .br-lg { display: inline; } }
+  .hero .sub { max-width: 42ch; margin: 1.15rem auto 0; }
+  .hero__actions { margin-top: 2rem; display: flex; flex-wrap: wrap; gap: 1.5rem; justify-content: center; align-items: center; }
+
+  .rail {
+    margin-top: clamp(2.5rem, 6vw, 4.5rem);
     display: flex;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
     overscroll-behavior-x: contain;
+    padding-bottom: clamp(2rem, 4vw, 3rem);
   }
-  .banner__viewport::-webkit-scrollbar { display: none; }
+  .rail::-webkit-scrollbar { display: none; }
 
-  .slide {
-    flex: 0 0 100%; min-width: 0;
-    scroll-snap-align: start;
-    padding: clamp(1.75rem, 4vw, 3.25rem) var(--pad);
-  }
-  .slide__inner {
-    width: min(100%, 72rem); margin-inline: auto;
-    display: grid; gap: clamp(1.25rem, 3vw, 3rem); align-items: center;
-  }
-  @media (min-width: 62rem) { .slide__inner { grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.4fr); } }
+  .slide { flex: 0 0 100%; min-width: 0; scroll-snap-align: center; padding-inline: var(--pad); }
+  .slide__inner { width: min(100%, 60rem); margin-inline: auto; }
 
-  .slide__label { font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--orange); }
-  .slide h3 { font-size: clamp(1.25rem, 1rem + 1.2vw, 1.7rem); font-weight: 500; margin-top: 0.7rem; }
+  .slide__caption { margin-bottom: 1.25rem; text-align: center; }
+  .slide__kicker { font-size: 0.8125rem; letter-spacing: 0.02em; color: var(--orange); font-weight: 500; }
+  .slide__caption h3 { margin-top: 0.35rem; font-size: clamp(1.15rem, 0.95rem + 0.9vw, 1.45rem); font-weight: 500; color: var(--ink); }
 
   /* --- Cadre navigateur ---------------------------------------------------- */
   .frame {
-    border: 1px solid var(--hair-strong); border-radius: 10px; overflow: hidden;
-    background: #fff; box-shadow: 0 24px 60px -30px rgb(0 0 0 / 0.85);
+    border-radius: 14px; overflow: hidden; background: #fff;
+    /* Une ombre portée avec décalage et flou : de la profondeur, pas un halo. */
+    box-shadow: 0 2px 6px rgb(0 0 0 / 0.06), 0 28px 60px -24px rgb(0 0 0 / 0.28);
   }
   .frame__bar {
     display: flex; align-items: center; gap: 6px;
-    padding: 8px 11px; background: #ecedee; border-bottom: 1px solid #dcdee0;
+    padding: 9px 13px; background: #ebebef; border-bottom: 1px solid #dededf;
   }
-  .frame__dot { width: 7px; height: 7px; border-radius: 50%; background: #c9cbcd; }
-  .frame__url { margin-left: 7px; font-size: 9px; color: #85888c; background: #fff; border-radius: 4px; padding: 3px 9px; }
-  /* Le contenu de la maquette se dimensionne sur la largeur du cadre, pas sur
-     celle de la page : sans cela, un titre de 18 px occupe 2,5 % d'un cadre de
-     bureau mais 5 % d'un cadre de téléphone — la miniature paraît zoomée.
-     Les `max()` posent un plancher de lisibilité en dessous duquel on
-     n'irait plus vers du petit mais vers de la bouillie. */
+  .frame__dot { width: 8px; height: 8px; border-radius: 50%; background: #c9c9ce; }
+  .frame__url {
+    margin-left: 8px; font-size: 10px; color: #86868b; background: #fff;
+    border-radius: 5px; padding: 3px 11px;
+  }
+  /* La maquette se dimensionne sur son cadre, jamais sur la page : à taille
+     fixe, un titre pèse deux fois plus lourd dans un cadre de téléphone. */
   .frame__page { aspect-ratio: 16 / 10; overflow: hidden; container-type: inline-size; }
 
-  /* --- Maquettes : du vrai contenu, jamais des rectangles vides ------------ */
+  /* --- Maquettes : du contenu réel, jamais des rectangles vides ------------ */
   .mock { height: 100%; display: flex; flex-direction: column; font-size: max(7px, 1.32cqw); line-height: 1.45; }
   .mock__nav {
     display: flex; align-items: center; justify-content: space-between;
@@ -214,109 +248,86 @@ finish review, the verdict, and DESIGN.md
   .mock--office .mock__cta { border: 1px solid #1c1f22; }
   .mock--office .mock__cards b { border-top: 1px solid #1c1f22; padding-top: 0.7cqw; }
 
-  /* --- Commandes : cibles tactiles de 44 px, repère visuel fin ------------- */
-  .banner__controls {
-    display: flex; align-items: center; gap: 1rem;
-    width: min(100%, 72rem); margin-inline: auto;
-    padding: 0 var(--pad) clamp(1.25rem, 2.5vw, 1.75rem);
-  }
-  .dots { display: flex; }
-  .dot {
-    width: 44px; height: 44px; padding: 0; border: 0; background: none; cursor: pointer;
-    display: grid; place-items: center;
-  }
+  /* --- Commandes : cibles de 44 px --------------------------------------- */
+  .rail__controls { display: flex; align-items: center; justify-content: center; gap: 0.25rem; padding-bottom: clamp(2.5rem, 5vw, 4rem); }
+  .dot { width: 44px; height: 44px; padding: 0; border: 0; background: none; cursor: pointer; display: grid; place-items: center; }
   .dot::before {
-    content: ""; width: 22px; height: 2px; background: var(--hair-strong);
-    transition: background-color 240ms var(--ease-out);
+    content: ""; width: 8px; height: 8px; border-radius: 50%;
+    background: rgb(0 0 0 / 0.18);
+    transition: background-color 240ms var(--ease-out), transform 240ms var(--ease-out);
   }
-  .dot[aria-selected="true"]::before { background: var(--orange); }
-  .dot:hover::before { background: var(--text-3); }
+  .dot[aria-selected="true"]::before { background: var(--orange); transform: scale(1.15); }
+  .dot:hover::before { background: rgb(0 0 0 / 0.34); }
 
-  .banner__note { font-size: 0.75rem; color: var(--text-3); }
+  .rail__note { font-size: 0.8125rem; color: var(--ink-2); text-align: center; margin-top: -0.5rem; padding-bottom: clamp(2.5rem, 5vw, 3.5rem); }
 
-  .arrows { margin-left: auto; display: flex; gap: 0.5rem; }
-  .arrow {
-    width: 44px; height: 44px; display: grid; place-items: center; cursor: pointer;
-    background: none; border: 1px solid var(--hair-strong); border-radius: 50%; color: var(--text-2);
-    transition: color 180ms var(--ease-out), border-color 180ms var(--ease-out), transform 120ms var(--ease-out);
+  /* --- Prise en charge ----------------------------------------------------- */
+  .trio { display: grid; gap: 2.5rem; margin-top: clamp(2.5rem, 5vw, 3.5rem); }
+  @media (min-width: 52rem) { .trio { grid-template-columns: repeat(3, 1fr); gap: 3.5rem; } }
+
+  .trio h3 { margin-bottom: 0.4rem; }
+  .trio > div > p { color: var(--ink-2); font-weight: 300; font-size: 1rem; }
+  .trio ul { margin-top: 1.15rem; display: grid; gap: 0.6rem; }
+  .trio li { display: grid; grid-template-columns: 15px 1fr; gap: 0.6rem; font-size: 1rem; color: var(--ink-2); }
+  .trio li::before {
+    content: ""; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--orange); margin-top: 0.6em;
   }
-  .arrow:hover { color: var(--text); border-color: var(--text-3); }
-  .arrow:active { transform: scale(0.94); }
-  /* Sur téléphone le doigt suffit : les flèches ne prennent pas la place. */
-  @media (max-width: 47.99rem) { .arrows { display: none; } }
 
-  /* ==========================================================================
-     PRISE EN CHARGE
-     Une seule section là où il y en avait deux : l'ancienne « Infrastructure »
-     et l'ancien « Compris dans le suivi » énuméraient les mêmes éléments.
-     Des listes courtes, pas des paragraphes.
-     ========================================================================== */
-
-  .offer { display: grid; gap: 0; margin-top: clamp(2rem, 4vw, 3rem); }
-  @media (min-width: 54rem) { .offer { grid-template-columns: repeat(3, 1fr); column-gap: 3rem; } }
-
-  .offer > div { border-top: 1px solid var(--hair); padding-block: 1.5rem; }
-  .offer h3 { font-size: 1.125rem; font-weight: 500; }
-  .offer > div > p { color: var(--text-2); font-weight: 300; margin-top: 0.5rem; font-size: 1rem; }
-  .offer ul { margin-top: 1.15rem; display: grid; gap: 0.55rem; }
-  .offer li {
-    display: grid; grid-template-columns: 14px 1fr; gap: 0.7rem;
-    font-size: 0.9375rem; color: var(--text-2);
-  }
-  .offer li::before { content: ""; width: 5px; height: 5px; background: var(--orange); margin-top: 0.62em; }
-
-  /* --- Méthode : une ligne par étape --------------------------------------- */
-  .method { margin-top: clamp(2rem, 4vw, 3rem); }
-  .method li { display: grid; gap: 0.2rem 2rem; padding-block: 1.25rem; border-top: 1px solid var(--hair); }
-  @media (min-width: 48rem) { .method li { grid-template-columns: 3rem 14rem 1fr; align-items: baseline; } }
-  .method__n { font-size: 0.8125rem; color: var(--orange); font-variant-numeric: tabular-nums; }
-  .method h3 { font-size: 1.0625rem; font-weight: 500; }
-  .method p { color: var(--text-2); font-weight: 300; font-size: 1rem; }
+  /* --- Méthode (bande noire) ---------------------------------------------- */
+  .steps { margin-top: clamp(2.5rem, 5vw, 3.5rem); }
+  .steps li { display: grid; gap: 0.25rem 2rem; padding-block: 1.4rem; border-top: 1px solid var(--hair-black); }
+  @media (min-width: 48rem) { .steps li { grid-template-columns: 3rem 14rem 1fr; align-items: baseline; } }
+  .steps__n { font-size: 0.8125rem; color: var(--orange-bright); font-variant-numeric: tabular-nums; }
+  .steps h3 { color: var(--on-black); }
+  .steps p { color: var(--on-black-2); font-weight: 300; font-size: 1rem; }
 
   /* --- Questions ----------------------------------------------------------- */
-  .faq { margin-top: clamp(2rem, 4vw, 3rem); max-width: 50rem; }
+  .faq { margin-top: clamp(2rem, 4vw, 3rem); max-width: 48rem; }
   .faq details { border-top: 1px solid var(--hair); }
   .faq details:last-of-type { border-bottom: 1px solid var(--hair); }
   .faq summary {
     cursor: pointer; list-style: none; position: relative;
-    padding: 1.15rem 2.5rem 1.15rem 0; font-size: 1.0625rem; font-weight: 500;
-    transition: color 180ms var(--ease-out);
+    padding: 1.2rem 2.5rem 1.2rem 0; font-size: 1.0625rem; font-weight: 500;
+    letter-spacing: -0.015em;
+    transition: color 140ms var(--ease-out);
   }
   .faq summary::-webkit-details-marker { display: none; }
-  .faq summary:hover { color: var(--orange-soft); }
+  .faq summary:hover { color: var(--orange); }
   .faq summary::after {
-    content: ""; position: absolute; right: 6px; top: 50%; width: 9px; height: 9px;
-    border-right: 1px solid var(--orange); border-bottom: 1px solid var(--orange);
+    content: ""; position: absolute; right: 8px; top: 50%; width: 9px; height: 9px;
+    border-right: 1.5px solid var(--orange); border-bottom: 1.5px solid var(--orange);
     transform: translateY(-70%) rotate(45deg);
     transition: transform 240ms var(--ease-out);
   }
   .faq details[open] summary::after { transform: translateY(-25%) rotate(-135deg); }
-  .faq p { padding-bottom: 1.35rem; color: var(--text-2); font-weight: 300; max-width: 56ch; font-size: 1rem; }
+  .faq p { padding-bottom: 1.4rem; color: var(--ink-2); font-weight: 300; max-width: 54ch; font-size: 1rem; }
   .faq details[open] > p { animation: panel 260ms var(--ease-out) both; }
   @keyframes panel { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
 
   /* --- Contact -------------------------------------------------------------- */
+  .contact { text-align: center; }
+  .contact .sub { margin: 1rem auto 0; max-width: 40ch; }
   .contact__mail {
-    display: inline-block; margin-top: 1.5rem;
-    font-size: clamp(1.45rem, 0.9rem + 2.5vw, 2.5rem); font-weight: 400; letter-spacing: -0.03em;
-    color: var(--text); text-decoration: none; padding-bottom: 0.4rem;
-    background-image: linear-gradient(var(--orange), var(--orange));
-    background-repeat: no-repeat; background-position: 0 100%; background-size: 100% 1px;
-    transition: background-size 300ms var(--ease-out), color 200ms var(--ease-out);
+    display: inline-block; margin-top: 1.75rem;
+    font-size: clamp(1.5rem, 0.95rem + 2.4vw, 2.5rem); font-weight: 500;
+    letter-spacing: -0.032em; color: var(--orange); text-decoration: none;
+    transition: color 160ms var(--ease-out);
   }
-  .contact__mail:hover { background-size: 100% 2px; color: var(--orange-soft); }
+  .contact__mail:hover { color: var(--orange-bright); }
 
   .footer {
     border-top: 1px solid var(--hair); padding-block: 1.75rem;
     display: flex; flex-wrap: wrap; gap: 0.4rem 2rem; justify-content: space-between;
-    font-size: 0.875rem; color: var(--text-3); font-weight: 300;
+    font-size: 0.8125rem; color: var(--ink-2); font-weight: 300;
   }
 
-  /* --- Mouvement : deux gestes -------------------------------------------- */
-  .rise { animation: rise 700ms var(--ease-out) both; }
+  /* --- Mouvement ------------------------------------------------------------ */
+  .rise { animation: rise 750ms var(--ease-out) both; }
   .rise--1 { animation-delay: 90ms; }
   .rise--2 { animation-delay: 180ms; }
-  @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  .rise--3 { animation-delay: 280ms; }
+  @keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
@@ -327,312 +338,308 @@ finish review, the verdict, and DESIGN.md
   }
 </style>
 
-<header class="wrap topbar">
-  <a class="brand" href="#top">
-    <span class="brand__name">IneWeb</span>
-    <span class="brand__dot"></span>
-    <span class="brand__suffix">Studio web</span>
-  </a>
-  <a class="link" href="mailto:info@ineart.be">info@ineart.be</a>
-</header>
-
-<section class="wrap hero" id="top">
-  <h1 class="rise">Nous concevons des sites web sur mesure. Et nous nous occupons du reste.</h1>
-  <div class="hero__row rise rise--1">
-    <p class="hero__promise">Domaine, hébergement, entretien : vous n'avez rien à gérer.</p>
-    <a class="hero__mail" href="mailto:info@ineart.be">Nous écrire</a>
+<nav class="nav">
+  <div class="wrap nav__inner">
+    <a class="brand" href="#top">
+      <span class="brand__name">IneWeb</span>
+      <span class="brand__dot"></span>
+      <span class="brand__suffix">Studio web</span>
+    </a>
+    <a class="quiet" href="mailto:info@ineart.be">Nous écrire</a>
   </div>
-</section>
+</nav>
 
-<section class="banner rise rise--2" aria-roledescription="carrousel" aria-label="Exemples de mise en page">
-  <div class="banner__viewport" data-viewport tabindex="0">
+<section class="band--grey" id="top">
+  <div class="hero">
+    <div class="wrap">
+      <h1 class="rise">Votre site web.<br />Sur mesure.<br />Entretenu par nous.</h1>
+      <p class="sub rise rise--1">Conception, domaine, hébergement, suivi.<br class="br-lg" />
+        Vous n'avez rien à gérer.</p>
+      <div class="hero__actions rise rise--2">
+        <a class="pill" href="mailto:info@ineart.be">Nous écrire</a>
+        <a class="quiet" href="#prestations">Ce que nous faisons</a>
+      </div>
+    </div>
 
-    <article class="slide" role="group" aria-roledescription="diapositive" aria-label="1 sur 3">
-      <div class="slide__inner">
-        <div>
-          <p class="slide__label">Commerce de proximité</p>
-          <h3>Horaires, produits, adresse — trouvés en trois secondes</h3>
-        </div>
-        <div class="frame">
-          <div class="frame__bar" aria-hidden="true">
-            <span class="frame__dot"></span><span class="frame__dot"></span><span class="frame__dot"></span>
-            <span class="frame__url">boulangerie-exemple.be</span>
+    <div class="rail rise rise--3" data-rail tabindex="0" aria-roledescription="carrousel" aria-label="Exemples de mise en page">
+
+      <article class="slide" role="group" aria-roledescription="diapositive" aria-label="1 sur 3">
+        <div class="slide__inner">
+          <div class="slide__caption">
+            <p class="slide__kicker">Commerce de proximité</p>
+            <h3>Horaires, produits, adresse — trouvés en trois secondes</h3>
           </div>
-          <div class="frame__page">
-            <div class="mock mock--bakery">
-              <div class="mock__nav">
-                <b>Boulangerie Martel</b>
-                <span><span>Produits</span><span>Horaires</span><span>Nous trouver</span></span>
-              </div>
-              <div class="mock__body">
-                <div class="mock__split">
-                  <div>
-                    <div class="mock__title">Le pain du jour,<br />cuit sur place.</div>
-                    <div class="mock__sub">Levain naturel, farines de la région.<br />Du mardi au samedi, 6 h 30 – 18 h.</div>
-                    <span class="mock__cta">Voir les produits</span>
-                  </div>
-                  <div class="mock__panel">photo — la boutique</div>
+          <div class="frame">
+            <div class="frame__bar" aria-hidden="true">
+              <span class="frame__dot"></span><span class="frame__dot"></span><span class="frame__dot"></span>
+              <span class="frame__url">boulangerie-exemple.be</span>
+            </div>
+            <div class="frame__page">
+              <div class="mock mock--bakery">
+                <div class="mock__nav">
+                  <b>Boulangerie Martel</b>
+                  <span><span>Produits</span><span>Horaires</span><span>Nous trouver</span></span>
                 </div>
-                <div>
-                  <div class="mock__item"><span>Pain au levain</span><em>500 g / 1 kg</em></div>
-                  <div class="mock__item"><span>Baguette tradition</span><em>cuisson continue</em></div>
-                  <div class="mock__item"><span>Viennoiseries</span><em>jusqu'à 11 h</em></div>
+                <div class="mock__body">
+                  <div class="mock__split">
+                    <div>
+                      <div class="mock__title">Le pain du jour,<br />cuit sur place.</div>
+                      <div class="mock__sub">Levain naturel, farines de la région.<br />Du mardi au samedi, 6 h 30 – 18 h.</div>
+                      <span class="mock__cta">Voir les produits</span>
+                    </div>
+                    <div class="mock__panel">photo — la boutique</div>
+                  </div>
+                  <div>
+                    <div class="mock__item"><span>Pain au levain</span><em>500 g / 1 kg</em></div>
+                    <div class="mock__item"><span>Baguette tradition</span><em>cuisson continue</em></div>
+                    <div class="mock__item"><span>Viennoiseries</span><em>jusqu'à 11 h</em></div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </article>
+      </article>
 
-    <article class="slide" role="group" aria-roledescription="diapositive" aria-label="2 sur 3">
-      <div class="slide__inner">
-        <div>
-          <p class="slide__label">Atelier &amp; technique</p>
-          <h3>Huit prestations, lisibles d'un coup d'œil</h3>
-        </div>
-        <div class="frame">
-          <div class="frame__bar" aria-hidden="true">
-            <span class="frame__dot"></span><span class="frame__dot"></span><span class="frame__dot"></span>
-            <span class="frame__url">garage-exemple.be</span>
+      <article class="slide" role="group" aria-roledescription="diapositive" aria-label="2 sur 3">
+        <div class="slide__inner">
+          <div class="slide__caption">
+            <p class="slide__kicker">Atelier &amp; technique</p>
+            <h3>Huit prestations, lisibles d'un coup d'œil</h3>
           </div>
-          <div class="frame__page">
-            <div class="mock mock--garage">
-              <div class="mock__nav">
-                <b>Garage Dubois</b>
-                <span><span>Prestations</span><span>Devis</span><span>Contact</span></span>
-              </div>
-              <div class="mock__body">
-                <div class="mock__split">
-                  <div>
-                    <div class="mock__title">Entretien, réparation,<br />contrôle technique.</div>
-                    <div class="mock__sub">Toutes marques. Véhicule de remplacement<br />sur demande.</div>
-                    <span class="mock__cta">Demander un devis</span>
-                  </div>
-                  <div class="mock__panel">photo — l'atelier</div>
+          <div class="frame">
+            <div class="frame__bar" aria-hidden="true">
+              <span class="frame__dot"></span><span class="frame__dot"></span><span class="frame__dot"></span>
+              <span class="frame__url">garage-exemple.be</span>
+            </div>
+            <div class="frame__page">
+              <div class="mock mock--garage">
+                <div class="mock__nav">
+                  <b>Garage Dubois</b>
+                  <span><span>Prestations</span><span>Devis</span><span>Contact</span></span>
                 </div>
-                <div class="mock__grid">
-                  <div class="mock__item"><span>Vidange &amp; révision</span><em>1 h</em></div>
-                  <div class="mock__item"><span>Freins</span><em>2 h</em></div>
-                  <div class="mock__item"><span>Pneus &amp; géométrie</span><em>1 h</em></div>
-                  <div class="mock__item"><span>Diagnostic</span><em>30 min</em></div>
-                  <div class="mock__item"><span>Climatisation</span><em>1 h</em></div>
-                  <div class="mock__item"><span>Carrosserie</span><em>sur devis</em></div>
+                <div class="mock__body">
+                  <div class="mock__split">
+                    <div>
+                      <div class="mock__title">Entretien, réparation,<br />contrôle technique.</div>
+                      <div class="mock__sub">Toutes marques. Véhicule de remplacement<br />sur demande.</div>
+                      <span class="mock__cta">Demander un devis</span>
+                    </div>
+                    <div class="mock__panel">photo — l'atelier</div>
+                  </div>
+                  <div class="mock__grid">
+                    <div class="mock__item"><span>Vidange &amp; révision</span><em>1 h</em></div>
+                    <div class="mock__item"><span>Freins</span><em>2 h</em></div>
+                    <div class="mock__item"><span>Pneus &amp; géométrie</span><em>1 h</em></div>
+                    <div class="mock__item"><span>Diagnostic</span><em>30 min</em></div>
+                    <div class="mock__item"><span>Climatisation</span><em>1 h</em></div>
+                    <div class="mock__item"><span>Carrosserie</span><em>sur devis</em></div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </article>
+      </article>
 
-    <article class="slide" role="group" aria-roledescription="diapositive" aria-label="3 sur 3">
-      <div class="slide__inner">
-        <div>
-          <p class="slide__label">Profession libérale</p>
-          <h3>Une présence sobre, qui inspire confiance</h3>
-        </div>
-        <div class="frame">
-          <div class="frame__bar" aria-hidden="true">
-            <span class="frame__dot"></span><span class="frame__dot"></span><span class="frame__dot"></span>
-            <span class="frame__url">cabinet-exemple.be</span>
+      <article class="slide" role="group" aria-roledescription="diapositive" aria-label="3 sur 3">
+        <div class="slide__inner">
+          <div class="slide__caption">
+            <p class="slide__kicker">Profession libérale</p>
+            <h3>Une présence sobre, qui inspire confiance</h3>
           </div>
-          <div class="frame__page">
-            <div class="mock mock--office">
-              <div class="mock__nav">
-                <b>Cabinet Lambert</b>
-                <span><span>Domaines</span><span>Équipe</span><span>Contact</span></span>
-              </div>
-              <div class="mock__body">
-                <div class="mock__split">
-                  <div>
-                    <div class="mock__title">Conseil juridique<br />aux entreprises.</div>
-                    <div class="mock__sub">Le cabinet accompagne dirigeants et indépendants dans leurs décisions courantes.</div>
-                    <span class="mock__cta">Prendre contact</span>
-                  </div>
-                  <div class="mock__panel">photo — le cabinet</div>
+          <div class="frame">
+            <div class="frame__bar" aria-hidden="true">
+              <span class="frame__dot"></span><span class="frame__dot"></span><span class="frame__dot"></span>
+              <span class="frame__url">cabinet-exemple.be</span>
+            </div>
+            <div class="frame__page">
+              <div class="mock mock--office">
+                <div class="mock__nav">
+                  <b>Cabinet Lambert</b>
+                  <span><span>Domaines</span><span>Équipe</span><span>Contact</span></span>
                 </div>
-                <div class="mock__cards">
-                  <div><b>Droit des sociétés</b><span>Constitution, cession.</span></div>
-                  <div><b>Droit social</b><span>Contrats, litiges.</span></div>
-                  <div><b>Contrats</b><span>Rédaction, négociation.</span></div>
+                <div class="mock__body">
+                  <div class="mock__split">
+                    <div>
+                      <div class="mock__title">Conseil juridique<br />aux entreprises.</div>
+                      <div class="mock__sub">Le cabinet accompagne dirigeants et indépendants dans leurs décisions courantes.</div>
+                      <span class="mock__cta">Prendre contact</span>
+                    </div>
+                    <div class="mock__panel">photo — le cabinet</div>
+                  </div>
+                  <div class="mock__cards">
+                    <div><b>Droit des sociétés</b><span>Constitution, cession.</span></div>
+                    <div><b>Droit social</b><span>Contrats, litiges.</span></div>
+                    <div><b>Contrats</b><span>Rédaction, négociation.</span></div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </article>
+      </article>
 
-  </div>
+    </div>
 
-  <div class="banner__controls">
-    <div class="dots" role="tablist" aria-label="Choisir une diapositive">
+    <div class="rail__controls">
       <button class="dot" type="button" role="tab" aria-selected="true" aria-label="Diapositive 1" data-dot="0"></button>
       <button class="dot" type="button" role="tab" aria-selected="false" aria-label="Diapositive 2" data-dot="1"></button>
       <button class="dot" type="button" role="tab" aria-selected="false" aria-label="Diapositive 3" data-dot="2"></button>
     </div>
-    <p class="banner__note">Mises en page de démonstration</p>
-    <div class="arrows">
-      <button class="arrow" type="button" data-prev aria-label="Diapositive précédente">
-        <svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 4l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
-      <button class="arrow" type="button" data-next aria-label="Diapositive suivante">
-        <svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M8 4l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
+    <p class="rail__note">Mises en page de démonstration</p>
+  </div>
+</section>
+
+<section class="band--white section" id="prestations">
+  <div class="wrap">
+    <h2>Tout est pris en charge.</h2>
+
+    <div class="trio">
+      <div>
+        <h3>Conception</h3>
+        <p>Sur mesure, pour un métier.</p>
+        <ul>
+          <li>Mise en page dédiée</li>
+          <li>Textes rédigés avec vous</li>
+          <li>Rapide sur téléphone</li>
+          <li>Visible sur Google</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Infrastructure</h3>
+        <p>Acquise et administrée par nos soins.</p>
+        <ul>
+          <li>Nom de domaine</li>
+          <li>Hébergement</li>
+          <li>Certificat de sécurité</li>
+          <li>Adresses e-mail</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Suivi</h3>
+        <p>Tant que le site est en ligne.</p>
+        <ul>
+          <li>Mises à jour</li>
+          <li>Sauvegardes</li>
+          <li>Surveillance</li>
+          <li>Modifications de contenu</li>
+        </ul>
+      </div>
     </div>
   </div>
 </section>
 
-<section class="wrap section">
-  <span class="tick"></span>
-  <h2>Ce que nous prenons en charge</h2>
+<section class="band--black section">
+  <div class="wrap">
+    <h2>Quatre étapes. Tout par e-mail.</h2>
 
-  <div class="offer">
-    <div>
-      <h3>Conception</h3>
-      <p>Sur mesure, pour un métier. Jamais un modèle recyclé.</p>
-      <ul>
-        <li>Mise en page dédiée</li>
-        <li>Textes rédigés avec vous</li>
-        <li>Rapide sur téléphone</li>
-        <li>Visible sur Google</li>
-      </ul>
-    </div>
-    <div>
-      <h3>Infrastructure</h3>
-      <p>Acquise et administrée par nos soins.</p>
-      <ul>
-        <li>Nom de domaine</li>
-        <li>Hébergement</li>
-        <li>Certificat de sécurité</li>
-        <li>Adresses e-mail</li>
-      </ul>
-    </div>
-    <div>
-      <h3>Suivi</h3>
-      <p>Tant que le site est en ligne.</p>
-      <ul>
-        <li>Mises à jour</li>
-        <li>Sauvegardes</li>
-        <li>Surveillance</li>
-        <li>Modifications de contenu</li>
-      </ul>
+    <ol class="steps">
+      <li>
+        <span class="steps__n">01</span>
+        <h3>Vous nous écrivez</h3>
+        <p>Votre activité, en quelques lignes.</p>
+      </li>
+      <li>
+        <span class="steps__n">02</span>
+        <h3>Nous proposons</h3>
+        <p>Structure, contenu, délai, budget.</p>
+      </li>
+      <li>
+        <span class="steps__n">03</span>
+        <h3>Nous ajustons</h3>
+        <p>Jusqu'à ce que ça vous convienne.</p>
+      </li>
+      <li>
+        <span class="steps__n">04</span>
+        <h3>Nous livrons</h3>
+        <p>Puis nous entretenons.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<section class="band--white section">
+  <div class="wrap">
+    <h2>Questions fréquentes</h2>
+
+    <div class="faq">
+      <details>
+        <summary>Une page Facebook ne suffit-elle pas ?</summary>
+        <p>
+          Elle appartient à Facebook : ses règles changent et sa visibilité
+          dépend d'un algorithme. Un site vous appartient.
+        </p>
+      </details>
+      <details>
+        <summary>Quel est le budget ?</summary>
+        <p>
+          Il dépend des pages et du contenu à produire. Nous chiffrons par
+          e-mail, puis nous ajustons avec vous.
+        </p>
+      </details>
+      <details>
+        <summary>Quel est le délai ?</summary>
+        <p>
+          Trois à cinq semaines après validation, selon la transmission de vos
+          textes et de vos photos.
+        </p>
+      </details>
+      <details>
+        <summary>Et si un texte doit changer plus tard ?</summary>
+        <p>
+          Vous nous écrivez, nous le modifions. Compris dans le suivi. Aucun
+          mot de passe à retenir.
+        </p>
+      </details>
+      <details>
+        <summary>Le site nous appartient-il ?</summary>
+        <p>
+          Oui. Le domaine est au nom de votre entreprise. Si vous partez, nous
+          transmettons tout.
+        </p>
+      </details>
     </div>
   </div>
 </section>
 
-<section class="wrap section hair-top">
-  <span class="tick"></span>
-  <h2>Notre méthode</h2>
-
-  <ol class="method">
-    <li>
-      <span class="method__n">01</span>
-      <h3>Vous nous écrivez</h3>
-      <p>Votre activité, en quelques lignes.</p>
-    </li>
-    <li>
-      <span class="method__n">02</span>
-      <h3>Nous proposons</h3>
-      <p>Structure, contenu, délai, budget. Par écrit.</p>
-    </li>
-    <li>
-      <span class="method__n">03</span>
-      <h3>Nous ajustons</h3>
-      <p>Jusqu'à ce que la proposition vous convienne.</p>
-    </li>
-    <li>
-      <span class="method__n">04</span>
-      <h3>Nous livrons</h3>
-      <p>Puis nous entretenons.</p>
-    </li>
-  </ol>
-</section>
-
-<section class="wrap section hair-top">
-  <span class="tick"></span>
-  <h2>Questions fréquentes</h2>
-
-  <div class="faq">
-    <details>
-      <summary>Une page Facebook ne suffit-elle pas ?</summary>
-      <p>
-        Elle appartient à Facebook : ses règles changent et sa visibilité dépend
-        d'un algorithme. Un site vous appartient, et personne ne peut le faire
-        disparaître.
-      </p>
-    </details>
-    <details>
-      <summary>Quel est le budget ?</summary>
-      <p>
-        Il dépend du nombre de pages et du contenu à produire. Nous établissons
-        une proposition chiffrée par e-mail, puis nous l'ajustons avec vous.
-      </p>
-    </details>
-    <details>
-      <summary>Quel est le délai ?</summary>
-      <p>
-        Trois à cinq semaines après validation. Le rythme dépend surtout de la
-        transmission de vos textes et de vos photos.
-      </p>
-    </details>
-    <details>
-      <summary>Et si un texte doit changer plus tard ?</summary>
-      <p>
-        Vous nous écrivez, nous le modifions. C'est compris dans le suivi. Aucun
-        outil à apprendre, aucun mot de passe à retenir.
-      </p>
-    </details>
-    <details>
-      <summary>Le site nous appartient-il ?</summary>
-      <p>
-        Oui. Le domaine est enregistré au nom de votre entreprise. Si vous
-        partez, nous transmettons les fichiers et les accès.
-      </p>
-    </details>
-    <details>
-      <summary>Nous ne savons pas quoi mettre sur un site.</summary>
-      <p>
-        C'est le cas de la plupart de nos clients. Vous décrivez votre métier ;
-        nous le traduisons en pages.
-      </p>
-    </details>
+<section class="band--grey section contact">
+  <div class="wrap">
+    <h2>Parlons de votre projet.</h2>
+    <p class="sub">Décrivez-nous votre activité. Nous revenons vers vous avec une proposition.</p>
+    <a class="contact__mail" href="mailto:info@ineart.be">info@ineart.be</a>
   </div>
 </section>
 
-<section class="wrap section hair-top">
-  <span class="tick"></span>
-  <h2>Parlons de votre projet</h2>
-  <a class="contact__mail" href="mailto:info@ineart.be">info@ineart.be</a>
-</section>
-
-<footer class="wrap footer">
-  <span>IneWeb — Conception, hébergement et suivi de sites web</span>
-  <span>Belgique</span>
+<footer class="band--white">
+  <div class="wrap footer">
+    <span>IneWeb — Conception, hébergement et suivi de sites web</span>
+    <span>Belgique</span>
+  </div>
 </footer>
 
 <script>
-  /* Bannière glissante.
-     Le défilement est natif : le doigt, le trackpad, les flèches et les points
-     agissent tous sur la même piste, et les points ne font que refléter la
-     position réelle. Rien à synchroniser à la main, donc rien à désynchroniser. */
+  /* Carrousel sur défilement natif.
+     Le natif donne gratuitement ce qu'une piste translatée en CSS ne sait pas
+     faire : suivi au doigt à l'unité près, inertie au relâchement, et
+     interruption à n'importe quel instant. Les points ne pilotent rien — ils
+     reflètent la position réelle, donc rien ne peut se désynchroniser. */
   (function () {
-    var viewport = document.querySelector("[data-viewport]");
-    if (!viewport) return;
+    var rail = document.querySelector("[data-rail]");
+    if (!rail) return;
 
     var dots = document.querySelectorAll("[data-dot]");
-    var count = viewport.children.length;
+    var count = rail.children.length;
     var reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
     var timer = null;
 
-    function current() {
-      return Math.round(viewport.scrollLeft / viewport.clientWidth);
-    }
+    function current() { return Math.round(rail.scrollLeft / rail.clientWidth); }
 
     function goTo(index) {
-      var target = (((index % count) + count) % count) * viewport.clientWidth;
-      viewport.scrollTo({ left: target, behavior: reduced.matches ? "auto" : "smooth" });
+      rail.scrollTo({
+        left: (((index % count) + count) % count) * rail.clientWidth,
+        behavior: reduced.matches ? "auto" : "smooth",
+      });
     }
 
     function sync() {
@@ -648,29 +655,24 @@ finish review, the verdict, and DESIGN.md
     }
     function stop() { window.clearInterval(timer); timer = null; }
 
-    viewport.addEventListener("scroll", sync, { passive: true });
-    // Un glissement au doigt vaut décision : l'avance automatique s'arrête.
-    viewport.addEventListener("pointerdown", stop);
-    viewport.addEventListener("keydown", function (event) {
+    rail.addEventListener("scroll", sync, { passive: true });
+    // Un geste vaut décision : l'avance automatique cesse dès le premier contact.
+    rail.addEventListener("pointerdown", stop);
+    rail.addEventListener("keydown", function (event) {
       if (event.key === "ArrowRight") { goTo(current() + 1); stop(); }
       if (event.key === "ArrowLeft") { goTo(current() - 1); stop(); }
     });
 
-    document.querySelector("[data-next]").addEventListener("click", function () { goTo(current() + 1); stop(); });
-    document.querySelector("[data-prev]").addEventListener("click", function () { goTo(current() - 1); stop(); });
     for (var i = 0; i < dots.length; i += 1) {
       (function (n) { dots[n].addEventListener("click", function () { goTo(n); stop(); }); })(i);
     }
 
-    var banner = document.querySelector(".banner");
-    banner.addEventListener("mouseenter", stop);
-    banner.addEventListener("mouseleave", start);
-    banner.addEventListener("focusin", stop);
+    rail.addEventListener("mouseenter", stop);
+    rail.addEventListener("mouseleave", start);
+    rail.addEventListener("focusin", stop);
     document.addEventListener("visibilitychange", function () {
       if (document.hidden) stop(); else start();
     });
-
-    // Le redimensionnement change la largeur d'une vue : on se recale dessus.
     window.addEventListener("resize", function () { goTo(current()); });
 
     start();

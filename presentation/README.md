@@ -47,71 +47,56 @@ studio qui prend en charge, pas d'un prestataire qui exécute.
 
 ## Le monde visuel
 
-Graphite mat, filets d'un pixel, larges respirations. Une seule graisse de
-grotesque (Archivo) menée de 300 à 620 : **la hiérarchie passe par l'échelle et
-le blanc, jamais par le gras**.
+**Base claire, bandes alternées.** C'est le point le plus important du fichier :
+un fond continu, clair ou sombre, transforme la page en un seul bloc. Le rythme
+vient de l'alternance, pas de la quantité de marge.
 
-L'orange ne sert qu'à marquer — un carré de 8 px en tête de section, un
-soulignement sous l'adresse e-mail, l'indicateur de diapositive active. Aucun
-aplat pleine largeur : c'est précisément ce qui alourdissait la version
-précédente.
+L'ordre des bandes, à respecter si vous ajoutez une section :
 
-## La bannière
+| Bande | Fond | Rôle |
+|---|---|---|
+| Accueil | `#f5f5f7` | Le message et les maquettes |
+| Prestations | blanc | Le contenu |
+| Méthode | `#16181c` | **La ponctuation sombre — une seule dans la page** |
+| Questions | blanc | Le contenu |
+| Contact | `#f5f5f7` | La sortie |
 
-Elle ne montre pas des photos de banque d'images. Elle montre **des sites**,
-rendus en HTML dans un cadre navigateur, qui défilent. Trois mises en page —
-commerce de proximité, atelier technique, profession libérale — chacune avec sa
-propre identité, son vrai texte et sa vraie hiérarchie.
+Une deuxième bande noire annulerait l'effet. Si une section s'ajoute, elle est
+blanche ou grise.
 
-Ce sont des **démonstrations**, annoncées comme telles sous le carrousel et
-servies par des adresses en `-exemple.be`. Ce ne sont pas des clients.
+L'orange (`#d2570b`) ne sert qu'à l'action : le bouton, les liens, les puces,
+les numéros d'étape. Jamais un aplat.
 
-Les zones marquées « photo — … » sont les emplacements d'image. Remplacez-les
-par de vraies prises de vue dès que vous en aurez : la mention en clair vaut
-mieux qu'un rectangle gris qui ferait croire à un site inachevé.
+## La typographie
 
-## Ce qui a été coupé
+Registre Apple : **l'interlettrage se resserre à mesure que le corps grandit**
+(−0,035 em sur le titre, −0,005 em sur le texte courant), et l'interligne
+descend avec lui (1,04 sur le titre, 1,55 sur le texte). Une valeur unique pour
+toutes les tailles serait fausse quelque part.
 
-Une passe de distillation a retiré environ la moitié du texte :
-
-- **Deux sections fusionnées.** « Infrastructure » et « Compris dans le suivi
-  annuel » énuméraient les mêmes éléments — nom de domaine, hébergement,
-  certificat. Il n'en reste qu'une, « Ce que nous prenons en charge ».
-- **Les paragraphes descriptifs deviennent des listes courtes.** On scanne une
-  liste ; on subit un paragraphe. C'est vrai partout, et décisif sur téléphone.
-- **Le héros tient en une phrase**, une promesse et une adresse.
-- **Les réponses de la FAQ ont été coupées de moitié.**
-
-La page fait 346 mots et 3 393 px de haut sur téléphone, contre le double
-auparavant. Toute rédaction future doit tenir cette contrainte : si une section
-demande un paragraphe, c'est qu'elle demande une liste.
+Les retours du titre sont **imposés à la main** aux frontières de phrase. Laissé
+libre, le navigateur coupait « Sur / mesure » au milieu.
 
 ## Le mouvement
 
-Deux gestes, pas davantage :
+Deux gestes : l'entrée à l'ouverture, et le carrousel.
 
-1. l'entrée du héros au chargement, décalée de 80 ms par bloc ;
-2. le glissement de la bannière.
+Le carrousel utilise le **défilement natif avec accrochage** (`scroll-snap`).
+C'est ce qui donne gratuitement les trois qualités qu'une piste translatée en
+CSS ne sait pas produire : suivi au doigt à l'unité près, inertie au
+relâchement, et interruption à n'importe quel instant. Les points ne pilotent
+rien — ils reflètent la position réelle, donc rien ne peut se désynchroniser.
 
-Le carrousel utilise le **défilement natif avec accrochage** (`scroll-snap`), pas
-une piste translatée en CSS : c'est ce qui le rend **glissable au doigt** sur
-téléphone, au trackpad sur portable, et aux flèches au clavier. Les points ne
-pilotent rien, ils reflètent la position réelle — il n'y a donc rien à
-désynchroniser.
+L'avance automatique (6,5 s) cesse dès le premier contact, et se suspend au
+survol, au focus clavier et quand l'onglet passe en arrière-plan.
 
-Le défilement automatique (6,5 s) s'arrête dès le premier geste, et se suspend
-au survol, au focus clavier et quand l'onglet passe en arrière-plan. Sur
-téléphone les flèches disparaissent : le doigt suffit.
+Le bouton répond **à l'appui** (`:active { scale(.97) }`, 100 ms), pas au
+relâchement. Cibles tactiles à 44 px.
 
 Les maquettes se dimensionnent sur la largeur de leur cadre
-(`container-type: inline-size` + unités `cqw`). Sans cela, un titre de 18 px
-occupe 2,5 % d'un cadre de bureau mais 5 % d'un cadre de téléphone, et la
-miniature paraît zoomée. Des `max()` posent un plancher de lisibilité.
-
-Aucune révélation au défilement : le contenu est lisible en permanence. Courbes
-et durées suivent la doctrine d'Emil Kowalski — `ease-out` marqué pour les
-entrées, `cubic-bezier(.32,.72,0,1)` pour le glissement, propriétés nommées
-plutôt que `all`.
+(`container-type: inline-size` + unités `cqw`). À taille fixe, un titre pèse
+deux fois plus lourd dans un cadre de téléphone que de bureau, et la miniature
+paraît zoomée.
 
 ## Polices
 

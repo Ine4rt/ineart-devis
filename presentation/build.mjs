@@ -40,13 +40,13 @@ const standalone = `<!doctype html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${title}</title>
 <meta name="description" content="Sites web sur mesure pour les indépendants et les petites entreprises qui n\u0027en ont pas encore. Nom de domaine, hébergement et entretien pris en charge.">
-<meta name="theme-color" content="#121316">
+<meta name="theme-color" content="#f5f5f7">
 <meta property="og:type" content="website">
 <meta property="og:title" content="${title}">
 <meta property="og:description" content="IneWeb conçoit des sites web sur mesure et en assure l'hébergement et le suivi. Les entreprises que nous accompagnons n'ont rien à gérer.">
 <meta property="og:locale" content="fr_BE">
 <link rel="icon" href="data:image/svg+xml,${encodeURIComponent(
-  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#e8641c"/><text x="16" y="22" font-family="Helvetica,Arial,sans-serif" font-size="14" font-weight="700" fill="#180d02" text-anchor="middle">iW</text></svg>',
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="7" fill="#d2570b"/><text x="16" y="22" font-family="Helvetica,Arial,sans-serif" font-size="14" font-weight="700" fill="#180d02" text-anchor="middle">iW</text></svg>',
 )}">
 <style>
   *, *::before, *::after { box-sizing: border-box; }

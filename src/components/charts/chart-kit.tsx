@@ -205,7 +205,7 @@ export function AreaChart({
       <div className="absolute inset-0 flex" onMouseLeave={() => setHover(null)}>
         {points.map((point, index) => (
           <button
-            key={point.label}
+            key={`${point.label}-${index}`}
             type="button"
             className="h-full flex-1 cursor-default"
             onMouseEnter={() => setHover(index)}
@@ -228,7 +228,7 @@ export function AreaChart({
       <div className="mt-2 flex justify-between text-[10px] text-ink-muted">
         {points.map((point, index) =>
           index === 0 || index === points.length - 1 || index === Math.floor(points.length / 2) ? (
-            <span key={point.label}>{point.label}</span>
+            <span key={`${point.label}-${index}`}>{point.label}</span>
           ) : null,
         )}
       </div>
@@ -275,7 +275,7 @@ export function BarChart({
           const isHovered = hover === index;
           return (
             <button
-              key={point.label}
+              key={`${point.label}-${index}`}
               type="button"
               className="group relative flex h-full flex-1 cursor-default flex-col justify-end"
               onMouseEnter={() => setHover(index)}
@@ -302,7 +302,7 @@ export function BarChart({
       <div className="mt-2 flex gap-1.5 text-[10px] text-ink-muted">
         {data.map((point, index) => (
           <span
-            key={point.label}
+            key={`${point.label}-${index}`}
             className={cn(
               "flex-1 truncate text-center",
               index === highlightIndex && "font-semibold text-ink-secondary",

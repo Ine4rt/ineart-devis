@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------------
-// Ine4rt Console — modèle de données
+// IneWeb Console — modèle de données
 //
 // Principes :
 //  - Le Client est l'entité pivot : tout (projet, domaine, hébergement,

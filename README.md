@@ -1,4 +1,4 @@
-# Ine4rt Console
+# IneWeb Console
 
 Outil interne de gestion pour un développeur web indépendant : clients, sites,
 domaines, hébergements, abonnements et encaissements dans une seule interface
@@ -210,3 +210,7 @@ pour que vos données ne soient jamais captives de l'outil.
 
 Le dépôt contenait auparavant `analyseur_mails.py` et son workflow GitHub
 Actions, sans rapport avec cette console. Ils sont conservés en l'état.
+
+Le produit s'appelait initialement « Ine4rt » ; il a été renommé **IneWeb**.
+L'adresse de contact reste `info@ineart.be` : le nom de domaine n'a pas suivi
+le changement de marque, c'est une décision à trancher.

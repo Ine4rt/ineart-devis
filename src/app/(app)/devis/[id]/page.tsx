@@ -95,10 +95,10 @@ export default async function QuotePage({ params }: { params: Promise<{ id: stri
           <div>
             <div className="flex items-center gap-2.5">
               <span className="flex h-9 w-9 items-center justify-center rounded-md bg-[var(--accent)] text-sm font-bold text-white">
-                i4
+                iW
               </span>
               <div>
-                <p className="text-sm font-semibold text-ink">Ine4rt</p>
+                <p className="text-sm font-semibold text-ink">IneWeb</p>
                 <p className="text-xs text-ink-muted">Développement web indépendant</p>
               </div>
             </div>

@@ -77,7 +77,7 @@ export function AppShell({
             {!collapsed ? (
               <span className="min-w-0">
                 <span className="block truncate text-[13px] font-semibold leading-tight text-ink">
-                  Ine4rt
+                  IneWeb
                 </span>
                 <span className="block truncate text-[10px] uppercase tracking-wider text-ink-muted">
                   Console
@@ -277,7 +277,7 @@ function QuickCreate() {
 function Logo() {
   return (
     <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-[var(--accent)] text-[13px] font-bold text-white shadow-[var(--shadow-xs)]">
-      i4
+      iW
     </span>
   );
 }

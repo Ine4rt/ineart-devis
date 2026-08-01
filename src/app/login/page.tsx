@@ -28,10 +28,10 @@ export default async function LoginPage() {
       <div className="relative w-full max-w-[380px] animate-rise-in">
         <div className="mb-7 flex flex-col items-center text-center">
           <span className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--accent)] text-base font-bold text-white shadow-[var(--shadow-md)]">
-            i4
+            iW
           </span>
           <h1 className="text-lg font-semibold text-ink">
-            {mode === "setup" ? "Installation de la console" : "Ine4rt Console"}
+            {mode === "setup" ? "Installation de la console" : "IneWeb Console"}
           </h1>
           <p className="mt-1.5 max-w-[300px] text-xs leading-relaxed text-ink-muted">
             {mode === "setup"

@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* ==========================================================================
-   Ine4rt Console — système de design
+   IneWeb Console — système de design
    --------------------------------------------------------------------------
    Trois couches, dans cet ordre :
      1. Primitives  : la palette brute (jamais utilisée directement en JSX)
@@ -39,12 +39,12 @@
   --text-muted: #8a877e;
   --text-inverted: #ffffff;
 
-  --accent: #5b5bd6;
-  --accent-hover: #4e4ec4;
-  --accent-active: #4343ad;
-  --accent-soft: #eeeefc;
-  --accent-line: #d3d3f6;
-  --accent-text: #4a4ab8;
+  --accent: #d2570b;
+  --accent-hover: #b94a06;
+  --accent-active: #9c4109;
+  --accent-soft: #fdf1e8;
+  --accent-line: #f7d5ba;
+  --accent-text: #9c4109;
 
   --shadow-xs: 0 1px 2px rgb(23 22 20 / 0.05);
   --shadow-sm: 0 1px 2px rgb(23 22 20 / 0.06), 0 1px 3px rgb(23 22 20 / 0.04);
@@ -59,9 +59,9 @@
   --tone-muted-soft: #f4f3f1;
   --tone-muted-line: #e5e3de;
 
-  --tone-accent: #4a4ab8;
-  --tone-accent-soft: #eeeefc;
-  --tone-accent-line: #d7d7f7;
+  --tone-accent: #9c4109;
+  --tone-accent-soft: #fdf1e8;
+  --tone-accent-line: #f7d5ba;
 
   --tone-success: #14713d;
   --tone-success-soft: #e7f6ec;
@@ -75,9 +75,9 @@
   --tone-caution-soft: #fdf4e0;
   --tone-caution-line: #f0dcaa;
 
-  --tone-warning: #9a4d10;
-  --tone-warning-soft: #fdf0e6;
-  --tone-warning-line: #f5d3b6;
+  --tone-warning: #8a6206;
+  --tone-warning-soft: #fdf6e4;
+  --tone-warning-line: #f0e0ad;
 
   --tone-critical: #a83a26;
   --tone-critical-soft: #fdeeeb;
@@ -91,12 +91,12 @@
      Ordre FIXE : une catégorie garde sa couleur quels que soient les filtres.
      Validée (bande de clarté, plancher de chroma, séparation deutan/protan/tritan
      des paires adjacentes, contraste ≥ 3:1 sur la surface) — ne pas réordonner. */
-  --chart-1: #5b5bd6;
-  --chart-2: #0891b2;
-  --chart-3: #b45309;
+  --chart-1: #d2570b;
+  --chart-2: #0e7fa8;
+  --chart-3: #8a4fd8;
   --chart-4: #15803d;
-  --chart-5: #9333ea;
-  --chart-6: #be123c;
+  --chart-5: #3d54cc;
+  --chart-6: #b3123f;
   --chart-grid: #ebe9e4;
   --chart-axis: #a5a29a;
 }
@@ -120,12 +120,12 @@
   --text-muted: #6f747d;
   --text-inverted: #0a0b0d;
 
-  --accent: #7b7bf0;
-  --accent-hover: #8d8df4;
-  --accent-active: #9c9cf7;
-  --accent-soft: #1c1c38;
-  --accent-line: #33336a;
-  --accent-text: #a9a9f8;
+  --accent: #ef7529;
+  --accent-hover: #ff883f;
+  --accent-active: #ff9557;
+  --accent-soft: #2a1608;
+  --accent-line: #4d2a12;
+  --accent-text: #ff9557;
 
   --shadow-xs: 0 1px 2px rgb(0 0 0 / 0.4);
   --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.5), 0 1px 3px rgb(0 0 0 / 0.3);
@@ -140,9 +140,9 @@
   --tone-muted-soft: #191c20;
   --tone-muted-line: #272b31;
 
-  --tone-accent: #a9a9f8;
-  --tone-accent-soft: #1c1c38;
-  --tone-accent-line: #34346c;
+  --tone-accent: #ff9557;
+  --tone-accent-soft: #2a1608;
+  --tone-accent-line: #4d2a12;
 
   --tone-success: #5fd08a;
   --tone-success-soft: #0e2418;
@@ -156,9 +156,9 @@
   --tone-caution-soft: #251d0b;
   --tone-caution-line: #46381a;
 
-  --tone-warning: #ef9c5a;
-  --tone-warning-soft: #271707;
-  --tone-warning-line: #4b2e15;
+  --tone-warning: #d8ae4a;
+  --tone-warning-soft: #241d09;
+  --tone-warning-line: #453718;
 
   --tone-critical: #f18a72;
   --tone-critical-soft: #2a120c;
@@ -170,11 +170,11 @@
 
   /* Le mode sombre n'est pas une inversion : ce sont des pas choisis et
      validés séparément contre la surface sombre. */
-  --chart-1: #7676e6;
+  --chart-1: #d9702a;
   --chart-2: #2e9ab4;
-  --chart-3: #c8802f;
+  --chart-3: #a465e0;
   --chart-4: #40a468;
-  --chart-5: #a465e0;
+  --chart-5: #6f7fe8;
   --chart-6: #d95a72;
   --chart-grid: #21242a;
   --chart-axis: #5d626a;

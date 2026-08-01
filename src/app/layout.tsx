@@ -21,8 +21,8 @@ const mono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Ine4rt Console",
-    template: "%s · Ine4rt Console",
+    default: "IneWeb Console",
+    template: "%s · IneWeb Console",
   },
   description: "Console interne de gestion des clients, sites, domaines et abonnements.",
   robots: { index: false, follow: false },

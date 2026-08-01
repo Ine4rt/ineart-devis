@@ -19,16 +19,14 @@
 </head>
 <body>
 <!--
-THESIS: Une société qui livre des sites finis et les tient en état. La page
-refuse le titre géant en gras, les pavés de couleur et les grilles de cartes.
-OWN-WORLD: Graphite mat, filets d'un pixel, larges respirations, une seule
-graisse de grotesque menée de 300 à 620. L'orange ne sert qu'à marquer : un
-carré de 8 px, un soulignement, l'indicateur actif. Aucun aplat plein.
-STORY: Un dirigeant voit d'abord des sites qui défilent, comprend que tout est
-pris en charge, et écrit.
-FIRST VIEWPORT: Titre mesuré sur trois lignes à gauche, contact à droite ; en
-dessous, la bannière défilante pleine largeur qui montre des sites réels.
-FORM: Signalétique de chantier, épurée à la demande du client, clé dda92f52.
+THESIS: Une société qui livre des sites finis et les tient en état. La page se
+regarde d'abord et se lit ensuite : elle refuse l'empilement de paragraphes.
+OWN-WORLD: Graphite mat, filets d'un pixel, une seule graisse de grotesque
+menée de 300 à 620. L'orange ne sert qu'à marquer. Aucun aplat plein.
+STORY: Un dirigeant voit des sites défiler sous son pouce, comprend en six mots
+ce qui est pris en charge, et écrit.
+FIRST VIEWPORT: Une phrase, une adresse, et la bannière glissante juste dessous.
+FORM: Signalétique de chantier, distillée, clé dda92f52.
 FINISH: unreviewed and undocumented is unfinished; this build ends with the
 finish review, the verdict, and DESIGN.md
 -->
@@ -36,11 +34,12 @@ finish review, the verdict, and DESIGN.md
 <style>
   /* ==========================================================================
      IneWeb — page de présentation
-     Correction de cap : la version précédente était trop lourde. Le poids
-     venait de trois choses — un lettrage étendu en graisse 800, des aplats
-     orange pleine largeur, et des listes encadrées. Ici la hiérarchie passe par
-     l'échelle et le blanc, pas par la graisse ; l'orange redevient une marque
-     ponctuelle ; les cadres deviennent des filets.
+     Troisième passe : distillation. Deux sections disaient la même chose
+     (l'infrastructure était énumérée deux fois) — elles n'en font plus qu'une.
+     Chaque paragraphe a été coupé, puis recoupé. Les descriptions deviennent
+     des listes : on scanne une liste, on subit un paragraphe.
+     Le carrousel devient glissable au doigt, parce que c'est le geste qu'un
+     téléphone appelle.
      Voix : celle d'une société. « Nous », jamais « je ».
      ========================================================================== */
 
@@ -56,21 +55,18 @@ finish review, the verdict, and DESIGN.md
 
     --ink-900: #101114;
     --ink-850: #141519;
-    --ink-800: #191b1f;
-    --ink-700: #212429;
 
     --hair: #24272d;
     --hair-strong: #33373f;
 
     --text: #eceded;
-    --text-2: #9aa0a8;
+    --text-2: #a2a8b0;
     --text-3: #7d838b;
 
     --orange: #e8641c;
     --orange-soft: #f07f3d;
 
     --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
-    --ease-slide: cubic-bezier(0.32, 0.72, 0, 1);
 
     --pad: clamp(1.25rem, 5vw, 4.5rem);
   }
@@ -82,271 +78,245 @@ finish review, the verdict, and DESIGN.md
     background: var(--ink-900);
     color: var(--text);
     font-family: "Archivo", ui-sans-serif, system-ui, sans-serif;
-    font-size: 1rem;
+    /* 17 px : en dessous de 16 px sur téléphone, on plisse les yeux. */
+    font-size: 1.0625rem;
     font-weight: 400;
-    line-height: 1.65;
+    line-height: 1.6;
     -webkit-font-smoothing: antialiased;
   }
 
-  h1, h2, h3 { margin: 0; font-weight: 500; letter-spacing: -0.025em; line-height: 1.12; text-wrap: balance; }
+  h1, h2, h3 { margin: 0; font-weight: 500; letter-spacing: -0.025em; line-height: 1.14; text-wrap: balance; }
   p { margin: 0; }
   a { color: inherit; }
+  ul, ol { margin: 0; padding: 0; list-style: none; }
 
   :focus-visible { outline: 2px solid var(--orange); outline-offset: 4px; }
 
-  .wrap { width: min(100% - 2 * var(--pad), 74rem); margin-inline: auto; }
-  .section { padding-block: clamp(3.5rem, 7vw, 6rem) clamp(2.5rem, 4vw, 3.5rem); }
+  .wrap { width: min(100% - 2 * var(--pad), 72rem); margin-inline: auto; }
+  .section { padding-block: clamp(3.25rem, 6vw, 5.5rem) clamp(2.25rem, 4vw, 3.25rem); }
   .hair-top { border-top: 1px solid var(--hair); }
 
-  /* Marque orange : un carré de 8 px. C'est tout l'accent d'une section. */
-  .tick {
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    background: var(--orange);
-    margin-bottom: 1.5rem;
-  }
+  /* Un carré de 8 px : tout l'accent d'une section. */
+  .tick { display: block; width: 8px; height: 8px; background: var(--orange); margin-bottom: 1.5rem; }
 
-  h2 { font-size: clamp(1.6rem, 1.1rem + 1.9vw, 2.35rem); }
-
-  .lede {
-    color: var(--text-2);
-    font-size: clamp(1rem, 0.96rem + 0.3vw, 1.125rem);
-    font-weight: 300;
-    max-width: 62ch;
-    margin-top: 1.25rem;
-  }
+  h2 { font-size: clamp(1.55rem, 1.15rem + 1.7vw, 2.25rem); }
 
   /* --- En-tête ------------------------------------------------------------ */
-  .topbar {
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 1rem; padding-block: 1.35rem;
-  }
-  .brand { display: inline-flex; align-items: baseline; gap: 0.6rem; text-decoration: none; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-block: 1.25rem; }
+  .brand { display: inline-flex; align-items: baseline; gap: 0.55rem; text-decoration: none; }
   .brand__name { font-size: 1.0625rem; font-weight: 600; letter-spacing: -0.02em; }
-  .brand__dot { width: 6px; height: 6px; background: var(--orange); display: inline-block; }
+  .brand__dot { width: 6px; height: 6px; background: var(--orange); }
   .brand__suffix { font-size: 0.75rem; color: var(--text-3); letter-spacing: 0.08em; text-transform: uppercase; }
 
   .link {
-    font-size: 0.875rem; color: var(--text-2); text-decoration: none;
-    padding-bottom: 2px; border-bottom: 1px solid transparent;
+    font-size: 0.9375rem; color: var(--text-2); text-decoration: none; padding-bottom: 2px;
+    border-bottom: 1px solid transparent;
     transition: color 180ms var(--ease-out), border-color 180ms var(--ease-out);
   }
   .link:hover { color: var(--text); border-color: var(--orange); }
 
-  /* --- Héros -------------------------------------------------------------- */
-  .hero { padding-block: clamp(3.5rem, 9vw, 6.5rem) clamp(2.5rem, 5vw, 4rem); }
-  .hero__grid { display: grid; gap: clamp(2rem, 5vw, 4rem); align-items: end; }
-  @media (min-width: 60rem) { .hero__grid { grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); } }
-
+  /* --- Héros --------------------------------------------------------------
+     Une phrase, une promesse, une adresse. Rien d'autre au-dessus du pli. */
+  .hero { padding-block: clamp(3rem, 8vw, 5.5rem) clamp(2rem, 4vw, 3rem); }
   .hero h1 {
-    /* Deux fois plus petit qu'avant, et en graisse 400 : l'échelle porte, pas le gras. */
-    font-size: clamp(2rem, 1.1rem + 3.4vw, 3.6rem);
+    font-size: clamp(2.05rem, 1.15rem + 3.5vw, 3.5rem);
     font-weight: 400;
-    max-width: 20ch;
+    max-width: 17ch;
   }
-  .hero h1 em { font-style: normal; color: var(--text-3); }
-
-  .hero__aside { color: var(--text-2); font-size: 0.9375rem; font-weight: 300; }
+  .hero__row {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.75rem 2.5rem;
+    margin-top: clamp(1.5rem, 3vw, 2.25rem);
+  }
+  .hero__promise { color: var(--text-2); font-weight: 300; max-width: 34ch; }
   .hero__mail {
-    display: inline-block; margin-top: 0.85rem; font-size: 1.0625rem; font-weight: 500;
-    color: var(--text); text-decoration: none; padding-bottom: 3px;
-    border-bottom: 1px solid var(--orange);
+    font-size: 1.0625rem; font-weight: 500; color: var(--text); text-decoration: none;
+    padding-bottom: 3px; border-bottom: 1px solid var(--orange);
     transition: color 180ms var(--ease-out);
   }
   .hero__mail:hover { color: var(--orange-soft); }
 
   /* ==========================================================================
-     BANNIÈRE DÉFILANTE
-     Elle ne montre pas des photos de banque d'images : elle montre des sites,
-     rendus en HTML dans un cadre navigateur. Ce sont des mises en page de
-     démonstration, annoncées comme telles — pas de faux clients.
+     BANNIÈRE GLISSANTE
+     Défilement natif avec accrochage : au doigt sur téléphone, au trackpad sur
+     portable, aux flèches au clavier. Une piste translatée en CSS ne se glisse
+     pas au pouce — et c'est le geste que l'appareil appelle.
      ========================================================================== */
 
-  .banner { position: relative; overflow: hidden; border-block: 1px solid var(--hair); background: var(--ink-850); }
-  .banner__viewport { overflow: hidden; }
-  .banner__track {
+  .banner { border-block: 1px solid var(--hair); background: var(--ink-850); }
+  .banner__viewport {
     display: flex;
-    transition: transform 720ms var(--ease-slide);
-    will-change: transform;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
   }
-  .slide { flex: 0 0 100%; min-width: 0; padding: clamp(2rem, 5vw, 4rem) var(--pad); }
+  .banner__viewport::-webkit-scrollbar { display: none; }
+
+  .slide {
+    flex: 0 0 100%; min-width: 0;
+    scroll-snap-align: start;
+    padding: clamp(1.75rem, 4vw, 3.25rem) var(--pad);
+  }
   .slide__inner {
-    width: min(100%, 74rem); margin-inline: auto;
-    display: grid; gap: clamp(1.75rem, 4vw, 3.5rem); align-items: center;
+    width: min(100%, 72rem); margin-inline: auto;
+    display: grid; gap: clamp(1.25rem, 3vw, 3rem); align-items: center;
   }
-  @media (min-width: 62rem) { .slide__inner { grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr); } }
+  @media (min-width: 62rem) { .slide__inner { grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.4fr); } }
 
   .slide__label { font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--orange); }
-  .slide h3 { font-size: clamp(1.35rem, 1rem + 1.4vw, 1.9rem); font-weight: 500; margin-top: 0.85rem; }
-  .slide p { color: var(--text-2); font-weight: 300; margin-top: 0.85rem; max-width: 40ch; font-size: 0.9375rem; }
+  .slide h3 { font-size: clamp(1.25rem, 1rem + 1.2vw, 1.7rem); font-weight: 500; margin-top: 0.7rem; }
 
-  /* --- Le cadre navigateur ------------------------------------------------ */
+  /* --- Cadre navigateur ---------------------------------------------------- */
   .frame {
-    border: 1px solid var(--hair-strong);
-    border-radius: 10px;
-    overflow: hidden;
-    background: #fff;
-    box-shadow: 0 24px 60px -30px rgb(0 0 0 / 0.85);
+    border: 1px solid var(--hair-strong); border-radius: 10px; overflow: hidden;
+    background: #fff; box-shadow: 0 24px 60px -30px rgb(0 0 0 / 0.85);
   }
   .frame__bar {
     display: flex; align-items: center; gap: 6px;
-    padding: 9px 12px; background: #ecedee; border-bottom: 1px solid #dcdee0;
+    padding: 8px 11px; background: #ecedee; border-bottom: 1px solid #dcdee0;
   }
-  .frame__dot { width: 8px; height: 8px; border-radius: 50%; background: #c9cbcd; }
-  .frame__url {
-    margin-left: 8px; font-size: 10px; color: #85888c; background: #fff;
-    border-radius: 4px; padding: 3px 10px; letter-spacing: 0.01em;
-  }
-  .frame__page { aspect-ratio: 16 / 10; overflow: hidden; }
+  .frame__dot { width: 7px; height: 7px; border-radius: 50%; background: #c9cbcd; }
+  .frame__url { margin-left: 7px; font-size: 9px; color: #85888c; background: #fff; border-radius: 4px; padding: 3px 9px; }
+  /* Le contenu de la maquette se dimensionne sur la largeur du cadre, pas sur
+     celle de la page : sans cela, un titre de 18 px occupe 2,5 % d'un cadre de
+     bureau mais 5 % d'un cadre de téléphone — la miniature paraît zoomée.
+     Les `max()` posent un plancher de lisibilité en dessous duquel on
+     n'irait plus vers du petit mais vers de la bouillie. */
+  .frame__page { aspect-ratio: 16 / 10; overflow: hidden; container-type: inline-size; }
 
-  /* --- Mises en page miniatures -------------------------------------------
-     Chaque maquette est un vrai petit site : du texte réel, une hiérarchie
-     réelle, une identité propre. Pas de rectangles gris en guise de contenu —
-     un bloc vide ne prouve rien et se voit immédiatement.
-     Les panneaux teintés marqués « photo » sont les emplacements où viennent
-     les images du client.
-     ------------------------------------------------------------------------ */
-  .mock { height: 100%; display: flex; flex-direction: column; font-size: 9.5px; line-height: 1.45; }
+  /* --- Maquettes : du vrai contenu, jamais des rectangles vides ------------ */
+  .mock { height: 100%; display: flex; flex-direction: column; font-size: max(7px, 1.32cqw); line-height: 1.45; }
   .mock__nav {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 11px 18px; font-size: 8px; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 1.4cqw 2.3cqw; font-size: max(5.6px, 1.05cqw); letter-spacing: 0.1em; text-transform: uppercase;
   }
-  .mock__nav b { font-weight: 600; letter-spacing: 0.06em; }
-  .mock__nav span span + span { margin-left: 12px; }
-  .mock__body { flex: 1; padding: 0 18px 16px; display: flex; flex-direction: column; gap: 12px; }
-  .mock__title { font-size: 19px; line-height: 1.1; font-weight: 500; letter-spacing: -0.025em; }
-  .mock__sub { font-size: 8.5px; opacity: 0.62; margin-top: 5px; }
+  .mock__nav b { font-weight: 600; }
+  .mock__nav span span + span { margin-left: 1.5cqw; }
+  .mock__body { flex: 1; padding: 1.8cqw 2.3cqw 2.1cqw; display: flex; flex-direction: column; gap: 1.5cqw; }
+  .mock__title { font-size: max(11px, 2.5cqw); line-height: 1.1; font-weight: 500; letter-spacing: -0.025em; }
+  .mock__sub { font-size: max(6px, 1.12cqw); opacity: 0.62; margin-top: 0.7cqw; }
   .mock__cta {
-    display: inline-block; margin-top: 9px; font-size: 7.5px; letter-spacing: 0.08em;
-    text-transform: uppercase; padding: 5px 10px; border-radius: 2px;
+    display: inline-block; margin-top: 1.25cqw; font-size: max(5.4px, 0.98cqw); letter-spacing: 0.08em;
+    text-transform: uppercase; padding: 0.7cqw 1.4cqw; border-radius: 2px;
   }
-  .mock__split { display: grid; gap: 12px; align-items: center; }
+  .mock__split { display: grid; gap: 1.5cqw; align-items: center; }
   .mock__panel {
-    position: relative; border-radius: 3px; display: flex; align-items: flex-end;
-    padding: 7px 8px; font-size: 7px; letter-spacing: 0.09em; text-transform: uppercase;
+    border-radius: 3px; display: flex; align-items: flex-end; padding: 0.85cqw 1cqw;
+    font-size: max(5.2px, 0.91cqw); letter-spacing: 0.09em; text-transform: uppercase;
   }
-  .mock__list { display: grid; gap: 0; }
-  .mock__item {
-    display: flex; align-items: baseline; justify-content: space-between;
-    padding: 5px 0; font-size: 8.5px;
-  }
-  .mock__item em { font-style: normal; opacity: 0.5; font-size: 7.5px; }
-  .mock__cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-  .mock__card { font-size: 8px; }
-  .mock__card b { display: block; font-weight: 600; font-size: 8.5px; margin-bottom: 2px; }
-  .mock__card span { opacity: 0.6; }
-  .mock__swatch { height: 26px; border-radius: 2px; margin-bottom: 5px; }
+  .mock__item { display: flex; align-items: baseline; justify-content: space-between; padding: 0.55cqw 0; font-size: max(6px, 1.12cqw); }
+  .mock__item em { font-style: normal; opacity: 0.5; font-size: max(5.4px, 0.98cqw); }
+  .mock__cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25cqw; font-size: max(5.6px, 1.05cqw); }
+  .mock__cards b { display: block; font-weight: 600; font-size: max(6px, 1.12cqw); margin-bottom: 0.3cqw; }
+  .mock__cards span { opacity: 0.6; }
 
-  /* Boulangerie — chaleureux, produits mis en avant */
   .mock--bakery { background: #fdfaf5; color: #2a2118; }
   .mock--bakery .mock__nav { border-bottom: 1px solid #ece1d1; color: #6b5c48; }
-  .mock--bakery .mock__body { padding-top: 14px; }
   .mock--bakery .mock__split { grid-template-columns: 1.15fr 1fr; }
   .mock--bakery .mock__panel { background: #b5703a; color: #fbf1e6; aspect-ratio: 4/3; }
   .mock--bakery .mock__cta { background: #2a2118; color: #fdfaf5; }
   .mock--bakery .mock__item { border-bottom: 1px solid #efe6d9; }
-  .mock--bakery .mock__swatch { background: #e8d9c4; }
 
-  /* Garage — sombre, orienté prestations */
   .mock--garage { background: #15181c; color: #e8ebee; }
   .mock--garage .mock__nav { border-bottom: 1px solid #242a31; color: #96a0aa; }
-  .mock--garage .mock__body { padding-top: 14px; }
   .mock--garage .mock__split { grid-template-columns: 1fr 1fr; }
   .mock--garage .mock__panel { background: #2b343d; color: #aab4bd; aspect-ratio: 16/7; }
   .mock--garage .mock__cta { background: #d9d9d9; color: #15181c; }
   .mock--garage .mock__item { border-bottom: 1px solid #232a31; }
-  .mock--garage .mock__list--two { grid-template-columns: 1fr 1fr; column-gap: 18px; }
+  .mock--garage .mock__grid { display: grid; grid-template-columns: 1fr 1fr; column-gap: 2.2cqw; }
 
-  /* Cabinet — sobre, éditorial */
   .mock--office { background: #f7f7f5; color: #1c1f22; }
   .mock--office .mock__nav { border-bottom: 1px solid #e2e2de; color: #6e7278; }
-  .mock--office .mock__body { padding-top: 16px; }
   .mock--office .mock__split { grid-template-columns: 1.5fr 1fr; }
   .mock--office .mock__panel { background: #384451; color: #ccd3da; aspect-ratio: 3/4; }
   .mock--office .mock__cta { border: 1px solid #1c1f22; }
-  .mock--office .mock__card b { border-top: 1px solid #1c1f22; padding-top: 6px; }
+  .mock--office .mock__cards b { border-top: 1px solid #1c1f22; padding-top: 0.7cqw; }
 
-  /* --- Commandes ---------------------------------------------------------- */
+  /* --- Commandes : cibles tactiles de 44 px, repère visuel fin ------------- */
   .banner__controls {
-    display: flex; align-items: center; gap: 1.25rem;
-    padding: 0 var(--pad) clamp(1.5rem, 3vw, 2rem);
-    width: min(100%, 74rem); margin-inline: auto;
+    display: flex; align-items: center; gap: 1rem;
+    width: min(100%, 72rem); margin-inline: auto;
+    padding: 0 var(--pad) clamp(1.25rem, 2.5vw, 1.75rem);
   }
-  .dots { display: flex; gap: 8px; }
+  .dots { display: flex; }
   .dot {
-    width: 26px; height: 2px; border: 0; padding: 0; cursor: pointer;
-    background: var(--hair-strong);
+    width: 44px; height: 44px; padding: 0; border: 0; background: none; cursor: pointer;
+    display: grid; place-items: center;
+  }
+  .dot::before {
+    content: ""; width: 22px; height: 2px; background: var(--hair-strong);
     transition: background-color 240ms var(--ease-out);
   }
-  .dot[aria-selected="true"] { background: var(--orange); }
-  .dot:hover { background: var(--text-3); }
-
-  .arrows { margin-left: auto; display: flex; gap: 0.5rem; }
-  .arrow {
-    width: 36px; height: 36px; display: grid; place-items: center; cursor: pointer;
-    background: transparent; border: 1px solid var(--hair-strong); border-radius: 50%;
-    color: var(--text-2);
-    transition: color 180ms var(--ease-out), border-color 180ms var(--ease-out);
-  }
-  .arrow:hover { color: var(--text); border-color: var(--text-3); }
-  .arrow:active { transform: scale(0.94); }
+  .dot[aria-selected="true"]::before { background: var(--orange); }
+  .dot:hover::before { background: var(--text-3); }
 
   .banner__note { font-size: 0.75rem; color: var(--text-3); }
 
-  /* --- Colonnes ----------------------------------------------------------- */
-  .cols { display: grid; gap: clamp(2rem, 4vw, 3.5rem); margin-top: clamp(2.5rem, 5vw, 4rem); }
-  @media (min-width: 54rem) { .cols { grid-template-columns: repeat(3, 1fr); } }
-
-  .col { border-top: 1px solid var(--hair); padding-top: 1.5rem; }
-  .col h3 { font-size: 1.0625rem; font-weight: 500; }
-  .col p { margin-top: 0.75rem; color: var(--text-2); font-weight: 300; font-size: 0.9375rem; }
-
-  /* --- Méthode ------------------------------------------------------------ */
-  .method { margin: clamp(2.5rem, 5vw, 4rem) 0 0; padding: 0; list-style: none; }
-  .method li {
-    display: grid; gap: 0.35rem 2.5rem; padding-block: clamp(1.5rem, 3vw, 2rem);
-    border-top: 1px solid var(--hair);
+  .arrows { margin-left: auto; display: flex; gap: 0.5rem; }
+  .arrow {
+    width: 44px; height: 44px; display: grid; place-items: center; cursor: pointer;
+    background: none; border: 1px solid var(--hair-strong); border-radius: 50%; color: var(--text-2);
+    transition: color 180ms var(--ease-out), border-color 180ms var(--ease-out), transform 120ms var(--ease-out);
   }
-  @media (min-width: 48rem) { .method li { grid-template-columns: 4rem 15rem 1fr; align-items: baseline; } }
+  .arrow:hover { color: var(--text); border-color: var(--text-3); }
+  .arrow:active { transform: scale(0.94); }
+  /* Sur téléphone le doigt suffit : les flèches ne prennent pas la place. */
+  @media (max-width: 47.99rem) { .arrows { display: none; } }
+
+  /* ==========================================================================
+     PRISE EN CHARGE
+     Une seule section là où il y en avait deux : l'ancienne « Infrastructure »
+     et l'ancien « Compris dans le suivi » énuméraient les mêmes éléments.
+     Des listes courtes, pas des paragraphes.
+     ========================================================================== */
+
+  .offer { display: grid; gap: 0; margin-top: clamp(2rem, 4vw, 3rem); }
+  @media (min-width: 54rem) { .offer { grid-template-columns: repeat(3, 1fr); column-gap: 3rem; } }
+
+  .offer > div { border-top: 1px solid var(--hair); padding-block: 1.5rem; }
+  .offer h3 { font-size: 1.125rem; font-weight: 500; }
+  .offer > div > p { color: var(--text-2); font-weight: 300; margin-top: 0.5rem; font-size: 1rem; }
+  .offer ul { margin-top: 1.15rem; display: grid; gap: 0.55rem; }
+  .offer li {
+    display: grid; grid-template-columns: 14px 1fr; gap: 0.7rem;
+    font-size: 0.9375rem; color: var(--text-2);
+  }
+  .offer li::before { content: ""; width: 5px; height: 5px; background: var(--orange); margin-top: 0.62em; }
+
+  /* --- Méthode : une ligne par étape --------------------------------------- */
+  .method { margin-top: clamp(2rem, 4vw, 3rem); }
+  .method li { display: grid; gap: 0.2rem 2rem; padding-block: 1.25rem; border-top: 1px solid var(--hair); }
+  @media (min-width: 48rem) { .method li { grid-template-columns: 3rem 14rem 1fr; align-items: baseline; } }
   .method__n { font-size: 0.8125rem; color: var(--orange); font-variant-numeric: tabular-nums; }
   .method h3 { font-size: 1.0625rem; font-weight: 500; }
-  .method p { color: var(--text-2); font-weight: 300; font-size: 0.9375rem; max-width: 52ch; }
+  .method p { color: var(--text-2); font-weight: 300; font-size: 1rem; }
 
-  /* --- Suivi -------------------------------------------------------------- */
-  .care { list-style: none; margin: clamp(2.5rem, 5vw, 4rem) 0 0; padding: 0; display: grid; gap: 0; }
-  @media (min-width: 48rem) { .care { grid-template-columns: 1fr 1fr; column-gap: 4rem; } }
-  .care li { border-top: 1px solid var(--hair); padding-block: 1.15rem; display: grid; gap: 0.2rem; }
-  .care strong { font-weight: 500; font-size: 0.9875rem; }
-  .care span { color: var(--text-3); font-weight: 300; font-size: 0.875rem; }
-
-  /* --- Questions ---------------------------------------------------------- */
-  .faq { margin-top: clamp(2.5rem, 5vw, 4rem); max-width: 52rem; }
+  /* --- Questions ----------------------------------------------------------- */
+  .faq { margin-top: clamp(2rem, 4vw, 3rem); max-width: 50rem; }
   .faq details { border-top: 1px solid var(--hair); }
   .faq details:last-of-type { border-bottom: 1px solid var(--hair); }
   .faq summary {
     cursor: pointer; list-style: none; position: relative;
-    padding: 1.35rem 2.5rem 1.35rem 0; font-size: 1rem; font-weight: 500;
+    padding: 1.15rem 2.5rem 1.15rem 0; font-size: 1.0625rem; font-weight: 500;
     transition: color 180ms var(--ease-out);
   }
   .faq summary::-webkit-details-marker { display: none; }
   .faq summary:hover { color: var(--orange-soft); }
   .faq summary::after {
-    content: ""; position: absolute; right: 4px; top: 50%; width: 9px; height: 9px;
+    content: ""; position: absolute; right: 6px; top: 50%; width: 9px; height: 9px;
     border-right: 1px solid var(--orange); border-bottom: 1px solid var(--orange);
     transform: translateY(-70%) rotate(45deg);
     transition: transform 240ms var(--ease-out);
   }
   .faq details[open] summary::after { transform: translateY(-25%) rotate(-135deg); }
-  .faq p { padding-bottom: 1.5rem; color: var(--text-2); font-weight: 300; max-width: 60ch; font-size: 0.9375rem; }
+  .faq p { padding-bottom: 1.35rem; color: var(--text-2); font-weight: 300; max-width: 56ch; font-size: 1rem; }
   .faq details[open] > p { animation: panel 260ms var(--ease-out) both; }
   @keyframes panel { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
 
-  /* --- Contact ------------------------------------------------------------ */
-  .contact { text-align: left; }
+  /* --- Contact -------------------------------------------------------------- */
   .contact__mail {
-    display: inline-block; margin-top: 1.75rem;
-    font-size: clamp(1.5rem, 0.9rem + 2.6vw, 2.6rem); font-weight: 400; letter-spacing: -0.03em;
+    display: inline-block; margin-top: 1.5rem;
+    font-size: clamp(1.45rem, 0.9rem + 2.5vw, 2.5rem); font-weight: 400; letter-spacing: -0.03em;
     color: var(--text); text-decoration: none; padding-bottom: 0.4rem;
     background-image: linear-gradient(var(--orange), var(--orange));
     background-repeat: no-repeat; background-position: 0 100%; background-size: 100% 1px;
@@ -355,22 +325,15 @@ finish review, the verdict, and DESIGN.md
   .contact__mail:hover { background-size: 100% 2px; color: var(--orange-soft); }
 
   .footer {
-    border-top: 1px solid var(--hair); padding-block: 2rem;
-    display: flex; flex-wrap: wrap; gap: 0.5rem 2rem; justify-content: space-between;
-    font-size: 0.8125rem; color: var(--text-3); font-weight: 300;
+    border-top: 1px solid var(--hair); padding-block: 1.75rem;
+    display: flex; flex-wrap: wrap; gap: 0.4rem 2rem; justify-content: space-between;
+    font-size: 0.875rem; color: var(--text-3); font-weight: 300;
   }
 
-  /* ==========================================================================
-     MOUVEMENT — deux gestes, pas davantage
-     1. l'entrée du héros au chargement
-     2. le glissement de la bannière
-     Aucune révélation au défilement : le contenu reste lisible en permanence.
-     ========================================================================== */
-
+  /* --- Mouvement : deux gestes -------------------------------------------- */
   .rise { animation: rise 700ms var(--ease-out) both; }
-  .rise--1 { animation-delay: 80ms; }
-  .rise--2 { animation-delay: 160ms; }
-  .rise--3 { animation-delay: 240ms; }
+  .rise--1 { animation-delay: 90ms; }
+  .rise--2 { animation-delay: 180ms; }
   @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 
   @media (prefers-reduced-motion: reduce) {
@@ -379,7 +342,6 @@ finish review, the verdict, and DESIGN.md
       animation-delay: 0ms !important;
       transition-duration: 0.001ms !important;
     }
-    .banner__track { transition: none !important; }
   }
 </style>
 
@@ -393,160 +355,133 @@ finish review, the verdict, and DESIGN.md
 </header>
 
 <section class="wrap hero" id="top">
-  <div class="hero__grid">
-    <h1 class="rise">
-      Nous concevons des sites web sur mesure, et nous les tenons en état.
-      <em>Vous n'avez rien à gérer.</em>
-    </h1>
-    <div class="hero__aside rise rise--1">
-      <p>
-        IneWeb accompagne les indépendants et les petites entreprises qui n'ont
-        pas encore de présence en ligne. Conception, nom de domaine, hébergement
-        et suivi : tout est pris en charge.
-      </p>
-      <a class="hero__mail" href="mailto:info@ineart.be">Nous écrire</a>
-    </div>
+  <h1 class="rise">Nous concevons des sites web sur mesure. Et nous nous occupons du reste.</h1>
+  <div class="hero__row rise rise--1">
+    <p class="hero__promise">Domaine, hébergement, entretien : vous n'avez rien à gérer.</p>
+    <a class="hero__mail" href="mailto:info@ineart.be">Nous écrire</a>
   </div>
 </section>
 
 <section class="banner rise rise--2" aria-roledescription="carrousel" aria-label="Exemples de mise en page">
-  <div class="banner__viewport">
-    <div class="banner__track" data-track>
+  <div class="banner__viewport" data-viewport tabindex="0">
 
-      <article class="slide" role="group" aria-roledescription="diapositive" aria-label="1 sur 3">
-        <div class="slide__inner">
-          <div>
-            <p class="slide__label">Commerce de proximité</p>
-            <h3>Des horaires, une adresse, et de quoi donner envie</h3>
-            <p>
-              Une page d'accueil qui répond aux trois questions posées avant de
-              se déplacer, et qui met les produits en avant sans faire attendre
-              le visiteur.
-            </p>
+    <article class="slide" role="group" aria-roledescription="diapositive" aria-label="1 sur 3">
+      <div class="slide__inner">
+        <div>
+          <p class="slide__label">Commerce de proximité</p>
+          <h3>Horaires, produits, adresse — trouvés en trois secondes</h3>
+        </div>
+        <div class="frame">
+          <div class="frame__bar" aria-hidden="true">
+            <span class="frame__dot"></span><span class="frame__dot"></span><span class="frame__dot"></span>
+            <span class="frame__url">boulangerie-exemple.be</span>
           </div>
-
-          <div class="frame">
-            <div class="frame__bar" aria-hidden="true">
-              <span class="frame__dot"></span><span class="frame__dot"></span><span class="frame__dot"></span>
-              <span class="frame__url">boulangerie-exemple.be</span>
-            </div>
-            <div class="frame__page">
-              <div class="mock mock--bakery">
-                <div class="mock__nav">
-                  <b>Boulangerie Martel</b>
-                  <span><span>Produits</span><span>Horaires</span><span>Nous trouver</span></span>
+          <div class="frame__page">
+            <div class="mock mock--bakery">
+              <div class="mock__nav">
+                <b>Boulangerie Martel</b>
+                <span><span>Produits</span><span>Horaires</span><span>Nous trouver</span></span>
+              </div>
+              <div class="mock__body">
+                <div class="mock__split">
+                  <div>
+                    <div class="mock__title">Le pain du jour,<br />cuit sur place.</div>
+                    <div class="mock__sub">Levain naturel, farines de la région.<br />Du mardi au samedi, 6 h 30 – 18 h.</div>
+                    <span class="mock__cta">Voir les produits</span>
+                  </div>
+                  <div class="mock__panel">photo — la boutique</div>
                 </div>
-                <div class="mock__body">
-                  <div class="mock__split">
-                    <div>
-                      <div class="mock__title">Le pain du jour,<br />cuit sur place.</div>
-                      <div class="mock__sub">Levain naturel, farines de la région.<br />Du mardi au samedi, 6 h 30 – 18 h.</div>
-                      <span class="mock__cta">Voir les produits</span>
-                    </div>
-                    <div class="mock__panel">photo — la boutique</div>
-                  </div>
-                  <div class="mock__list">
-                    <div class="mock__item"><span>Pain au levain</span><em>500 g / 1 kg</em></div>
-                    <div class="mock__item"><span>Baguette tradition</span><em>cuisson continue</em></div>
-                    <div class="mock__item"><span>Viennoiseries</span><em>jusqu'à 11 h</em></div>
-                  </div>
+                <div>
+                  <div class="mock__item"><span>Pain au levain</span><em>500 g / 1 kg</em></div>
+                  <div class="mock__item"><span>Baguette tradition</span><em>cuisson continue</em></div>
+                  <div class="mock__item"><span>Viennoiseries</span><em>jusqu'à 11 h</em></div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </article>
+      </div>
+    </article>
 
-      <article class="slide" role="group" aria-roledescription="diapositive" aria-label="2 sur 3">
-        <div class="slide__inner">
-          <div>
-            <p class="slide__label">Atelier & technique</p>
-            <h3>Toutes les prestations, lisibles d'un coup d'œil</h3>
-            <p>
-              Quand une activité couvre huit métiers, le site doit le dire vite.
-              Une grille de services, un contact visible, rien à chercher.
-            </p>
+    <article class="slide" role="group" aria-roledescription="diapositive" aria-label="2 sur 3">
+      <div class="slide__inner">
+        <div>
+          <p class="slide__label">Atelier &amp; technique</p>
+          <h3>Huit prestations, lisibles d'un coup d'œil</h3>
+        </div>
+        <div class="frame">
+          <div class="frame__bar" aria-hidden="true">
+            <span class="frame__dot"></span><span class="frame__dot"></span><span class="frame__dot"></span>
+            <span class="frame__url">garage-exemple.be</span>
           </div>
-
-          <div class="frame">
-            <div class="frame__bar" aria-hidden="true">
-              <span class="frame__dot"></span><span class="frame__dot"></span><span class="frame__dot"></span>
-              <span class="frame__url">garage-exemple.be</span>
-            </div>
-            <div class="frame__page">
-              <div class="mock mock--garage">
-                <div class="mock__nav">
-                  <b>Garage Dubois</b>
-                  <span><span>Prestations</span><span>Devis</span><span>Contact</span></span>
+          <div class="frame__page">
+            <div class="mock mock--garage">
+              <div class="mock__nav">
+                <b>Garage Dubois</b>
+                <span><span>Prestations</span><span>Devis</span><span>Contact</span></span>
+              </div>
+              <div class="mock__body">
+                <div class="mock__split">
+                  <div>
+                    <div class="mock__title">Entretien, réparation,<br />contrôle technique.</div>
+                    <div class="mock__sub">Toutes marques. Véhicule de remplacement<br />sur demande.</div>
+                    <span class="mock__cta">Demander un devis</span>
+                  </div>
+                  <div class="mock__panel">photo — l'atelier</div>
                 </div>
-                <div class="mock__body">
-                  <div class="mock__split">
-                    <div>
-                      <div class="mock__title">Entretien, réparation,<br />contrôle technique.</div>
-                      <div class="mock__sub">Toutes marques. Véhicule de remplacement<br />sur demande.</div>
-                      <span class="mock__cta">Demander un devis</span>
-                    </div>
-                    <div class="mock__panel">photo — l'atelier</div>
-                  </div>
-                  <div class="mock__list mock__list--two">
-                    <div class="mock__item"><span>Vidange & révision</span><em>1 h</em></div>
-                    <div class="mock__item"><span>Freins</span><em>2 h</em></div>
-                    <div class="mock__item"><span>Pneus & géométrie</span><em>1 h</em></div>
-                    <div class="mock__item"><span>Diagnostic électronique</span><em>30 min</em></div>
-                    <div class="mock__item"><span>Climatisation</span><em>1 h</em></div>
-                    <div class="mock__item"><span>Carrosserie</span><em>sur devis</em></div>
-                  </div>
+                <div class="mock__grid">
+                  <div class="mock__item"><span>Vidange &amp; révision</span><em>1 h</em></div>
+                  <div class="mock__item"><span>Freins</span><em>2 h</em></div>
+                  <div class="mock__item"><span>Pneus &amp; géométrie</span><em>1 h</em></div>
+                  <div class="mock__item"><span>Diagnostic</span><em>30 min</em></div>
+                  <div class="mock__item"><span>Climatisation</span><em>1 h</em></div>
+                  <div class="mock__item"><span>Carrosserie</span><em>sur devis</em></div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </article>
+      </div>
+    </article>
 
-      <article class="slide" role="group" aria-roledescription="diapositive" aria-label="3 sur 3">
-        <div class="slide__inner">
-          <div>
-            <p class="slide__label">Profession libérale</p>
-            <h3>Une présence sobre, qui inspire confiance</h3>
-            <p>
-              Pas de démonstration technique : une mise en page calme, des textes
-              clairs, et une adresse professionnelle à son propre nom.
-            </p>
+    <article class="slide" role="group" aria-roledescription="diapositive" aria-label="3 sur 3">
+      <div class="slide__inner">
+        <div>
+          <p class="slide__label">Profession libérale</p>
+          <h3>Une présence sobre, qui inspire confiance</h3>
+        </div>
+        <div class="frame">
+          <div class="frame__bar" aria-hidden="true">
+            <span class="frame__dot"></span><span class="frame__dot"></span><span class="frame__dot"></span>
+            <span class="frame__url">cabinet-exemple.be</span>
           </div>
-
-          <div class="frame">
-            <div class="frame__bar" aria-hidden="true">
-              <span class="frame__dot"></span><span class="frame__dot"></span><span class="frame__dot"></span>
-              <span class="frame__url">cabinet-exemple.be</span>
-            </div>
-            <div class="frame__page">
-              <div class="mock mock--office">
-                <div class="mock__nav">
-                  <b>Cabinet Lambert</b>
-                  <span><span>Domaines</span><span>Équipe</span><span>Honoraires</span><span>Contact</span></span>
+          <div class="frame__page">
+            <div class="mock mock--office">
+              <div class="mock__nav">
+                <b>Cabinet Lambert</b>
+                <span><span>Domaines</span><span>Équipe</span><span>Contact</span></span>
+              </div>
+              <div class="mock__body">
+                <div class="mock__split">
+                  <div>
+                    <div class="mock__title">Conseil juridique<br />aux entreprises.</div>
+                    <div class="mock__sub">Le cabinet accompagne dirigeants et indépendants dans leurs décisions courantes.</div>
+                    <span class="mock__cta">Prendre contact</span>
+                  </div>
+                  <div class="mock__panel">photo — le cabinet</div>
                 </div>
-                <div class="mock__body">
-                  <div class="mock__split">
-                    <div>
-                      <div class="mock__title">Conseil juridique<br />aux entreprises.</div>
-                      <div class="mock__sub">Le cabinet accompagne dirigeants et indépendants dans leurs décisions courantes comme dans leurs opérations exceptionnelles.</div>
-                      <span class="mock__cta">Prendre contact</span>
-                    </div>
-                    <div class="mock__panel">photo — le cabinet</div>
-                  </div>
-                  <div class="mock__cards">
-                    <div class="mock__card"><b>Droit des sociétés</b><span>Constitution, cession, gouvernance.</span></div>
-                    <div class="mock__card"><b>Droit social</b><span>Contrats, litiges, restructurations.</span></div>
-                    <div class="mock__card"><b>Contrats</b><span>Rédaction et négociation.</span></div>
-                  </div>
+                <div class="mock__cards">
+                  <div><b>Droit des sociétés</b><span>Constitution, cession.</span></div>
+                  <div><b>Droit social</b><span>Contrats, litiges.</span></div>
+                  <div><b>Contrats</b><span>Rédaction, négociation.</span></div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </article>
+      </div>
+    </article>
 
-    </div>
   </div>
 
   <div class="banner__controls">
@@ -558,10 +493,10 @@ finish review, the verdict, and DESIGN.md
     <p class="banner__note">Mises en page de démonstration</p>
     <div class="arrows">
       <button class="arrow" type="button" data-prev aria-label="Diapositive précédente">
-        <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 4l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 4l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
       <button class="arrow" type="button" data-next aria-label="Diapositive suivante">
-        <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M8 4l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M8 4l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
     </div>
   </div>
@@ -570,34 +505,37 @@ finish review, the verdict, and DESIGN.md
 <section class="wrap section">
   <span class="tick"></span>
   <h2>Ce que nous prenons en charge</h2>
-  <p class="lede">
-    Un site ne s'arrête pas à sa mise en ligne. Nous couvrons l'ensemble, de la
-    conception à l'entretien courant, pour que nos clients n'aient jamais à
-    ouvrir un compte technique.
-  </p>
 
-  <div class="cols">
-    <div class="col">
+  <div class="offer">
+    <div>
       <h3>Conception</h3>
-      <p>
-        Chaque site est développé sur mesure pour une activité. Pas de modèle
-        recyclé : la mise en page, les textes et le parcours sont dessinés pour
-        un métier précis.
-      </p>
+      <p>Sur mesure, pour un métier. Jamais un modèle recyclé.</p>
+      <ul>
+        <li>Mise en page dédiée</li>
+        <li>Textes rédigés avec vous</li>
+        <li>Rapide sur téléphone</li>
+        <li>Visible sur Google</li>
+      </ul>
     </div>
-    <div class="col">
+    <div>
       <h3>Infrastructure</h3>
-      <p>
-        Nom de domaine, hébergement, certificat de sécurité et adresses e-mail
-        professionnelles sont acquis et administrés par nos soins.
-      </p>
+      <p>Acquise et administrée par nos soins.</p>
+      <ul>
+        <li>Nom de domaine</li>
+        <li>Hébergement</li>
+        <li>Certificat de sécurité</li>
+        <li>Adresses e-mail</li>
+      </ul>
     </div>
-    <div class="col">
+    <div>
       <h3>Suivi</h3>
-      <p>
-        Mises à jour, sauvegardes, surveillance et modifications de contenu en
-        cours d'année. Un interlocuteur unique, qui connaît le dossier.
-      </p>
+      <p>Tant que le site est en ligne.</p>
+      <ul>
+        <li>Mises à jour</li>
+        <li>Sauvegardes</li>
+        <li>Surveillance</li>
+        <li>Modifications de contenu</li>
+      </ul>
     </div>
   </div>
 </section>
@@ -605,48 +543,29 @@ finish review, the verdict, and DESIGN.md
 <section class="wrap section hair-top">
   <span class="tick"></span>
   <h2>Notre méthode</h2>
-  <p class="lede">
-    Tout se traite par écrit. Pas de formulaire, pas de créneau à réserver : nos
-    clients écrivent quand ils ont cinq minutes, et gardent une trace de chaque
-    décision.
-  </p>
 
   <ol class="method">
     <li>
       <span class="method__n">01</span>
       <h3>Vous nous écrivez</h3>
-      <p>Un e-mail, même bref : votre activité, votre clientèle, et ce que vous aimeriez qu'on trouve en vous cherchant.</p>
+      <p>Votre activité, en quelques lignes.</p>
     </li>
     <li>
       <span class="method__n">02</span>
       <h3>Nous proposons</h3>
-      <p>Vous recevez une proposition écrite — structure du site, contenu à produire, délai et budget. À lire tranquillement.</p>
+      <p>Structure, contenu, délai, budget. Par écrit.</p>
     </li>
     <li>
       <span class="method__n">03</span>
-      <h3>Nous validons ensemble</h3>
-      <p>Vous demandez les changements que vous voulez. Nous ajustons jusqu'à ce que la proposition corresponde à votre attente.</p>
+      <h3>Nous ajustons</h3>
+      <p>Jusqu'à ce que la proposition vous convienne.</p>
     </li>
     <li>
       <span class="method__n">04</span>
-      <h3>Nous livrons et assurons le suivi</h3>
-      <p>Le site est mis en ligne avec son domaine et son hébergement. Ensuite, nous l'entretenons.</p>
+      <h3>Nous livrons</h3>
+      <p>Puis nous entretenons.</p>
     </li>
   </ol>
-</section>
-
-<section class="wrap section hair-top">
-  <span class="tick"></span>
-  <h2>Compris dans le suivi annuel</h2>
-
-  <ul class="care">
-    <li><strong>Nom de domaine</strong><span>Enregistré au nom de votre entreprise et renouvelé chaque année.</span></li>
-    <li><strong>Hébergement</strong><span>Le serveur qui fait vivre le site, sélectionné et administré par nos soins.</span></li>
-    <li><strong>Certificat de sécurité</strong><span>Le cadenas du navigateur, renouvelé automatiquement.</span></li>
-    <li><strong>Sauvegardes</strong><span>Copies régulières, avec possibilité de revenir en arrière.</span></li>
-    <li><strong>Mises à jour</strong><span>Correctifs techniques appliqués avant qu'ils ne posent problème.</span></li>
-    <li><strong>Modifications de contenu</strong><span>Un texte, une photo, un horaire : vous écrivez, nous le faisons.</span></li>
-  </ul>
 </section>
 
 <section class="wrap section hair-top">
@@ -657,64 +576,52 @@ finish review, the verdict, and DESIGN.md
     <details>
       <summary>Une page Facebook ne suffit-elle pas ?</summary>
       <p>
-        Elle est utile, mais elle appartient à Facebook : ses règles changent, sa
-        visibilité dépend d'un algorithme, et une partie de votre clientèle n'y
-        est pas. Un site vous appartient, apparaît dans les moteurs de recherche,
-        et personne ne peut le faire disparaître.
+        Elle appartient à Facebook : ses règles changent et sa visibilité dépend
+        d'un algorithme. Un site vous appartient, et personne ne peut le faire
+        disparaître.
       </p>
     </details>
     <details>
       <summary>Quel est le budget ?</summary>
       <p>
-        Il dépend du nombre de pages, du contenu à produire et des fonctions
-        particulières. Plutôt qu'un tarif affiché qui ne correspondrait pas à
-        votre situation, nous établissons une proposition chiffrée par e-mail
-        après avoir pris connaissance de votre activité, puis nous l'ajustons
-        avec vous.
+        Il dépend du nombre de pages et du contenu à produire. Nous établissons
+        une proposition chiffrée par e-mail, puis nous l'ajustons avec vous.
       </p>
     </details>
     <details>
-      <summary>Quel est le délai de mise en ligne ?</summary>
+      <summary>Quel est le délai ?</summary>
       <p>
-        Généralement trois à cinq semaines après validation de la proposition. Le
-        délai dépend surtout de la transmission de vos textes et de vos photos ;
-        le développement est de notre côté.
+        Trois à cinq semaines après validation. Le rythme dépend surtout de la
+        transmission de vos textes et de vos photos.
       </p>
     </details>
     <details>
       <summary>Et si un texte doit changer plus tard ?</summary>
       <p>
-        Vous nous écrivez et nous le modifions. Les changements courants sont
-        compris dans le suivi annuel. Aucun outil à apprendre, aucun mot de passe
-        à retenir.
+        Vous nous écrivez, nous le modifions. C'est compris dans le suivi. Aucun
+        outil à apprendre, aucun mot de passe à retenir.
       </p>
     </details>
     <details>
       <summary>Le site nous appartient-il ?</summary>
       <p>
-        Oui. Le nom de domaine est enregistré au nom de votre entreprise et le
-        site est le vôtre. Si vous souhaitez un jour en confier l'entretien à un
-        tiers, nous transmettons l'ensemble des fichiers et des accès.
+        Oui. Le domaine est enregistré au nom de votre entreprise. Si vous
+        partez, nous transmettons les fichiers et les accès.
       </p>
     </details>
     <details>
       <summary>Nous ne savons pas quoi mettre sur un site.</summary>
       <p>
-        C'est le cas de la plupart des entreprises que nous accompagnons. Vous
-        décrivez votre métier avec vos mots ; nous le traduisons en pages, en
-        titres et en textes, que vous relisez et corrigez.
+        C'est le cas de la plupart de nos clients. Vous décrivez votre métier ;
+        nous le traduisons en pages.
       </p>
     </details>
   </div>
 </section>
 
-<section class="wrap section hair-top contact">
+<section class="wrap section hair-top">
   <span class="tick"></span>
   <h2>Parlons de votre projet</h2>
-  <p class="lede">
-    Décrivez-nous votre activité et ce que vous attendez d'un site. Nous revenons
-    vers vous avec une proposition, sans engagement.
-  </p>
   <a class="contact__mail" href="mailto:info@ineart.be">info@ineart.be</a>
 </section>
 
@@ -724,25 +631,30 @@ finish review, the verdict, and DESIGN.md
 </footer>
 
 <script>
-  /* Bannière défilante.
-     Glissement du rail, pas de fondu : le mouvement dit qu'il y a d'autres
-     vues à côté. Défilement automatique suspendu au survol, au focus clavier
-     et quand l'onglet passe en arrière-plan — une animation qui tourne dans le
-     vide consomme de la batterie pour personne. */
+  /* Bannière glissante.
+     Le défilement est natif : le doigt, le trackpad, les flèches et les points
+     agissent tous sur la même piste, et les points ne font que refléter la
+     position réelle. Rien à synchroniser à la main, donc rien à désynchroniser. */
   (function () {
-    var track = document.querySelector("[data-track]");
-    if (!track) return;
+    var viewport = document.querySelector("[data-viewport]");
+    if (!viewport) return;
 
-    var slides = track.children;
     var dots = document.querySelectorAll("[data-dot]");
-    var count = slides.length;
-    var index = 0;
-    var timer = null;
+    var count = viewport.children.length;
     var reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+    var timer = null;
 
-    function go(next) {
-      index = (next + count) % count;
-      track.style.transform = "translateX(" + -index * 100 + "%)";
+    function current() {
+      return Math.round(viewport.scrollLeft / viewport.clientWidth);
+    }
+
+    function goTo(index) {
+      var target = (((index % count) + count) % count) * viewport.clientWidth;
+      viewport.scrollTo({ left: target, behavior: reduced.matches ? "auto" : "smooth" });
+    }
+
+    function sync() {
+      var index = current();
       for (var i = 0; i < dots.length; i += 1) {
         dots[i].setAttribute("aria-selected", i === index ? "true" : "false");
       }
@@ -750,32 +662,34 @@ finish review, the verdict, and DESIGN.md
 
     function start() {
       if (reduced.matches || timer) return;
-      timer = window.setInterval(function () { go(index + 1); }, 6000);
+      timer = window.setInterval(function () { goTo(current() + 1); }, 6500);
     }
-    function stop() {
-      window.clearInterval(timer);
-      timer = null;
-    }
+    function stop() { window.clearInterval(timer); timer = null; }
 
-    document.querySelector("[data-next]").addEventListener("click", function () { go(index + 1); stop(); });
-    document.querySelector("[data-prev]").addEventListener("click", function () { go(index - 1); stop(); });
+    viewport.addEventListener("scroll", sync, { passive: true });
+    // Un glissement au doigt vaut décision : l'avance automatique s'arrête.
+    viewport.addEventListener("pointerdown", stop);
+    viewport.addEventListener("keydown", function (event) {
+      if (event.key === "ArrowRight") { goTo(current() + 1); stop(); }
+      if (event.key === "ArrowLeft") { goTo(current() - 1); stop(); }
+    });
+
+    document.querySelector("[data-next]").addEventListener("click", function () { goTo(current() + 1); stop(); });
+    document.querySelector("[data-prev]").addEventListener("click", function () { goTo(current() - 1); stop(); });
     for (var i = 0; i < dots.length; i += 1) {
-      (function (n) {
-        dots[n].addEventListener("click", function () { go(n); stop(); });
-      })(i);
+      (function (n) { dots[n].addEventListener("click", function () { goTo(n); stop(); }); })(i);
     }
 
     var banner = document.querySelector(".banner");
     banner.addEventListener("mouseenter", stop);
     banner.addEventListener("mouseleave", start);
     banner.addEventListener("focusin", stop);
-    banner.addEventListener("keydown", function (event) {
-      if (event.key === "ArrowRight") { go(index + 1); stop(); }
-      if (event.key === "ArrowLeft") { go(index - 1); stop(); }
-    });
     document.addEventListener("visibilitychange", function () {
       if (document.hidden) stop(); else start();
     });
+
+    // Le redimensionnement change la largeur d'une vue : on se recale dessus.
+    window.addEventListener("resize", function () { goTo(current()); });
 
     start();
   })();

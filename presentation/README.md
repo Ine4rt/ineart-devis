@@ -70,16 +70,43 @@ Les zones marquées « photo — … » sont les emplacements d'image. Remplacez
 par de vraies prises de vue dès que vous en aurez : la mention en clair vaut
 mieux qu'un rectangle gris qui ferait croire à un site inachevé.
 
+## Ce qui a été coupé
+
+Une passe de distillation a retiré environ la moitié du texte :
+
+- **Deux sections fusionnées.** « Infrastructure » et « Compris dans le suivi
+  annuel » énuméraient les mêmes éléments — nom de domaine, hébergement,
+  certificat. Il n'en reste qu'une, « Ce que nous prenons en charge ».
+- **Les paragraphes descriptifs deviennent des listes courtes.** On scanne une
+  liste ; on subit un paragraphe. C'est vrai partout, et décisif sur téléphone.
+- **Le héros tient en une phrase**, une promesse et une adresse.
+- **Les réponses de la FAQ ont été coupées de moitié.**
+
+La page fait 346 mots et 3 393 px de haut sur téléphone, contre le double
+auparavant. Toute rédaction future doit tenir cette contrainte : si une section
+demande un paragraphe, c'est qu'elle demande une liste.
+
 ## Le mouvement
 
 Deux gestes, pas davantage :
 
 1. l'entrée du héros au chargement, décalée de 80 ms par bloc ;
-2. le glissement de la bannière — le rail se translate, il n'y a pas de fondu :
-   le mouvement doit dire qu'il y a d'autres vues à côté.
+2. le glissement de la bannière.
 
-Le défilement automatique (6 s) se suspend au survol, au focus clavier et quand
-l'onglet passe en arrière-plan. Flèches, points et touches ← → fonctionnent.
+Le carrousel utilise le **défilement natif avec accrochage** (`scroll-snap`), pas
+une piste translatée en CSS : c'est ce qui le rend **glissable au doigt** sur
+téléphone, au trackpad sur portable, et aux flèches au clavier. Les points ne
+pilotent rien, ils reflètent la position réelle — il n'y a donc rien à
+désynchroniser.
+
+Le défilement automatique (6,5 s) s'arrête dès le premier geste, et se suspend
+au survol, au focus clavier et quand l'onglet passe en arrière-plan. Sur
+téléphone les flèches disparaissent : le doigt suffit.
+
+Les maquettes se dimensionnent sur la largeur de leur cadre
+(`container-type: inline-size` + unités `cqw`). Sans cela, un titre de 18 px
+occupe 2,5 % d'un cadre de bureau mais 5 % d'un cadre de téléphone, et la
+miniature paraît zoomée. Des `max()` posent un plancher de lisibilité.
 
 Aucune révélation au défilement : le contenu est lisible en permanence. Courbes
 et durées suivent la doctrine d'Emil Kowalski — `ease-out` marqué pour les

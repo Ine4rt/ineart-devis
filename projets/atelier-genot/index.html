@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<!-- ==========================================================================
+     À REMPLIR AVANT MISE EN LIGNE
+     Chaque valeur ci-dessous est un emplacement. Elles sont toutes repérables
+     en cherchant « À REMPLIR » dans ce fichier.
+
+       · Téléphone .......... +32 4XX XX XX XX   (4x : nav, contact, barre mobile, JSON-LD)
+       · E-mail ............. contact@ateliergenot.be  (3x : contact, JSON-LD, main.js)
+       · Adresse ............ rue et numéro à Marchin  (2x : contact, JSON-LD)
+       · Horaires ........... section Contact + JSON-LD
+       · TVA / n° entreprise  pied de page
+       · Photos ............. assets/img/ — voir assets/img/README.md
+       · Logo ............... remplacer .logo__mark par <img> si un logo existe
+
+     Les prestations listées sont les catégories standard du métier de
+     ferronnier-soudeur. À faire valider par le client : retirer ce qu'il ne
+     fait pas, ajouter ce qui manque.
+     ========================================================================== -->
+
+<title>Atelier Genot — Ferronnerie et soudure à Marchin</title>
+<meta name="description" content="Atelier Genot, ferronnerie et soudure à Marchin. Garde-corps, portails, escaliers, structures métalliques et réparations sur mesure." />
+
+<meta name="theme-color" content="#101215" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Atelier Genot — Ferronnerie et soudure à Marchin" />
+<meta property="og:description" content="Le métal travaillé sur mesure. Garde-corps, portails, escaliers, structures et réparations." />
+<meta property="og:locale" content="fr_BE" />
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23101215'/%3E%3Crect x='4' y='4' width='24' height='24' fill='none' stroke='%23c4441c' stroke-width='2.5'/%3E%3Ctext x='16' y='22' font-family='Helvetica,Arial,sans-serif' font-size='13' font-weight='700' fill='%23c4441c' text-anchor='middle'%3EG%3C/text%3E%3C/svg%3E" />
+<link rel="stylesheet" href="assets/css/style.css" />
+
+<!-- Référencement local : c'est ce qui fait apparaître l'atelier dans les
+     recherches « ferronnier près de chez moi » et dans la fiche Google.
+     À REMPLIR : téléphone, adresse, horaires réels. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "Atelier Genot",
+  "description": "Ferronnerie et soudure sur mesure : garde-corps, portails, escaliers, structures métalliques et réparations.",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "À REMPLIR",
+    "addressLocality": "Marchin",
+    "postalCode": "4570",
+    "addressCountry": "BE"
+  },
+  "telephone": "+32 4XX XX XX XX",
+  "email": "contact@ateliergenot.be",
+  "areaServed": ["Marchin", "Huy", "Modave", "Nandrin", "Clavier", "Tinlot"],
+  "openingHours": "Mo-Fr 08:00-17:00"
+}
+</script>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap nav__inner">
+    <!-- À REMPLIR : si un logo existe, remplacer le bloc .logo__mark par
+         <img src="assets/img/logo.svg" alt="Atelier Genot" height="34"> -->
+    <a class="logo" href="#top">
+      <span class="logo__mark" aria-hidden="true">AG</span>
+      <span class="logo__text">
+        <span class="logo__name">Atelier Genot</span>
+        <span class="logo__trade">Ferronnerie · Soudure</span>
+      </span>
+    </a>
+
+    <ul class="nav__links">
+      <li><a href="#prestations">Prestations</a></li>
+      <li><a href="#realisations">Réalisations</a></li>
+      <li><a href="#atelier">L'atelier</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+
+    <!-- À REMPLIR : téléphone -->
+    <a class="nav__call" href="tel:+3240000000">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .3 1.9.6 2.8a2 2 0 0 1-.5 2.1L8.1 9.7a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.9.3 1.8.5 2.8.6a2 2 0 0 1 1.7 2z" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>Appeler</span>
+    </a>
+  </div>
+</nav>
+
+<!-- ====================================================================== -->
+<header class="hero" id="top">
+  <div class="hero__media" aria-hidden="true">
+    <!-- À REMPLIR : photo d'accueil. Une réalisation en situation, de
+         préférence en extérieur et bien exposée. Format paysage, 2000 px de
+         large minimum. -->
+    <div class="slot">
+      <span class="slot__label">Photo d'accueil — une réalisation en situation</span>
+    </div>
+  </div>
+
+  <div class="wrap hero__inner">
+    <p class="eyebrow rise">Marchin · Province de Liège</p>
+    <h1 class="rise rise--1">Le métal, travaillé <em>sur mesure</em>.</h1>
+    <p class="lede rise rise--2">
+      Garde-corps, portails, escaliers, structures. Nous concevons, fabriquons
+      et posons des ouvrages métalliques adaptés à chaque projet — du particulier
+      au chantier professionnel.
+    </p>
+    <div class="hero__actions rise rise--3">
+      <a class="btn btn--ember" href="#devis">Demander un devis</a>
+      <a class="btn btn--outline" href="#realisations">Voir nos réalisations</a>
+    </div>
+  </div>
+
+  <ul class="hero__facts">
+    <li class="hero__fact">
+      <b>Sur mesure</b>
+      <span>Chaque pièce est dessinée puis fabriquée à l'atelier.</span>
+    </li>
+    <li class="hero__fact">
+      <b>Conception et pose</b>
+      <span>Un seul interlocuteur, du relevé à l'installation.</span>
+    </li>
+    <li class="hero__fact">
+      <b>Devis gratuit</b>
+      <span>Déplacement et étude sans engagement.</span>
+    </li>
+  </ul>
+</header>
+
+<!-- ====================================================================== -->
+<section class="section band-concrete" id="prestations">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Prestations</p>
+      <h2>Ce que nous fabriquons</h2>
+      <p class="lede">
+        Acier, inox, aluminium. De la pièce unique à la série, en neuf comme en
+        réparation.
+      </p>
+    </div>
+
+    <div class="trades">
+      <article class="trade">
+        <span class="trade__icon" aria-hidden="true">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 20h18M6 20V8m4 12V8m4 12V8m4 12V8M4 8h16l-2-4H6L4 8z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <h3>Garde-corps &amp; rampes</h3>
+        <p>Balcons, terrasses, mezzanines et escaliers. Barreaudage, remplissage verre ou tôle, conformes aux normes de sécurité.</p>
+      </article>
+
+      <article class="trade">
+        <span class="trade__icon" aria-hidden="true">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 21V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v16M12 3v18M7 8v8m10-8v8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <h3>Portails &amp; clôtures</h3>
+        <p>Battants ou coulissants, manuels ou motorisés. Portillons, barrières et clôtures assorties.</p>
+      </article>
+
+      <article class="trade">
+        <span class="trade__icon" aria-hidden="true">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 21h4v-4h4v-4h4V9h4V5h2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <h3>Escaliers métalliques</h3>
+        <p>Droits, quart tournant ou hélicoïdaux. Structure seule ou avec marches bois, tôle ou caillebotis.</p>
+      </article>
+
+      <article class="trade">
+        <span class="trade__icon" aria-hidden="true">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20V6l8-3 8 3v14M4 20h16M9 20v-6h6v6M4 10h16" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <h3>Structures &amp; charpente</h3>
+        <p>Ossatures, poutres, mezzanines, auvents et abris. Étude de charge et assemblage sur site.</p>
+      </article>
+
+      <article class="trade">
+        <span class="trade__icon" aria-hidden="true">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 3l7 7-4 4-7-7 4-4zM10 7L3 14v7h7l7-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <h3>Réparation &amp; soudure</h3>
+        <p>Soudure acier, inox et aluminium. Remise en état de pièces, renforts et modifications, à l'atelier ou sur place.</p>
+      </article>
+
+      <article class="trade">
+        <span class="trade__icon" aria-hidden="true">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3l2.4 5.9 6.6.5-5 4.3 1.5 6.3L12 16.8 6.5 20l1.5-6.3-5-4.3 6.6-.5L12 3z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <h3>Pièces sur mesure</h3>
+        <p>Mobilier, verrières, habillages et éléments décoratifs. Dessin d'atelier avant fabrication.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================================== -->
+<section class="section band-white" id="realisations">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Réalisations</p>
+      <h2>Nos derniers chantiers</h2>
+      <p class="lede">
+        Chaque ouvrage est dessiné pour son emplacement. Voici quelques
+        réalisations récentes.
+      </p>
+    </div>
+
+    <!-- À REMPLIR : six photos de réalisations. Remplacer chaque bloc .slot
+         par <img src="assets/img/realisation-1.jpg" alt="…" loading="lazy">
+         et ajuster la légende. -->
+    <div class="gallery">
+      <figure class="work">
+        <div class="slot"><span class="slot__label">Réalisation 1 — la plus marquante</span></div>
+        <figcaption class="work__caption">
+          <b>Garde-corps de terrasse</b>
+          <span>Acier thermolaqué, remplissage verre</span>
+        </figcaption>
+      </figure>
+
+      <figure class="work">
+        <div class="slot"><span class="slot__label">Réalisation 2</span></div>
+        <figcaption class="work__caption">
+          <b>Portail coulissant</b>
+          <span>Acier galvanisé, motorisation</span>
+        </figcaption>
+      </figure>
+
+      <figure class="work">
+        <div class="slot"><span class="slot__label">Réalisation 3</span></div>
+        <figcaption class="work__caption">
+          <b>Escalier quart tournant</b>
+          <span>Structure acier, marches chêne</span>
+        </figcaption>
+      </figure>
+
+      <figure class="work">
+        <div class="slot"><span class="slot__label">Réalisation 4</span></div>
+        <figcaption class="work__caption">
+          <b>Verrière d'intérieur</b>
+          <span>Profilés fins, vitrage clair</span>
+        </figcaption>
+      </figure>
+
+      <figure class="work">
+        <div class="slot"><span class="slot__label">Réalisation 5</span></div>
+        <figcaption class="work__caption">
+          <b>Auvent d'entrée</b>
+          <span>Ossature acier, couverture tôle</span>
+        </figcaption>
+      </figure>
+
+      <figure class="work">
+        <div class="slot"><span class="slot__label">Réalisation 6</span></div>
+        <figcaption class="work__caption">
+          <b>Mobilier sur mesure</b>
+          <span>Piètement acier brut verni</span>
+        </figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================================== -->
+<section class="section band-dark" id="atelier">
+  <div class="wrap about">
+    <div>
+      <p class="eyebrow">L'atelier</p>
+      <h2>Du dessin à la pose</h2>
+      <p class="lede">
+        Tout part d'un relevé sur place. La pièce est ensuite dessinée, validée
+        avec vous, puis fabriquée à l'atelier avant d'être posée par nos soins.
+      </p>
+
+      <ul class="about__points">
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Relevé et étude sur place, sans engagement</span>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Plan d'atelier soumis avant fabrication</span>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Traitement anticorrosion : galvanisation, thermolaquage ou peinture</span>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Pose assurée par l'atelier, pas sous-traitée</span>
+        </li>
+      </ul>
+
+      <p class="eyebrow" style="margin-top:2.5rem">Zone d'intervention</p>
+      <!-- À REMPLIR : communes réellement couvertes -->
+      <ul class="area">
+        <li>Marchin</li><li>Huy</li><li>Modave</li><li>Nandrin</li>
+        <li>Clavier</li><li>Tinlot</li><li>Ouffet</li><li>Héron</li>
+      </ul>
+    </div>
+
+    <div>
+      <!-- À REMPLIR : photo de l'atelier ou du gérant au travail. -->
+      <div class="slot slot--portrait">
+        <span class="slot__label">Photo — l'atelier ou une scène de travail</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================================== -->
+<section class="section band-concrete" id="contact">
+  <div class="wrap contact">
+    <div>
+      <p class="eyebrow">Contact</p>
+      <h2>Parlons de votre projet</h2>
+      <p class="lede">
+        Un besoin précis ou une simple idée : appelez-nous ou décrivez votre
+        projet, nous passons prendre les mesures.
+      </p>
+
+      <div class="details">
+        <div class="detail">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .3 1.9.6 2.8a2 2 0 0 1-.5 2.1L8.1 9.7a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.9.3 1.8.5 2.8.6a2 2 0 0 1 1.7 2z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div>
+            <b>Téléphone</b>
+            <!-- À REMPLIR -->
+            <a href="tel:+3240000000">+32 4XX XX XX XX</a>
+          </div>
+        </div>
+
+        <div class="detail">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M3 6h18v12H3zM3 6l9 7 9-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div>
+            <b>E-mail</b>
+            <!-- À REMPLIR -->
+            <a href="mailto:contact@ateliergenot.be">contact@ateliergenot.be</a>
+          </div>
+        </div>
+
+        <div class="detail">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>
+          <div>
+            <b>Atelier</b>
+            <!-- À REMPLIR : rue et numéro -->
+            <p>Rue à compléter, 4570 Marchin</p>
+          </div>
+        </div>
+
+        <div class="detail">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div>
+            <b>Horaires</b>
+            <!-- À REMPLIR -->
+            <div class="hours">
+              <div><span>Lundi – vendredi</span><span>8 h – 17 h</span></div>
+              <div><span>Samedi</span><span>sur rendez-vous</span></div>
+              <div><span>Dimanche</span><span>fermé</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Le formulaire ouvre le logiciel de messagerie avec un message déjà
+         rempli. Aucun serveur, aucune base de données, rien à maintenir :
+         pour un atelier, c'est le bon niveau de complexité. -->
+    <form class="quote" id="devis" data-quote>
+      <h3>Demander un devis</h3>
+      <p>Réponse sous deux jours ouvrables. Le devis et le déplacement sont gratuits.</p>
+
+      <div class="field">
+        <label for="q-nom">Nom</label>
+        <input id="q-nom" name="nom" type="text" autocomplete="name" required />
+      </div>
+
+      <div class="field">
+        <label for="q-tel">Téléphone</label>
+        <input id="q-tel" name="tel" type="tel" autocomplete="tel" required />
+      </div>
+
+      <div class="field">
+        <label for="q-type">Type d'ouvrage</label>
+        <select id="q-type" name="type">
+          <option>Garde-corps ou rampe</option>
+          <option>Portail ou clôture</option>
+          <option>Escalier</option>
+          <option>Structure ou charpente</option>
+          <option>Réparation ou soudure</option>
+          <option>Pièce sur mesure</option>
+          <option>Autre</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="q-msg">Votre projet</label>
+        <textarea id="q-msg" name="message" placeholder="Dimensions approximatives, matériau souhaité, délai…"></textarea>
+      </div>
+
+      <button class="btn btn--ember" type="submit">Envoyer la demande</button>
+      <p class="quote__note">
+        Le bouton ouvre votre messagerie avec le message déjà rédigé. Aucune
+        donnée n'est enregistrée sur ce site.
+      </p>
+    </form>
+  </div>
+</section>
+
+<!-- ====================================================================== -->
+<footer class="footer">
+  <div class="wrap footer__inner">
+    <span>Atelier Genot — Ferronnerie et soudure, Marchin</span>
+    <!-- À REMPLIR : numéro d'entreprise / TVA -->
+    <span>TVA BE 0XXX.XXX.XXX</span>
+  </div>
+</footer>
+
+<!-- À REMPLIR : téléphone -->
+<div class="callbar">
+  <a href="tel:+3240000000">Appeler</a>
+  <a href="#devis">Demander un devis</a>
+</div>
+
+<script src="assets/js/main.js" defer></script>
+</body>
+</html>

@@ -33,3 +33,6 @@ yarn-error.log*
 # python legacy
 __pycache__/
 *.pyc
+
+# polices sources téléchargées pour le sous-ensemble (régénérables)
+/presentation/fonts/*.ttf

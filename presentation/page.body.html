@@ -1,0 +1,1020 @@
+<title>Ine4rt — Sites web sur mesure pour indépendants et petites entreprises</title>
+
+<style>
+  /* ==========================================================================
+     Ine4rt — page de présentation commerciale
+     --------------------------------------------------------------------------
+     Direction : l'enseigne d'atelier. Vert pin des auvents de devanture, blanc
+     os légèrement verdi, un seul accent laiton. Le public visé n'est pas
+     technique : boulangère, garagiste, menuisier. Le propos tient en une idée —
+     ils travaillent sur mesure, ce site l'est aussi.
+     ========================================================================== */
+
+  /* --- Polices intégrées ------------------------------------------------- */
+  /* Inlinées en base64 : le CSP des pages publiées bloque les CDN de polices,
+     un @import distant se replierait silencieusement sur Arial. */
+  @font-face {
+    font-family: "Fraunces";
+    src: url(data:font/woff2;base64,__FRAUNCES__) format("woff2-variations");
+    font-weight: 500 800;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Karla";
+    src: url(data:font/woff2;base64,__KARLA__) format("woff2-variations");
+    font-weight: 400 700;
+    font-display: swap;
+  }
+
+  /* --- Jetons ------------------------------------------------------------- */
+  :root {
+    color-scheme: light;
+
+    --pine-900: #0d1613;
+    --pine-800: #14302a;
+    --pine-700: #1b4038;
+    --pine-600: #24564a;
+
+    --bone: #eff1ec;
+    --bone-raised: #f7f8f4;
+    --bone-sunk: #e4e8e1;
+
+    --ink: #121a17;
+    --ink-2: #41504a;
+    --ink-3: #6d7c75;
+    --rule: #d5dbd4;
+
+    --brass: #a06f2c;
+    --brass-bright: #c99247;
+
+    /* Rôles — les composants ne stylent QUE via ces variables. */
+    --page: var(--bone);
+    --surface: var(--bone-raised);
+    --surface-sunk: var(--bone-sunk);
+    --text: var(--ink);
+    --text-2: var(--ink-2);
+    --text-3: var(--ink-3);
+    --line: var(--rule);
+    --accent: var(--brass);
+    --band: var(--pine-800);
+    --band-text: #e9ede8;
+    --band-text-2: #a9bdb4;
+    --band-line: #2b4a42;
+    --band-accent: var(--brass-bright);
+
+    --shadow: 0 1px 2px rgb(13 22 19 / 0.05), 0 12px 28px -14px rgb(13 22 19 / 0.18);
+
+    --step: clamp(1rem, 0.6rem + 1.1vw, 1.0625rem);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      color-scheme: dark;
+      --page: #0b1310;
+      --surface: #121d19;
+      --surface-sunk: #0f1a16;
+      --text: #e7ebe6;
+      --text-2: #adbab3;
+      --text-3: #7b8a83;
+      --line: #22322c;
+      --accent: var(--brass-bright);
+      --band: #102520;
+      --band-text: #e7ebe6;
+      --band-text-2: #9fb3aa;
+      --band-line: #24403a;
+      --shadow: 0 1px 2px rgb(0 0 0 / 0.5), 0 14px 32px -16px rgb(0 0 0 / 0.7);
+    }
+  }
+
+  /* Le sélecteur de thème du lecteur doit gagner dans les deux sens. */
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --page: #0b1310;
+    --surface: #121d19;
+    --surface-sunk: #0f1a16;
+    --text: #e7ebe6;
+    --text-2: #adbab3;
+    --text-3: #7b8a83;
+    --line: #22322c;
+    --accent: var(--brass-bright);
+    --band: #102520;
+    --band-text: #e7ebe6;
+    --band-text-2: #9fb3aa;
+    --band-line: #24403a;
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.5), 0 14px 32px -16px rgb(0 0 0 / 0.7);
+  }
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --page: var(--bone);
+    --surface: var(--bone-raised);
+    --surface-sunk: var(--bone-sunk);
+    --text: var(--ink);
+    --text-2: var(--ink-2);
+    --text-3: var(--ink-3);
+    --line: var(--rule);
+    --accent: var(--brass);
+    --band: var(--pine-800);
+    --band-text: #e9ede8;
+    --band-text-2: #a9bdb4;
+    --band-line: #2b4a42;
+    --shadow: 0 1px 2px rgb(13 22 19 / 0.05), 0 12px 28px -14px rgb(13 22 19 / 0.18);
+  }
+
+  /* --- Base --------------------------------------------------------------- */
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--page);
+    color: var(--text);
+    font-family: "Karla", ui-sans-serif, system-ui, sans-serif;
+    font-size: var(--step);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1, h2, h3 {
+    font-family: "Fraunces", Georgia, "Times New Roman", serif;
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+    margin: 0;
+  }
+
+  p { margin: 0; }
+  a { color: inherit; }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /* --- Ossature ----------------------------------------------------------- */
+  .wrap {
+    width: min(100% - 2.5rem, 68rem);
+    margin-inline: auto;
+  }
+
+  .band {
+    background: var(--band);
+    color: var(--band-text);
+  }
+
+  .section {
+    padding-block: clamp(3.5rem, 8vw, 6rem);
+  }
+
+  .eyebrow {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-3);
+    margin: 0;
+  }
+  .band .eyebrow { color: var(--band-text-2); }
+
+  .lede {
+    font-size: clamp(1.0625rem, 0.9rem + 0.7vw, 1.25rem);
+    line-height: 1.6;
+    color: var(--text-2);
+    max-width: 60ch;
+  }
+  .band .lede { color: var(--band-text-2); }
+
+  .section-head {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    max-width: 46rem;
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+  }
+  .section-head h2 { font-size: clamp(1.75rem, 1.1rem + 2.4vw, 2.5rem); }
+
+  /* --- Barre supérieure --------------------------------------------------- */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block: 1.25rem;
+  }
+
+  .mark {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    text-decoration: none;
+  }
+  .mark__badge {
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.45rem;
+    background: var(--band-accent);
+    color: #14211b;
+    font-family: "Fraunces", serif;
+    font-size: 0.9rem;
+    font-weight: 800;
+  }
+  .mark__text { font-size: 0.95rem; }
+  .mark__text span {
+    display: block;
+    font-size: 0.6875rem;
+    font-weight: 400;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--band-text-2);
+  }
+
+  .topbar__contact {
+    font-size: 0.875rem;
+    color: var(--band-text-2);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .topbar__contact:hover { color: var(--band-text); border-color: currentColor; }
+
+  /* --- Héros -------------------------------------------------------------- */
+  .hero { padding-bottom: clamp(4rem, 9vw, 7rem); }
+
+  .hero__grid {
+    display: grid;
+    gap: clamp(2.5rem, 5vw, 4rem);
+    align-items: end;
+  }
+  @media (min-width: 62rem) {
+    .hero__grid { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); }
+  }
+
+  .hero h1 {
+    font-size: clamp(2.5rem, 1.2rem + 5.2vw, 4.4rem);
+    margin-block: 1.25rem 1.5rem;
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: var(--band-accent);
+  }
+
+  /* La plaque : seule vraie figure de la page, empruntée aux plaques émaillées
+     des devantures. Elle n'apparaît qu'une fois. */
+  .plaque {
+    border: 1px solid var(--band-accent);
+    border-radius: 0.5rem;
+    padding: 1.6rem 1.5rem;
+    background:
+      linear-gradient(180deg, rgb(255 255 255 / 0.045), rgb(0 0 0 / 0.12));
+    box-shadow: inset 0 0 0 4px rgb(0 0 0 / 0.16);
+    position: relative;
+  }
+  .plaque::after {
+    content: "";
+    position: absolute;
+    inset: 0.35rem;
+    border: 1px solid rgb(201 146 71 / 0.4);
+    border-radius: 0.3rem;
+    pointer-events: none;
+  }
+  .plaque dl {
+    margin: 0;
+    display: grid;
+    gap: 0.9rem;
+  }
+  .plaque div {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .plaque dt {
+    font-size: 0.8125rem;
+    letter-spacing: 0.04em;
+    color: var(--band-text-2);
+  }
+  .plaque dd {
+    margin: 0;
+    font-family: "Fraunces", serif;
+    font-weight: 600;
+    font-size: 1.0625rem;
+    color: var(--band-text);
+    text-align: right;
+  }
+
+  .cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.35rem;
+    border-radius: 0.4rem;
+    font-weight: 700;
+    font-size: 0.9375rem;
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition: transform 0.18s, background-color 0.18s, border-color 0.18s, color 0.18s;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn--solid { background: var(--band-accent); color: #14211b; }
+  .btn--solid:hover { background: #dda75c; }
+  .btn--ghost { border-color: var(--band-line); color: var(--band-text); }
+  .btn--ghost:hover { border-color: var(--band-accent); color: var(--band-accent); }
+  .btn--onlight { background: var(--band); color: #eef1ec; }
+  .btn--onlight:hover { background: var(--pine-700); }
+
+  /* --- Constat ------------------------------------------------------------ */
+  .facts {
+    display: grid;
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: 0.6rem;
+    overflow: hidden;
+  }
+  @media (min-width: 48rem) { .facts { grid-template-columns: repeat(3, 1fr); } }
+
+  .fact {
+    background: var(--surface);
+    padding: 1.75rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .fact h3 {
+    font-size: 1.0625rem;
+    font-family: "Karla", sans-serif;
+    font-weight: 700;
+    letter-spacing: 0;
+    line-height: 1.4;
+  }
+  .fact p { color: var(--text-2); font-size: 0.9375rem; }
+
+  /* --- Comparaison -------------------------------------------------------- */
+  .compare {
+    display: grid;
+    gap: 1.25rem;
+  }
+  @media (min-width: 52rem) { .compare { grid-template-columns: 1fr 1fr; } }
+
+  .compare__col {
+    border: 1px solid var(--line);
+    border-radius: 0.6rem;
+    padding: 1.75rem 1.5rem;
+    background: var(--surface);
+  }
+  .compare__col--mine {
+    border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+    box-shadow: var(--shadow);
+  }
+  .compare__col h3 {
+    font-family: "Karla", sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-3);
+    margin-bottom: 1.1rem;
+  }
+  .compare__col--mine h3 { color: var(--accent); }
+
+  .lines { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.85rem; }
+  .lines li {
+    display: grid;
+    grid-template-columns: 1.15rem 1fr;
+    gap: 0.7rem;
+    align-items: start;
+    font-size: 0.9375rem;
+    line-height: 1.55;
+  }
+  .lines svg { width: 1.15rem; height: 1.15rem; margin-top: 0.15rem; }
+  .lines--muted li { color: var(--text-3); }
+  .lines--muted svg { color: var(--text-3); }
+  .lines--mine svg { color: var(--accent); }
+
+  /* --- Étapes (séquence réelle : la numérotation porte du sens) ----------- */
+  .steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1px;
+    background: var(--line);
+    border-block: 1px solid var(--line);
+  }
+  @media (min-width: 56rem) { .steps { grid-template-columns: repeat(4, 1fr); } }
+
+  .step {
+    background: var(--page);
+    padding: 1.75rem 1.35rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+  .step__n {
+    font-family: "Fraunces", serif;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .step h3 {
+    font-family: "Karla", sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+  .step p { color: var(--text-2); font-size: 0.9125rem; line-height: 1.55; }
+  .step__meta {
+    margin-top: auto;
+    padding-top: 0.5rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-3);
+  }
+
+  /* --- Tarifs ------------------------------------------------------------- */
+  .offers { display: grid; gap: 1.25rem; }
+  @media (min-width: 52rem) { .offers { grid-template-columns: 1fr 1fr; } }
+
+  .offer {
+    border: 1px solid var(--line);
+    border-radius: 0.6rem;
+    background: var(--surface);
+    padding: 1.9rem 1.65rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+  }
+  /* En clair, le fond vert suffit à distinguer cette carte. En sombre, il se
+     confond avec la surface : le liseré laiton porte alors la distinction. */
+  .offer--recurring {
+    background: var(--band);
+    color: var(--band-text);
+    border-color: color-mix(in srgb, var(--band-accent) 42%, var(--band-line));
+    box-shadow: var(--shadow);
+  }
+  .offer__label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-3);
+  }
+  .offer--recurring .offer__label { color: var(--band-accent); }
+
+  .offer__price {
+    font-family: "Fraunces", serif;
+    font-size: clamp(2rem, 1.4rem + 2vw, 2.75rem);
+    font-weight: 700;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .offer__price small {
+    display: block;
+    font-family: "Karla", sans-serif;
+    font-size: 0.875rem;
+    font-weight: 400;
+    letter-spacing: 0;
+    color: var(--text-3);
+    margin-top: 0.5rem;
+  }
+  .offer--recurring .offer__price small { color: var(--band-text-2); }
+  .offer > p { color: var(--text-2); font-size: 0.9375rem; }
+  .offer--recurring > p { color: var(--band-text-2); }
+  .offer--recurring .lines svg { color: var(--band-accent); }
+
+  .note {
+    margin-top: 1.5rem;
+    font-size: 0.875rem;
+    color: var(--text-3);
+    max-width: 58ch;
+  }
+
+  /* --- Questions ---------------------------------------------------------- */
+  .faq { border-top: 1px solid var(--line); max-width: 52rem; }
+  .faq details { border-bottom: 1px solid var(--line); }
+  .faq summary {
+    cursor: pointer;
+    list-style: none;
+    padding: 1.15rem 2.5rem 1.15rem 0;
+    font-weight: 700;
+    font-size: 1rem;
+    position: relative;
+    transition: color 0.18s;
+  }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary:hover { color: var(--accent); }
+  .faq summary::after {
+    content: "";
+    position: absolute;
+    right: 0.4rem;
+    top: 1.55rem;
+    width: 0.6rem;
+    height: 0.6rem;
+    border-right: 2px solid var(--accent);
+    border-bottom: 2px solid var(--accent);
+    transform: rotate(45deg);
+    transition: transform 0.22s;
+  }
+  .faq details[open] summary::after { transform: rotate(-135deg); }
+  .faq p { padding-bottom: 1.3rem; color: var(--text-2); max-width: 62ch; font-size: 0.9375rem; }
+
+  /* --- Contact ------------------------------------------------------------ */
+  .contact__grid {
+    display: grid;
+    gap: clamp(2rem, 5vw, 3.5rem);
+    align-items: start;
+  }
+  @media (min-width: 56rem) { .contact__grid { grid-template-columns: 1.2fr 1fr; } }
+
+  .contact h2 { font-size: clamp(1.9rem, 1.2rem + 2.6vw, 2.75rem); }
+
+  .contact__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.1rem; }
+  .contact__list a {
+    text-decoration: none;
+    display: grid;
+    gap: 0.15rem;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid var(--band-line);
+    transition: border-color 0.2s;
+  }
+  .contact__list a:hover { border-color: var(--band-accent); }
+  .contact__list span {
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--band-text-2);
+  }
+  .contact__list strong {
+    font-family: "Fraunces", serif;
+    font-size: 1.125rem;
+    font-weight: 600;
+  }
+
+  /* --- Pied --------------------------------------------------------------- */
+  .footer {
+    padding-block: 2rem;
+    font-size: 0.8125rem;
+    color: var(--text-3);
+    border-top: 1px solid var(--line);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+    justify-content: space-between;
+  }
+
+  /* --- Apparition ---------------------------------------------------------
+     Une seule séquence, au chargement du héros. Rien au défilement : la
+     surenchère d'animations est précisément ce qui trahit une page fabriquée
+     à la chaîne. */
+  .rise { animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  .rise:nth-child(2) { animation-delay: 0.07s; }
+  .rise:nth-child(3) { animation-delay: 0.14s; }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      transition-duration: 0.001ms !important;
+    }
+    .btn:hover { transform: none; }
+  }
+</style>
+
+<!-- ==========================================================================
+     À PERSONNALISER AVANT DIFFUSION
+       · Coordonnées (téléphone, e-mail, zone géographique) — section #contact
+       · Montants des deux formules — section #tarifs
+       · Ajouter vos réalisations réelles une fois les premiers sites en ligne
+     Aucun témoignage ni chiffre n'a été inventé : tout ce qui figure ici est
+     soit vérifiable, soit un engagement que vous prenez.
+     ========================================================================== -->
+
+<header class="band">
+  <div class="wrap topbar">
+    <a class="mark" href="#top">
+      <span class="mark__badge">i4</span>
+      <span class="mark__text">
+        Ine4rt
+        <span>Développement web</span>
+      </span>
+    </a>
+    <a class="topbar__contact" href="#contact">Prendre contact</a>
+  </div>
+</header>
+
+<section class="band hero section" id="top">
+  <div class="wrap hero__grid">
+    <div>
+      <p class="eyebrow rise">Indépendant · Région liégeoise</p>
+      <h1 class="rise">
+        Votre commerce mérite mieux qu'une <em>page Facebook</em>.
+      </h1>
+      <p class="lede rise">
+        Je conçois des sites web pour les indépendants et les petites entreprises
+        qui n'en ont pas encore. Chaque site est écrit à la main pour un seul
+        métier — le vôtre. Nom de domaine, hébergement et entretien compris :
+        vous n'avez rien à gérer.
+      </p>
+      <div class="cta-row rise">
+        <a class="btn btn--solid" href="#contact">Discutons de votre projet</a>
+        <a class="btn btn--ghost" href="#etapes">Comment ça se passe</a>
+      </div>
+    </div>
+
+    <div class="plaque rise">
+      <dl>
+        <div>
+          <dt>Conception</dt>
+          <dd>Sur mesure</dd>
+        </div>
+        <div>
+          <dt>Nom de domaine</dt>
+          <dd>Je m'en occupe</dd>
+        </div>
+        <div>
+          <dt>Hébergement</dt>
+          <dd>Je m'en occupe</dd>
+        </div>
+        <div>
+          <dt>Entretien</dt>
+          <dd>Je m'en occupe</dd>
+        </div>
+        <div>
+          <dt>Votre travail</dt>
+          <dd>Me parler de votre métier</dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Ce qui se passe aujourd'hui</p>
+      <h2>Vos clients vous cherchent. Ils tombent sur le vide.</h2>
+      <p class="lede">
+        Une entreprise sans site n'est pas invisible : elle est représentée par
+        ce que les autres en disent. Voici les trois situations les plus
+        courantes.
+      </p>
+    </div>
+
+    <div class="facts">
+      <article class="fact">
+        <h3>« Ils sont ouverts le lundi ? »</h3>
+        <p>
+          La question part sur Google. La réponse se trouve sur un annuaire jamais
+          mis à jour, avec de vieux horaires. Le client va ailleurs.
+        </p>
+      </article>
+      <article class="fact">
+        <h3>« Ils font ça, eux ? »</h3>
+        <p>
+          Vous proposez huit prestations. La page Facebook en montre deux, dans
+          une publication d'il y a trois ans. Les six autres n'existent pas.
+        </p>
+      </article>
+      <article class="fact">
+        <h3>« C'est sérieux, cette adresse ? »</h3>
+        <p>
+          Un devis envoyé depuis une adresse Gmail n'inspire pas la même chose
+          qu'un devis envoyé depuis votre propre nom de domaine.
+        </p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background: var(--surface-sunk);">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">La différence</p>
+      <h2>Vous ne travaillez pas avec des modèles tout faits. Moi non plus.</h2>
+      <p class="lede">
+        Un menuisier ne livre pas la même armoire à tout le monde. Un site
+        généré à partir d'un modèle, si — et cela se voit.
+      </p>
+    </div>
+
+    <div class="compare">
+      <div class="compare__col">
+        <h3>Un site à modèle</h3>
+        <ul class="lines lines--muted">
+          <li>
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15" stroke-linecap="round"/></svg>
+            <span>La même mise en page que des milliers d'autres entreprises</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15" stroke-linecap="round"/></svg>
+            <span>Lourd, lent à charger, mal classé par Google</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15" stroke-linecap="round"/></svg>
+            <span>Des textes génériques qui ne parlent pas de votre métier</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15" stroke-linecap="round"/></svg>
+            <span>Un abonnement à une plateforme : vous arrêtez, tout disparaît</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15" stroke-linecap="round"/></svg>
+            <span>Une assistance par formulaire, quelque part à l'étranger</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="compare__col compare__col--mine">
+        <h3>Un site Ine4rt</h3>
+        <ul class="lines lines--mine">
+          <li>
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Une mise en page dessinée pour votre activité, et pour elle seule</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Code écrit à la main : rapide sur mobile, lisible par Google</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Vos mots, vos photos, vos prestations réelles</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Le site et le nom de domaine restent les vôtres</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Un interlocuteur unique, joignable, qui connaît votre dossier</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="etapes">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Le déroulement</p>
+      <h2>Quatre étapes, et vous n'intervenez qu'à la première.</h2>
+      <p class="lede">
+        L'ordre compte : chaque étape dépend de la précédente. Vous validez, je
+        fais le reste.
+      </p>
+    </div>
+
+    <ol class="steps">
+      <li class="step">
+        <span class="step__n">1</span>
+        <h3>On se rencontre</h3>
+        <p>
+          Chez vous, sur votre lieu de travail. Vous me montrez ce que vous
+          faites, je note ce qui doit se retrouver sur le site.
+        </p>
+        <span class="step__meta">Environ 1 h · sans engagement</span>
+      </li>
+      <li class="step">
+        <span class="step__n">2</span>
+        <h3>Je conçois</h3>
+        <p>
+          Je vous présente une maquette. Vous demandez les corrections que vous
+          voulez, jusqu'à ce que le résultat vous convienne.
+        </p>
+        <span class="step__meta">Aller-retours inclus</span>
+      </li>
+      <li class="step">
+        <span class="step__n">3</span>
+        <h3>Je mets en ligne</h3>
+        <p>
+          Nom de domaine, hébergement, certificat de sécurité, adresses e-mail
+          professionnelles, référencement local. Rien à faire de votre côté.
+        </p>
+        <span class="step__meta">Vous n'avez aucun compte à créer</span>
+      </li>
+      <li class="step">
+        <span class="step__n">4</span>
+        <h3>Je m'en occupe</h3>
+        <p>
+          Mises à jour, sauvegardes, surveillance, petites modifications de
+          textes ou de photos quand vous en avez besoin.
+        </p>
+        <span class="step__meta">Compris dans la formule annuelle</span>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<section class="section" id="tarifs" style="background: var(--surface-sunk);">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Tarifs</p>
+      <h2>Un prix pour la création, un abonnement pour la tranquillité.</h2>
+      <p class="lede">
+        Deux lignes, et rien d'autre. Pas de frais de mise en service, pas
+        d'option cachée, pas de facture surprise en cours d'année.
+      </p>
+    </div>
+
+    <div class="offers">
+      <article class="offer">
+        <p class="offer__label">Une fois, au démarrage</p>
+        <p class="offer__price">
+          dès 1 250 €
+          <small>selon le nombre de pages et le contenu à produire</small>
+        </p>
+        <p>
+          La conception et le développement complets de votre site, jusqu'à sa
+          mise en ligne.
+        </p>
+        <ul class="lines lines--mine">
+          <li>
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Maquette et aller-retours jusqu'à validation</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Rédaction et mise en forme de vos textes</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Adapté au téléphone, à la tablette et à l'ordinateur</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Formulaire de contact et fiche Google locale</span>
+          </li>
+        </ul>
+      </article>
+
+      <article class="offer offer--recurring">
+        <p class="offer__label">Chaque année, ensuite</p>
+        <p class="offer__price">
+          480 € / an
+          <small>soit 40 € par mois, facturés en une fois</small>
+        </p>
+        <p>
+          Tout ce qui fait qu'un site reste en ligne, à jour et sécurisé, sans
+          que vous ayez à y penser.
+        </p>
+        <ul class="lines lines--mine">
+          <li>
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Nom de domaine et hébergement</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Certificat de sécurité et sauvegardes automatiques</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Mises à jour techniques et surveillance</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Modifications de textes et de photos en cours d'année</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Un numéro à appeler quand quelque chose cloche</span>
+          </li>
+        </ul>
+      </article>
+    </div>
+
+    <p class="note">
+      Montants hors TVA. Le devis détaillé est établi après notre rencontre : il
+      dépend du nombre de pages, des photos à réaliser et des fonctions
+      particulières (réservation, catalogue, paiement en ligne).
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Questions fréquentes</p>
+      <h2>Ce qu'on me demande le plus souvent.</h2>
+    </div>
+
+    <div class="faq">
+      <details>
+        <summary>J'ai déjà une page Facebook. Ça ne suffit pas ?</summary>
+        <p>
+          Une page Facebook est utile, mais elle appartient à Facebook. Ses
+          règles changent, sa visibilité dépend d'un algorithme, et une partie de
+          vos clients n'y est pas. Un site vous appartient : il apparaît dans
+          Google, il est consultable par tout le monde, et personne ne peut le
+          faire disparaître.
+        </p>
+      </details>
+      <details>
+        <summary>Combien de temps avant que le site soit en ligne ?</summary>
+        <p>
+          En général trois à cinq semaines après notre rencontre. Le délai dépend
+          surtout de la vitesse à laquelle vous me transmettez vos textes et vos
+          photos — le développement, lui, est de mon côté.
+        </p>
+      </details>
+      <details>
+        <summary>Et si je veux changer un texte ou une photo plus tard ?</summary>
+        <p>
+          Vous m'écrivez ou vous m'appelez, et je le fais. Les modifications
+          courantes sont comprises dans la formule annuelle. Vous n'avez aucun
+          outil à apprendre ni aucun mot de passe à retenir.
+        </p>
+      </details>
+      <details>
+        <summary>Le site m'appartient-il vraiment ?</summary>
+        <p>
+          Oui. Le nom de domaine est enregistré pour votre entreprise et le site
+          est le vôtre. Si un jour vous souhaitez confier son entretien à
+          quelqu'un d'autre, je transmets l'ensemble des fichiers et des accès.
+        </p>
+      </details>
+      <details>
+        <summary>Pourquoi un abonnement, et pas un paiement unique ?</summary>
+        <p>
+          Parce qu'un site n'est pas un objet posé une fois pour toutes. Le nom de
+          domaine se renouvelle chaque année, l'hébergement se paie, les
+          certificats de sécurité expirent et les mises à jour doivent être
+          appliquées. L'abonnement couvre ces frais réels et mon temps
+          d'entretien — plutôt que de vous laisser découvrir un site cassé deux
+          ans plus tard.
+        </p>
+      </details>
+      <details>
+        <summary>Je ne sais pas du tout quoi mettre sur un site.</summary>
+        <p>
+          C'est le cas de la plupart des personnes que je rencontre, et ce n'est
+          pas un problème. Vous me parlez de votre métier ; je m'occupe de le
+          traduire en pages, en titres et en textes. Vous relisez et vous
+          corrigez.
+        </p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="band section contact" id="contact">
+  <div class="wrap contact__grid">
+    <div>
+      <p class="eyebrow">Prendre contact</p>
+      <h2 style="margin-block: 0.85rem 1.2rem;">
+        Un premier échange ne coûte rien et ne vous engage à rien.
+      </h2>
+      <p class="lede">
+        Dites-moi simplement ce que vous faites et ce que vous aimeriez que les
+        gens trouvent en vous cherchant. Je vous rappelle sous 48 heures et,
+        si le projet a du sens, je vous envoie un devis détaillé.
+      </p>
+      <div class="cta-row" style="margin-top: 1.75rem;">
+        <a class="btn btn--solid" href="mailto:bonjour@ine4rt.be">Envoyer un e-mail</a>
+      </div>
+    </div>
+
+    <ul class="contact__list">
+      <li>
+        <a href="tel:+32400000000">
+          <span>Téléphone</span>
+          <strong>+32 4XX XX XX XX</strong>
+        </a>
+      </li>
+      <li>
+        <a href="mailto:bonjour@ine4rt.be">
+          <span>E-mail</span>
+          <strong>bonjour@ine4rt.be</strong>
+        </a>
+      </li>
+      <li>
+        <a href="#contact">
+          <span>Zone d'intervention</span>
+          <strong>Liège et alentours</strong>
+        </a>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<footer class="wrap footer">
+  <span>Ine4rt — Développement web indépendant</span>
+  <span>Sites conçus et entretenus en Belgique</span>
+</footer>

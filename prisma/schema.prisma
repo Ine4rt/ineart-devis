@@ -1,0 +1,645 @@
+// ---------------------------------------------------------------------------
+// Ine4rt Console — modèle de données
+//
+// Principes :
+//  - Le Client est l'entité pivot : tout (projet, domaine, hébergement,
+//    abonnement, document, tâche, note, devis) remonte vers lui.
+//  - Un prospect N'EST PAS une entité distincte : c'est un Client avec
+//    status = PROSPECT et un pipelineStage. La conversion = un changement de
+//    statut, sans recopie de données ni duplication de code.
+//  - Les montants sont des Decimal (jamais des Float) pour éviter toute
+//    dérive d'arrondi sur les calculs de MRR/ARR et de marge.
+//  - Les secrets (mots de passe FTP/SSH/CMS…) ne sont JAMAIS stockés en clair :
+//    voir Credential.secretEnc, chiffré AES-256-GCM (src/lib/crypto.ts).
+// ---------------------------------------------------------------------------
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// --------------------------------------------------------------------------
+// Compte & réglages
+// --------------------------------------------------------------------------
+
+/// Utilisateur unique de la console (outil interne mono-utilisateur).
+/// Le modèle reste une table pour permettre d'ouvrir l'outil à un associé
+/// plus tard sans migration douloureuse.
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  avatarUrl    String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+/// Réglages applicatifs (clé/valeur) : devise, seuils d'alerte, taux de TVA…
+model Setting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+}
+
+// --------------------------------------------------------------------------
+// Clients & prospects
+// --------------------------------------------------------------------------
+
+enum ClientStatus {
+  PROSPECT
+  ACTIVE
+  PAUSED
+  ARCHIVED
+  LOST
+}
+
+/// Étapes du pipeline de prospection (pertinent uniquement si status=PROSPECT).
+enum PipelineStage {
+  IDENTIFIED
+  CONTACTED
+  MEETING
+  QUOTE_SENT
+  NEGOTIATION
+  WON
+  LOST
+}
+
+model Client {
+  id        String @id @default(cuid())
+  /// Référence lisible et stable (CLI-0001) affichée dans l'UI et les devis.
+  reference String @unique
+
+  company   String
+  firstName String?
+  lastName  String?
+  email     String?
+  phone     String?
+  mobile    String?
+  website   String?
+
+  addressLine1 String?
+  addressLine2 String?
+  postalCode   String?
+  city         String?
+  country      String? @default("Belgique")
+
+  vatNumber     String?
+  companyNumber String?
+  industry      String?
+  logoUrl       String?
+
+  status        ClientStatus   @default(PROSPECT)
+  pipelineStage PipelineStage? @default(IDENTIFIED)
+  /// Estimation du potentiel annuel d'un prospect, pour pondérer le pipeline.
+  potentialValue Decimal?
+
+  /// Comment ce client est arrivé (prospection à froid, recommandation…).
+  source String?
+  /// Notes privées — jamais exposées ailleurs que dans la fiche.
+  notes  String?
+
+  wonAt    DateTime?
+  lostAt   DateTime?
+  lostReason String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  contacts      Contact[]
+  projects      Project[]
+  domains       Domain[]
+  hostings      Hosting[]
+  subscriptions Subscription[]
+  quotes        Quote[]
+  tasks         Task[]
+  notesList     Note[]
+  documents     Document[]
+  credentials   Credential[]
+  activities    Activity[]
+  tags          Tag[]          @relation("ClientTags")
+
+  @@index([status])
+  @@index([company])
+}
+
+/// Interlocuteurs supplémentaires chez un client (gérant, compta, technique…).
+model Contact {
+  id        String  @id @default(cuid())
+  clientId  String
+  client    Client  @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  firstName String
+  lastName  String?
+  role      String?
+  email     String?
+  phone     String?
+  isPrimary Boolean @default(false)
+  notes     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([clientId])
+}
+
+model Tag {
+  id      String   @id @default(cuid())
+  name    String   @unique
+  color   String   @default("slate")
+  clients Client[] @relation("ClientTags")
+}
+
+// --------------------------------------------------------------------------
+// Projets
+// --------------------------------------------------------------------------
+
+enum ProjectStatus {
+  DISCOVERY
+  DESIGN
+  DEVELOPMENT
+  REVIEW
+  LIVE
+  MAINTENANCE
+  PAUSED
+  ARCHIVED
+}
+
+enum ProjectType {
+  VITRINE
+  ECOMMERCE
+  LANDING
+  WEBAPP
+  REFONTE
+  AUTRE
+}
+
+model Project {
+  id       String @id @default(cuid())
+  clientId String
+  client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  name        String
+  url         String?
+  stagingUrl  String?
+  description String?
+
+  type   ProjectType   @default(VITRINE)
+  status ProjectStatus @default(DISCOVERY)
+  /// 0-100. Piloté à la main : c'est un outil de suivi, pas un tracker de tickets.
+  progress Int         @default(0)
+
+  /// true = développement sur mesure, false = CMS. `cms` précise lequel.
+  isCustom Boolean @default(true)
+  cms      String?
+  /// Liste de technologies sérialisée en JSON (["Next.js","Tailwind"]).
+  techStack String @default("[]")
+
+  repositoryUrl String?
+  notes         String?
+
+  startedAt   DateTime?
+  launchedAt  DateTime?
+  deliveredAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  domains       Domain[]
+  hostings      Hosting[]
+  subscriptions Subscription[]
+  tasks         Task[]
+  notesList     Note[]
+  documents     Document[]
+  credentials   Credential[]
+  milestones    Milestone[]
+
+  @@index([clientId])
+  @@index([status])
+}
+
+/// Historique des modifications / jalons d'un projet (mise en ligne, refonte…).
+model Milestone {
+  id        String   @id @default(cuid())
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  title     String
+  detail    String?
+  happenedAt DateTime @default(now())
+  createdAt DateTime @default(now())
+
+  @@index([projectId])
+}
+
+// --------------------------------------------------------------------------
+// Domaines
+// --------------------------------------------------------------------------
+
+model Domain {
+  id        String  @id @default(cuid())
+  clientId  String?
+  client    Client? @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  projectId String?
+  project   Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+
+  name      String  @unique
+  registrar String?
+
+  purchasedAt DateTime?
+  expiresAt   DateTime?
+  /// Prix de renouvellement annuel payé par MOI (base du calcul de marge).
+  renewalPrice Decimal @default(0)
+  autoRenew    Boolean @default(true)
+
+  dnsProvider String?
+  nameservers String?
+
+  sslProvider  String?
+  sslExpiresAt DateTime?
+  sslAutoRenew Boolean   @default(true)
+
+  notes String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  subdomains  Subdomain[]
+  credentials Credential[]
+
+  @@index([clientId])
+  @@index([expiresAt])
+}
+
+model Subdomain {
+  id       String @id @default(cuid())
+  domainId String
+  domain   Domain @relation(fields: [domainId], references: [id], onDelete: Cascade)
+  name     String
+  target   String?
+  notes    String?
+
+  @@index([domainId])
+}
+
+// --------------------------------------------------------------------------
+// Hébergements
+// --------------------------------------------------------------------------
+
+enum BillingCycle {
+  MONTHLY
+  QUARTERLY
+  YEARLY
+  BIENNIAL
+}
+
+model Hosting {
+  id        String   @id @default(cuid())
+  clientId  String?
+  client    Client?  @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  projectId String?
+  project   Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+
+  provider String
+  plan     String?
+  label    String?
+
+  /// Coût que JE paie au fournisseur, sur le cycle indiqué.
+  price        Decimal      @default(0)
+  billingCycle BillingCycle @default(YEARLY)
+  renewsAt     DateTime?
+  autoRenew    Boolean      @default(true)
+
+  diskSpaceGb  Int?
+  bandwidth    String?
+  serverIp     String?
+  region       String?
+  phpVersion   String?
+  controlPanelUrl String?
+  /// Détails techniques libres (versions, cron, stack…).
+  technicalNotes String?
+  notes          String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  credentials Credential[]
+
+  @@index([clientId])
+  @@index([renewsAt])
+}
+
+// --------------------------------------------------------------------------
+// Coffre à identifiants (chiffré)
+// --------------------------------------------------------------------------
+
+enum CredentialKind {
+  FTP
+  SSH
+  DATABASE
+  CPANEL
+  CMS
+  REGISTRAR
+  EMAIL
+  ANALYTICS
+  OTHER
+}
+
+/// Un secret ne quitte jamais le serveur en clair : il n'est déchiffré que
+/// sur action explicite de l'utilisateur (« Révéler »), via une server action.
+model Credential {
+  id    String         @id @default(cuid())
+  label String
+  kind  CredentialKind @default(OTHER)
+
+  username String?
+  /// Payload AES-256-GCM encodé `iv:tag:ciphertext` en base64url.
+  secretEnc String?
+  url       String?
+  notes     String?
+
+  clientId  String?
+  client    Client?  @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  projectId String?
+  project   Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  hostingId String?
+  hosting   Hosting? @relation(fields: [hostingId], references: [id], onDelete: Cascade)
+  domainId  String?
+  domain    Domain?  @relation(fields: [domainId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([clientId])
+}
+
+// --------------------------------------------------------------------------
+// Abonnements — le cœur du suivi récurrent
+// --------------------------------------------------------------------------
+
+enum SubscriptionStatus {
+  ACTIVE
+  PENDING
+  PAST_DUE
+  PAUSED
+  CANCELLED
+}
+
+enum SubscriptionType {
+  FULL_CARE
+  MAINTENANCE
+  HOSTING_DOMAIN
+  SEO
+  SUPPORT
+  CUSTOM
+}
+
+model Subscription {
+  id        String   @id @default(cuid())
+  clientId  String
+  client    Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  projectId String?
+  project   Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+
+  name String
+  type SubscriptionType @default(FULL_CARE)
+
+  /// Montant facturé au client, par cycle.
+  amount       Decimal
+  currency     String       @default("EUR")
+  billingCycle BillingCycle @default(YEARLY)
+
+  status    SubscriptionStatus @default(ACTIVE)
+  autoRenew Boolean            @default(true)
+
+  startedAt          DateTime
+  currentPeriodStart DateTime
+  currentPeriodEnd   DateTime
+  /// Date du prochain renouvellement = base de tous les rappels du dashboard.
+  nextRenewalAt      DateTime
+  cancelledAt        DateTime?
+
+  paymentMethod String?
+  notes         String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  periods SubscriptionPeriod[]
+
+  @@index([clientId])
+  @@index([status])
+  @@index([nextRenewalAt])
+}
+
+enum PeriodStatus {
+  DUE
+  PAID
+  OVERDUE
+  CANCELLED
+  REFUNDED
+}
+
+/// Une période = une échéance facturable. C'est cette table qui répond à
+/// « qui a payé / qui doit payer / quelle période est couverte ».
+model SubscriptionPeriod {
+  id             String       @id @default(cuid())
+  subscriptionId String
+  subscription   Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+
+  periodStart DateTime
+  periodEnd   DateTime
+  dueAt       DateTime
+  amount      Decimal
+  status      PeriodStatus @default(DUE)
+
+  paidAt        DateTime?
+  paymentMethod String?
+  reference     String?
+  notes         String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([subscriptionId])
+  @@index([status])
+  @@index([dueAt])
+}
+
+// --------------------------------------------------------------------------
+// Devis
+// --------------------------------------------------------------------------
+
+enum QuoteStatus {
+  DRAFT
+  SENT
+  ACCEPTED
+  REJECTED
+  EXPIRED
+}
+
+model Quote {
+  id       String @id @default(cuid())
+  number   String @unique
+  clientId String
+  client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  title  String
+  status QuoteStatus @default(DRAFT)
+
+  issuedAt   DateTime  @default(now())
+  validUntil DateTime?
+  sentAt     DateTime?
+  decidedAt  DateTime?
+
+  /// Remise en pourcentage appliquée au sous-total.
+  discountPct Decimal @default(0)
+  taxRate     Decimal @default(21)
+  currency    String  @default("EUR")
+
+  intro String?
+  terms String?
+  notes String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  items QuoteItem[]
+
+  @@index([clientId])
+  @@index([status])
+}
+
+model QuoteItem {
+  id      String @id @default(cuid())
+  quoteId String
+  quote   Quote  @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+
+  label       String
+  description String?
+  quantity    Decimal @default(1)
+  unitPrice   Decimal @default(0)
+  position    Int     @default(0)
+
+  @@index([quoteId])
+}
+
+// --------------------------------------------------------------------------
+// Tâches, notes, documents, activité
+// --------------------------------------------------------------------------
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  BLOCKED
+  DONE
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum TaskKind {
+  TASK
+  REMINDER
+  CALL
+  EMAIL
+  MEETING
+  FOLLOW_UP
+}
+
+model Task {
+  id          String  @id @default(cuid())
+  title       String
+  description String?
+
+  status   TaskStatus   @default(TODO)
+  priority TaskPriority @default(MEDIUM)
+  kind     TaskKind     @default(TASK)
+
+  dueAt       DateTime?
+  completedAt DateTime?
+
+  clientId  String?
+  client    Client?  @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  projectId String?
+  project   Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([dueAt])
+  @@index([clientId])
+}
+
+model Note {
+  id     String  @id @default(cuid())
+  title  String?
+  body   String
+  pinned Boolean @default(false)
+
+  clientId  String?
+  client    Client?  @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  projectId String?
+  project   Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([clientId])
+}
+
+enum DocumentCategory {
+  CONTRACT
+  QUOTE
+  INVOICE
+  DESIGN
+  SCREENSHOT
+  LEGAL
+  TECHNICAL
+  OTHER
+}
+
+/// Métadonnées de fichier. Le binaire vit dans `storage/documents/<storageKey>`,
+/// hors de `public/` : le téléchargement passe par une route authentifiée.
+model Document {
+  id           String           @id @default(cuid())
+  name         String
+  originalName String
+  mimeType     String
+  size         Int
+  storageKey   String           @unique
+  category     DocumentCategory @default(OTHER)
+  notes        String?
+
+  clientId  String?
+  client    Client?  @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  projectId String?
+  project   Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([clientId])
+  @@index([category])
+}
+
+/// Journal d'activité : alimente les timelines client et le flux « Activité ».
+model Activity {
+  id         String   @id @default(cuid())
+  entityType String
+  entityId   String
+  clientId   String?
+  client     Client?  @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  action     String
+  summary    String
+  createdAt  DateTime @default(now())
+
+  @@index([clientId])
+  @@index([createdAt])
+}

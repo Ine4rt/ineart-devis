@@ -17,8 +17,8 @@ l'aise avec le numérique. Beaucoup n'ont qu'une page Facebook, parfois rien.
 Ils évaluent la page depuis un téléphone, souvent en fin de journée, entre deux
 tâches. Ils ne connaissent pas le vocabulaire technique.
 
-**Public de la console** : le fondateur, seul. Outil interne mono-utilisateur,
-ouvert plusieurs heures par jour pour suivre clients, échéances et
+**Public de la console** : l'équipe d'IneWeb — aujourd'hui une personne. Outil
+interne, ouvert plusieurs heures par jour pour suivre clients, échéances et
 encaissements.
 
 ## Product Purpose
@@ -39,13 +39,13 @@ Un seul interlocuteur, qui connaît son dossier.
 ## Operating Context
 
 **Le parcours commercial passe exclusivement par l'e-mail.** Le prospect écrit,
-le fondateur propose, la validation se fait ensemble par échanges écrits. Il n'y
+IneWeb propose, la validation se fait ensemble par échanges écrits. Il n'y
 a pas de prise de rendez-vous, pas de formulaire d'appel, pas de créneau à
 réserver. Cette contrainte est confirmée par le client et lie toute la page :
 aucune formulation ne doit suggérer un rendez-vous, un appel ou une rencontre.
 
-Côté production : le fondateur achète lui-même les noms de domaine, gère
-l'hébergement et assure la maintenance. La console interne suit ces engagements.
+Côté production : IneWeb achète les noms de domaine, gère l'hébergement et
+assure la maintenance. La console interne suit ces engagements.
 
 ## Capabilities and Constraints
 
@@ -60,11 +60,18 @@ l'hébergement et assure la maintenance. La console interne suit ces engagements
 ## Brand Commitments
 
 - Nom : **IneWeb** (remplace « Ine4rt », y compris dans la console interne).
-- Palette imposée par le client : **gris très foncé et orange**.
-- Mouvement attendu : transitions de type glissement, interface qui « prend vie ».
-- E-mail de contact confirmé : **info@ineart.be** — noter que le domaine reste
-  `ineart.be` alors que la marque devient IneWeb ; à trancher plus tard.
-- Aucun numéro de téléphone communiqué : le contact est uniquement par e-mail.
+- **IneWeb se présente comme une société, pas comme un indépendant.** La voix
+  publique est « nous » ; jamais « je », jamais « je crée des sites ». Cette
+  contrainte est confirmée par le client et lie toute rédaction future.
+- Palette imposée : **gris très foncé et orange**. L'orange s'emploie **par
+  touches** — le client a explicitement rejeté les aplats pleine largeur, jugés
+  trop lourds.
+- Registre visuel demandé : **épuré, élégant, professionnel**. Graisses légères,
+  larges respirations, filets fins. Un lettrage gras et étendu a été refusé.
+- Mouvement attendu : **glissements**, dont une bannière défilante.
+- E-mail de contact confirmé : **info@ineart.be** — le domaine reste `ineart.be`
+  alors que la marque devient IneWeb ; à trancher.
+- Aucun numéro de téléphone : le contact est uniquement par e-mail.
 
 ## Evidence on Hand
 
@@ -75,6 +82,11 @@ l'hébergement et assure la maintenance. La console interne suit ces engagements
   réalisation publique n'existe à ce jour.** Rien de tel ne doit être inventé sur
   la page. Une section « réalisations » ne pourra exister qu'une fois de vrais
   sites en ligne.
+- Les maquettes de la bannière (boulangerie, garage, cabinet) sont des **mises
+  en page de démonstration**, annoncées comme telles et servies par des adresses
+  en `-exemple.be`. Elles ne doivent jamais être présentées comme des clients.
+- **Aucune photographie disponible.** Les emplacements d'image des maquettes
+  portent la mention « photo » en clair, en attendant de vraies prises de vue.
 
 ## Product Principles
 

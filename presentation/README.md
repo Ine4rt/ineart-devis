@@ -39,45 +39,55 @@ Elles viennent de vous et lient toute rédaction future :
 - **Rien d'inventé** : ni témoignage, ni logo client, ni statistique. Une section
   « réalisations » ne pourra exister qu'une fois de vrais sites en ligne.
 
+## La voix
+
+**IneWeb est une société.** Toute la page dit « nous ». Aucune formulation à la
+première personne, aucun « je crée des sites » : le registre est celui d'un
+studio qui prend en charge, pas d'un prestataire qui exécute.
+
 ## Le monde visuel
 
-Signalétique de chantier. Le gris très foncé et l'orange haute visibilité que
-vous avez imposés sont natifs de ce monde — ce n'est pas un thème sombre
-décoratif. Vos prospects (menuisier, garagiste, artisan) croisent cette
-signalétique tous les jours, et « chantier » dit exactement ce que vous vendez :
-quelque chose qu'on vous livre fini.
+Graphite mat, filets d'un pixel, larges respirations. Une seule graisse de
+grotesque (Archivo) menée de 300 à 620 : **la hiérarchie passe par l'échelle et
+le blanc, jamais par le gras**.
 
-Conséquences tenues dans le code :
+L'orange ne sert qu'à marquer — un carré de 8 px en tête de section, un
+soulignement sous l'adresse e-mail, l'indicateur de diapositive active. Aucun
+aplat pleine largeur : c'est précisément ce qui alourdissait la version
+précédente.
 
-- L'orange est posé en **aplats pleins** — le bandeau des prises en charge, le
-  bloc de contact — jamais en halo ni en dégradé. Un orange qui ne sert que de
-  liseré lumineux, c'est le fond sombre générique des logiciels en ligne.
-- Lettrage **Archivo étendu** (axe de largeur poussé à 118) pour les titres :
-  c'est le lettrage large des plaques, pas une police d'interface.
-- Bords francs, filets de 2 px, aucun verre, aucune ombre colorée.
-- **Un seul monde, sombre.** Une identité de marque ne se décline pas en version
-  claire. La console, elle, garde ses deux thèmes : on l'ouvre huit heures par
-  jour.
+## La bannière
+
+Elle ne montre pas des photos de banque d'images. Elle montre **des sites**,
+rendus en HTML dans un cadre navigateur, qui défilent. Trois mises en page —
+commerce de proximité, atelier technique, profession libérale — chacune avec sa
+propre identité, son vrai texte et sa vraie hiérarchie.
+
+Ce sont des **démonstrations**, annoncées comme telles sous le carrousel et
+servies par des adresses en `-exemple.be`. Ce ne sont pas des clients.
+
+Les zones marquées « photo — … » sont les emplacements d'image. Remplacez-les
+par de vraies prises de vue dès que vous en aurez : la mention en clair vaut
+mieux qu'un rectangle gris qui ferait croire à un site inachevé.
 
 ## Le mouvement
 
-Un seul moment orchestré au chargement (le titre monte, le bandeau orange se
-déploie latéralement), plus une entrée séquentielle sur les quatre étapes, où le
-glissement porte l'ordre de lecture. Rien d'autre ne bouge au défilement : une
-entrée identique sur chaque section est du bruit.
+Deux gestes, pas davantage :
 
-Courbes et durées suivent la doctrine d'Emil Kowalski : `ease-out` marqué
-(`cubic-bezier(.23,1,.32,1)`) pour les entrées, propriétés nommées plutôt que
-`all`, retour d'appui sur les boutons.
+1. l'entrée du héros au chargement, décalée de 80 ms par bloc ;
+2. le glissement de la bannière — le rail se translate, il n'y a pas de fondu :
+   le mouvement doit dire qu'il y a d'autres vues à côté.
 
-Le contenu est **visible par défaut** : l'état masqué n'est posé que par le
-script, uniquement sur ce qui est sous le pli, et un filet de sécurité de quatre
-secondes révèle tout quoi qu'il arrive. Sans JavaScript, ou si l'utilisateur a
-demandé moins d'animations, la page reste entièrement lisible.
+Le défilement automatique (6 s) se suspend au survol, au focus clavier et quand
+l'onglet passe en arrière-plan. Flèches, points et touches ← → fonctionnent.
+
+Aucune révélation au défilement : le contenu est lisible en permanence. Courbes
+et durées suivent la doctrine d'Emil Kowalski — `ease-out` marqué pour les
+entrées, `cubic-bezier(.32,.72,0,1)` pour le glissement, propriétés nommées
+plutôt que `all`.
 
 ## Polices
 
-Archivo (licence SIL Open Font) en deux largeurs, sous-ensemblée sur un jeu de
-caractères français complet et intégrée en base64 — 58 Ko au total. C'est ce qui
-garantit un rendu identique partout, y compris derrière un réseau qui bloquerait
-un CDN. `fonts/sub2.py` régénère les sous-ensembles.
+Archivo (licence SIL Open Font), une seule famille, axe de graisse 300–620,
+sous-ensemblée sur un jeu de caractères français complet et intégrée en base64 —
+33 Ko. `fonts/sub3.py` régénère le sous-ensemble.

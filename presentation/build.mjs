@@ -21,9 +21,10 @@ const fontsDir = process.env.FONTS_DIR ?? join(here, "fonts");
 
 const source = readFileSync(join(here, "page.body.html"), "utf8");
 
-const withFonts = source
-  .replace("__ARCHIVO_EXP__", readFileSync(join(fontsDir, "archivo-exp.woff2.b64"), "utf8").trim())
-  .replace("__ARCHIVO__", readFileSync(join(fontsDir, "archivo.woff2.b64"), "utf8").trim());
+const withFonts = source.replace(
+  "__ARCHIVO__",
+  readFileSync(join(fontsDir, "archivo.woff2.b64"), "utf8").trim(),
+);
 
 // --- Sortie 1 : fragment embarquable ---------------------------------------
 writeFileSync(join(here, "page.embed.html"), withFonts);
@@ -42,10 +43,10 @@ const standalone = `<!doctype html>
 <meta name="theme-color" content="#121316">
 <meta property="og:type" content="website">
 <meta property="og:title" content="${title}">
-<meta property="og:description" content="Vous n'avez pas de site. On s'en occupe. Sites sur mesure, domaine et hébergement pris en charge.">
+<meta property="og:description" content="IneWeb conçoit des sites web sur mesure et en assure l'hébergement et le suivi. Les entreprises que nous accompagnons n'ont rien à gérer.">
 <meta property="og:locale" content="fr_BE">
 <link rel="icon" href="data:image/svg+xml,${encodeURIComponent(
-  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#ff6a15"/><text x="16" y="22" font-family="Helvetica,Arial,sans-serif" font-size="14" font-weight="700" fill="#180d02" text-anchor="middle">iW</text></svg>',
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#e8641c"/><text x="16" y="22" font-family="Helvetica,Arial,sans-serif" font-size="14" font-weight="700" fill="#180d02" text-anchor="middle">iW</text></svg>',
 )}">
 <style>
   *, *::before, *::after { box-sizing: border-box; }

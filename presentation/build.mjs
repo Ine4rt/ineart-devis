@@ -6,8 +6,12 @@ import { fileURLToPath } from "node:url";
  * Construit la page de présentation.
  *
  * Une seule source (`page.body.html`) produit deux sorties :
- *   · index.html          — document complet, déployable tel quel sur n'importe
+ *   · ../projets/ineweb-site/index.html
+ *                         — document complet, déployable tel quel sur n'importe
  *                           quel hébergement statique (aucune dépendance).
+ *                           Il atterrit dans projets/ pour être au même endroit
+ *                           que les autres sites livrables — un seul dossier à
+ *                           ouvrir quand on cherche quoi mettre en ligne.
  *   · page.embed.html     — le même contenu sans <html>/<head>/<body>, pour les
  *                           contextes qui fournissent déjà l'enveloppe.
  *
@@ -60,8 +64,9 @@ ${body}
 </html>
 `;
 
-writeFileSync(join(here, "index.html"), standalone);
+writeFileSync(join(here, "..", "projets", "ineweb-site", "index.html"), standalone);
 
 console.log(
-  `✓ index.html (${Math.round(standalone.length / 1024)} Ko) et page.embed.html générés.`,
+  `✓ projets/ineweb-site/index.html (${Math.round(standalone.length / 1024)} Ko) ` +
+  `et presentation/page.embed.html générés.`,
 );

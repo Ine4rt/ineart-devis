@@ -147,6 +147,38 @@ h3 { font-size: 1.25rem; letter-spacing: -0.005em; }
 .band-dark .btn--outline:hover,
 .hero .btn--outline:hover { background: var(--on-dark); color: var(--iron-900); }
 
+/* --- Bandeau de démonstration --------------------------------------------
+   Il défile avec la page au lieu de rester collé : la mention doit être vue
+   une fois, pas encadrer la visite. Elle dit qui a fait la page et combien de
+   temps elle reste — sans quoi une maquette portant le nom et le logo d'une
+   entreprise pourrait passer pour son site officiel.
+   ------------------------------------------------------------------------ */
+.demo { background: var(--iron-800); color: var(--on-dark-2); font-size: 0.875rem; }
+.demo__inner {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.55rem 1rem;
+  padding-block: 0.7rem;
+}
+.demo__tag {
+  font-family: "Genot Display", sans-serif; font-size: 0.6875rem; font-weight: 600;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--ember-bright); border: 1px solid currentColor;
+  padding: 0.15rem 0.5rem; flex: none;
+}
+.demo__text { flex: 1 1 16rem; }
+.demo__text b { color: var(--on-dark); font-weight: 600; }
+.demo__link { color: var(--on-dark); text-decoration: none; border-bottom: 1px solid var(--ember); }
+
+/* --- Écran de fin de démonstration ---------------------------------------- */
+.expire {
+  min-height: 100svh; display: grid; place-items: center;
+  padding: var(--pad); background: var(--iron-950); color: var(--on-dark);
+  text-align: center;
+}
+.expire__box { display: grid; justify-items: center; gap: 1.5rem; max-width: 34rem; }
+.expire__logo { height: 90px; width: auto; }
+.expire h1 { font-size: clamp(1.75rem, 1.2rem + 2.4vw, 2.75rem); }
+.expire p { color: var(--on-dark-2); }
+
 /* --- Barre de navigation -------------------------------------------------- */
 .nav {
   position: sticky; top: 0; z-index: 30;
@@ -158,15 +190,12 @@ h3 { font-size: 1.25rem; letter-spacing: -0.005em; }
 }
 .nav__inner { display: flex; align-items: center; gap: 1.25rem; padding-block: 0.9rem; }
 
-.logo { display: inline-flex; align-items: center; gap: 0.7rem; text-decoration: none; }
-.logo__mark {
-  width: 34px; height: 34px; flex: none;
-  display: grid; place-items: center;
-  border: 2px solid var(--ember);
-  font-family: "Genot Display", sans-serif; font-weight: 700; font-size: 0.9rem;
-  color: var(--ember);
-}
-.logo__text { line-height: 1.1; }
+.logo { display: inline-flex; align-items: center; gap: 0.75rem; text-decoration: none; }
+/* Le logo de l'atelier est déjà un bloc typographique complet ; à côté du nom
+   répété en toutes lettres, il se suffit à lui-même sur petit écran. */
+.logo__img { height: 38px; width: auto; flex: none; }
+.logo__text { display: none; line-height: 1.1; }
+@media (min-width: 30rem) { .logo__text { display: block; } }
 .logo__name {
   display: block; font-family: "Genot Display", sans-serif; font-weight: 600;
   font-size: 1.05rem; letter-spacing: 0.04em; text-transform: uppercase;
@@ -201,6 +230,7 @@ h3 { font-size: 1.25rem; letter-spacing: -0.005em; }
 /* --- Héros ---------------------------------------------------------------- */
 .hero { position: relative; background: var(--iron-950); color: var(--on-dark); overflow: hidden; }
 .hero__media { position: absolute; inset: 0; }
+.hero__media img { width: 100%; height: 100%; object-fit: cover; }
 .hero__media .slot { height: 100%; border: 0; place-items: start end; }
 /* L'étiquette se loge en haut à droite : au centre elle percutait le titre,
    en bas elle passait derrière la barre de faits. */
@@ -279,10 +309,13 @@ h3 { font-size: 1.25rem; letter-spacing: -0.005em; }
 .trade p { color: var(--ink-2); font-size: 0.9875rem; }
 
 /* --- Réalisations --------------------------------------------------------
-   Mosaïque à rangées de hauteur fixe : la première réalisation occupe deux
-   colonnes et deux rangées. Sans hauteur de rangée imposée, les tuiles d'une
-   même ligne prenaient des hauteurs différentes et la légende, ancrée en bas
-   de la tuile, flottait sous l'image.
+   Mosaïque à rangées de hauteur fixe : sans hauteur imposée, les tuiles d'une
+   même ligne prenaient des hauteurs différentes et la légende, ancrée en bas,
+   flottait sous l'image.
+
+   Les tailles sont portées par des classes (.work--large, .work--wide) plutôt
+   que par des :nth-child : ajouter ou retirer une photo ne casse alors plus la
+   composition, il suffit de déplacer la classe.
    ------------------------------------------------------------------------ */
 .gallery {
   display: grid;
@@ -290,11 +323,26 @@ h3 { font-size: 1.25rem; letter-spacing: -0.005em; }
   margin-top: clamp(2.5rem, 5vw, 3.5rem);
   grid-auto-rows: clamp(9rem, 20vw, 13rem);
 }
-@media (min-width: 46rem) { .gallery { grid-template-columns: repeat(2, 1fr); } }
-@media (min-width: 64rem) { .gallery { grid-template-columns: repeat(3, 1fr); } }
+/* Une grande tuile carrée, une verticale, deux petites : c'est la combinaison
+   qui remplit un rectangle sans laisser de case vide, aussi bien sur quatre
+   colonnes que sur deux. Une tuile panoramique avait été essayée d'abord —
+   elle écrasait les photos, qui sont toutes cadrées en carré ou en hauteur. */
 @media (min-width: 46rem) {
-  .gallery > *:first-child { grid-column: span 2; grid-row: span 2; }
+  .gallery { grid-template-columns: repeat(2, 1fr); }
+  .work--large { grid-column: span 2; grid-row: span 2; }
+  .work--tall { grid-row: span 2; }
 }
+@media (min-width: 64rem) {
+  .gallery { grid-template-columns: repeat(4, 1fr); }
+}
+
+.gallery__note { margin-top: 1.5rem; font-size: 0.9375rem; }
+.gallery__note a {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  color: var(--ink-2); text-decoration: none; border-bottom: 1px solid var(--ember);
+  transition: color 160ms var(--ease-out);
+}
+.gallery__note a:hover { color: var(--ink); }
 
 .work { position: relative; overflow: hidden; margin: 0; }
 .work .slot { height: 100%; aspect-ratio: auto; }
@@ -339,7 +387,12 @@ h3 { font-size: 1.25rem; letter-spacing: -0.005em; }
   font-size: 0.875rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2);
 }
 .detail a, .detail p { font-size: 1.0625rem; }
-.detail a { text-decoration: none; border-bottom: 1px solid var(--ember); }
+.detail a { display: inline-block; text-decoration: none; border-bottom: 1px solid var(--ember); }
+/* Canal secondaire : présent, mais pas au même rang que le numéro principal. */
+.detail a.detail__alt {
+  margin-top: 0.35rem; font-size: 0.875rem;
+  color: var(--ink-2); border-bottom-color: var(--hair);
+}
 
 .hours { margin-top: 0.4rem; display: grid; gap: 0.2rem; font-size: 1rem; }
 .hours div { display: flex; justify-content: space-between; gap: 1.5rem; max-width: 20rem; }
@@ -373,6 +426,7 @@ h3 { font-size: 1.25rem; letter-spacing: -0.005em; }
 }
 .footer a { text-decoration: none; }
 .footer a:hover { color: var(--on-dark); }
+.footer__links { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; }
 
 /* --- Barre d'appel mobile ------------------------------------------------
    Un artisan se fait appeler, pas écrire. Sur téléphone, le numéro reste

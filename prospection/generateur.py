@@ -88,9 +88,10 @@ def resume_horaires(horaires):
 
 # --- fragments HTML ----------------------------------------------------------
 
-def html_services(theme, fiche):
+def html_services(theme, fiche, secteur):
     blocs = []
-    for index, (titre, texte) in enumerate(theme["services"], 1):
+    liste = secteurs.services(secteur, fiche.get("categorie_osm"))
+    for index, (titre, texte) in enumerate(liste, 1):
         blocs.append(
             '<article class="carte"><div class="puce">%02d</div>'
             '<h3>%s</h3><p>%s</p></article>' % (index, e(titre), e(texte))
@@ -227,6 +228,25 @@ def generer_site(fiche, duree_jours, modele):
     ville = adresse.get("ville") or config.AGENCE["ville"]
     nom = fiche.get("nom", "Votre société")
 
+    # Sans numero connu, mieux vaut orienter vers le formulaire que d'afficher
+    # un bouton d'appel qui ne compose rien.
+    telephone = (fiche.get("telephone") or "").strip()
+    if telephone:
+        lien_tel = "tel:%s" % e(tel_brut(telephone))
+        bouton_entete = ('<a class="tel-btn" href="%s">%s</a>'
+                         % (lien_tel, e(telephone)))
+        bouton_hero = ('<a class="btn btn-plein" href="%s">Appeler maintenant</a>'
+                       % lien_tel)
+        label_contact, valeur_contact = "Téléphone", ('<a href="%s">%s</a>'
+                                                      % (lien_tel, e(telephone)))
+        ligne_telephone = '<a href="%s">%s</a>' % (lien_tel, e(telephone))
+    else:
+        bouton_entete = '<a class="tel-btn" href="#contact">Nous écrire</a>'
+        bouton_hero = ('<a class="btn btn-plein" href="#contact">'
+                       'Nous écrire</a>')
+        label_contact, valeur_contact = "Contact", '<a href="#contact">Formulaire</a>'
+        ligne_telephone = ('<a href="#contact">Nous écrire</a>')
+
     valeurs = {
         "NOM": e(nom),
         "VILLE": e(ville),
@@ -235,14 +255,17 @@ def generer_site(fiche, duree_jours, modele):
         "ADRESSE_LIGNE1": e(adresse.get("ligne1") or "Adresse à confirmer"),
         "ADRESSE_LIGNE2": e(adresse.get("ligne2") or ville),
         "ADRESSE_COMPLETE": e(adresse.get("complete") or ville),
-        "TEL_BRUT": e(tel_brut(fiche.get("telephone"))),
-        "TEL_AFFICHE": e(tel_affiche(fiche.get("telephone"))),
+        "BOUTON_ENTETE": bouton_entete,
+        "BOUTON_HERO": bouton_hero,
+        "LABEL_CONTACT": label_contact,
+        "VALEUR_CONTACT": valeur_contact,
+        "LIGNE_TELEPHONE": ligne_telephone,
         "MAPS_URL": e(fiche.get("maps_url") or
                       "https://www.google.com/maps/search/" + quote("%s %s" % (nom, ville))),
         "HORAIRE_RESUME": e(resume_horaires(fiche.get("horaires"))),
         "CASE_AVIS": case_avis,
         "BLOC_NOTE": bloc_note,
-        "SERVICES_HTML": html_services(theme, fiche),
+        "SERVICES_HTML": html_services(theme, fiche, secteur),
         "HORAIRES_HTML": html_horaires(fiche.get("horaires")),
         "GALERIE_SECTION": galerie_section,
         "LIEN_GALERIE": lien_galerie,
@@ -363,6 +386,15 @@ def main():
     for index, fiche in enumerate(prospects, 1):
         print("  [%d/%d] %s" % (index, len(prospects), fiche.get("nom")))
         entrees.append(generer_site(fiche, arguments.duree, modele))
+
+    # Les societes ecartees depuis la collecte precedente ne doivent pas
+    # rester en ligne ni repartir dans le paquet FTP.
+    slugs = {entree["slug"] for entree in entrees}
+    for nom in sorted(os.listdir(config.DOSSIER_SITES)):
+        chemin = os.path.join(config.DOSSIER_SITES, nom)
+        if os.path.isdir(chemin) and nom not in slugs:
+            shutil.rmtree(chemin)
+            print("  - maquette obsolete supprimee : %s" % nom)
 
     os.makedirs(config.DOSSIER_DATA, exist_ok=True)
     with open(config.FICHIER_MANIFEST, "w", encoding="utf-8") as fichier:

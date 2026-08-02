@@ -157,6 +157,30 @@ def ecrire_eml(entree, relance):
     return chemin
 
 
+def nettoyer_anciens(manifest):
+    """Supprime les fichiers des campagnes precedentes.
+
+    Sans cela, un prospect ecarte entre deux collectes laisse son mail dans le
+    dossier et finit par etre contacte pour rien.
+    """
+    attendus = set()
+    for entree in manifest:
+        attendus.update((
+            "%s.eml" % entree["slug"],
+            "%s-relance.eml" % entree["slug"],
+            "%s-appel.txt" % entree["slug"],
+        ))
+    attendus.add(os.path.basename(config.FICHIER_ENVOIS))
+
+    retires = 0
+    for nom in os.listdir(config.DOSSIER_MAILS):
+        if nom not in attendus and nom.endswith((".eml", ".txt")):
+            os.remove(os.path.join(config.DOSSIER_MAILS, nom))
+            retires += 1
+    if retires:
+        print("%d fichier(s) d'une campagne precedente supprime(s)" % retires)
+
+
 def main():
     analyseur = argparse.ArgumentParser(description="Preparation des mails de prospection")
     analyseur.add_argument("--relance", action="store_true",
@@ -170,6 +194,7 @@ def main():
         manifest = json.load(fichier)
 
     os.makedirs(config.DOSSIER_MAILS, exist_ok=True)
+    nettoyer_anciens(manifest)
     lignes_csv, avec_mail, sans_mail = [], 0, 0
 
     for entree in manifest:

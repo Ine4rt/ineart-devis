@@ -172,7 +172,7 @@ footer a{color:#c9d1dc}
       {{LIEN_GALERIE}}
       <a href="#contact">Contact</a>
     </nav>
-    <a class="tel-btn" href="tel:{{TEL_BRUT}}">{{TEL_AFFICHE}}</a>
+    {{BOUTON_ENTETE}}
   </div>
 </header>
 
@@ -182,7 +182,7 @@ footer a{color:#c9d1dc}
     <h1>{{NOM}}</h1>
     <p class="accroche">{{ACCROCHE}}</p>
     <div class="actions">
-      <a class="btn btn-plein" href="tel:{{TEL_BRUT}}">Appeler maintenant</a>
+      {{BOUTON_HERO}}
       <a class="btn btn-vide" href="{{MAPS_URL}}" target="_blank" rel="noopener">Voir l'itinéraire</a>
     </div>
   </div>
@@ -195,8 +195,8 @@ footer a{color:#c9d1dc}
       <div class="val">{{ADRESSE_LIGNE1}}<br>{{ADRESSE_LIGNE2}}</div>
     </div>
     <div class="case">
-      <div class="lab">Téléphone</div>
-      <div class="val"><a href="tel:{{TEL_BRUT}}">{{TEL_AFFICHE}}</a></div>
+      <div class="lab">{{LABEL_CONTACT}}</div>
+      <div class="val">{{VALEUR_CONTACT}}</div>
     </div>
     <div class="case">
       <div class="lab">Ouverture</div>
@@ -246,7 +246,7 @@ footer a{color:#c9d1dc}
         <p style="margin-top:26px;line-height:2">
           <strong>{{NOM}}</strong><br>
           {{ADRESSE_COMPLETE}}<br>
-          <a href="tel:{{TEL_BRUT}}">{{TEL_AFFICHE}}</a>{{LIGNE_FACEBOOK}}
+          {{LIGNE_TELEPHONE}}{{LIGNE_FACEBOOK}}
         </p>
         <a class="btn btn-plein" style="margin-top:26px" href="{{MAPS_URL}}" target="_blank" rel="noopener">Nous trouver</a>
       </div>

@@ -251,3 +251,56 @@ def detecter_secteur(prospect):
 
 def theme(secteur):
     return THEMES.get(secteur, THEMES[SECTEUR_DEFAUT])
+
+# Metiers dont le vocabulaire generique du secteur sonnerait faux.
+# La cle est la valeur OSM (shop / craft / amenity).
+SERVICES_SPECIFIQUES = {
+    "tattoo": [
+        ("Nos projets", "Un dessin unique, pensé avec vous avant la première ligne."),
+        ("Sur rendez-vous", "On prend le temps qu'il faut, jamais deux clients à la fois."),
+        ("Hygiène", "Matériel à usage unique et protocole strict, à chaque séance."),
+    ],
+    "ice_cream": [
+        ("Nos parfums", "Des glaces préparées sur place, avec de vrais fruits."),
+        ("À emporter", "Cornets, pots et bacs familiaux pour la maison."),
+        ("De saison", "La carte change au fil des arrivages et des envies."),
+    ],
+    "florist": [
+        ("Bouquets", "Composés à la main, avec les fleurs du jour."),
+        ("Événements", "Mariages, naissances, deuils : on s'occupe de tout."),
+        ("Livraison", "Vos fleurs déposées à l'adresse de votre choix."),
+    ],
+    "greengrocer": [
+        ("Fruits et légumes", "Des produits frais, choisis chaque matin."),
+        ("Producteurs locaux", "Le circuit court quand la saison le permet."),
+        ("Commande", "Dites-nous ce qu'il vous faut, on le prépare."),
+    ],
+    "grocery": [
+        ("L'épicerie", "Les essentiels du quotidien, à deux pas de chez vous."),
+        ("Produits du coin", "Une sélection régionale à côté des grandes marques."),
+        ("Dépannage", "Ouvert quand les grandes surfaces ne le sont plus."),
+    ],
+    "bicycle": [
+        ("Réparation", "Diagnostic gratuit, devis avant toute intervention."),
+        ("Entretien", "Freins, transmission, roues : votre vélo repart réglé."),
+        ("Conseil", "Le bon vélo pour votre usage, sans vous vendre du superflu."),
+    ],
+    "leather": [
+        ("Nos pièces", "Du cuir travaillé à la main, fait pour durer."),
+        ("Réparation", "On répare ce qui peut l'être plutôt que de le remplacer."),
+        ("Sur mesure", "Une commande précise ? On la réalise pour vous."),
+    ],
+    "bag": [
+        ("La boutique", "Sacs et maroquinerie choisis un par un."),
+        ("Conseil", "On prend le temps de trouver la pièce qui vous va."),
+        ("Commande", "Pas le bon modèle en rayon ? On le fait venir."),
+    ],
+}
+
+
+def services(secteur, categorie_osm=""):
+    """Retourne les 3 services a afficher, specifiques si le metier le merite."""
+    cle = str(categorie_osm or "").strip().lower()
+    if cle in SERVICES_SPECIFIQUES:
+        return SERVICES_SPECIFIQUES[cle]
+    return theme(secteur)["services"]

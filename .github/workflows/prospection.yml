@@ -1,0 +1,110 @@
+name: IneArt — Prospection Huy (collecte, sites, mails)
+
+on:
+  workflow_dispatch:
+    inputs:
+      communes:
+        description: 'Communes (separees par des virgules)'
+        required: true
+        default: 'Huy'
+        type: string
+      limite:
+        description: 'Nombre max de societes'
+        required: true
+        default: '20'
+        type: string
+      enrichir:
+        description: 'Enrichir via Google Maps (plus lent)'
+        required: true
+        default: true
+        type: boolean
+      deployer:
+        description: 'Mettre en ligne sur le FTP'
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+jobs:
+  prospection:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Telecharger le code
+        uses: actions/checkout@v4
+
+      - name: Installer Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Installer les dependances
+        run: pip install -r prospection/requirements.txt
+
+      - name: Installer Chromium
+        if: ${{ inputs.enrichir }}
+        run: python -m playwright install --with-deps chromium
+
+      - name: Collecter les entreprises
+        working-directory: prospection
+        env:
+          COMMUNES: ${{ inputs.communes }}
+          LIMITE_PROSPECTS: ${{ inputs.limite }}
+        run: |
+          if [ "${{ inputs.enrichir }}" = "true" ]; then
+            python collecte.py --enrich --limite ${{ inputs.limite }} --communes "${{ inputs.communes }}"
+          else
+            python collecte.py --limite ${{ inputs.limite }} --communes "${{ inputs.communes }}"
+          fi
+
+      - name: Generer les sites
+        working-directory: prospection
+        env:
+          DEMO_BASE_URL: ${{ secrets.DEMO_BASE_URL }}
+          INEART_EMAIL: ${{ secrets.INEART_EMAIL }}
+          INEART_TEL: ${{ secrets.INEART_TEL }}
+          INEART_SITE: ${{ secrets.INEART_SITE }}
+        run: python generateur.py
+
+      - name: Mettre en ligne sur le FTP
+        if: ${{ inputs.deployer }}
+        working-directory: prospection
+        env:
+          FTP_HOST: ${{ secrets.FTP_HOST }}
+          FTP_USER: ${{ secrets.FTP_USER }}
+          FTP_PASS: ${{ secrets.FTP_PASS }}
+          FTP_DIR: ${{ secrets.FTP_DIR }}
+          DEMO_BASE_URL: ${{ secrets.DEMO_BASE_URL }}
+        run: python ftp_deploy.py
+
+      - name: Preparer les mails
+        working-directory: prospection
+        env:
+          DEMO_BASE_URL: ${{ secrets.DEMO_BASE_URL }}
+          INEART_EMAIL: ${{ secrets.INEART_EMAIL }}
+          INEART_TEL: ${{ secrets.INEART_TEL }}
+          INEART_SITE: ${{ secrets.INEART_SITE }}
+        run: python mailer.py
+
+      - name: Publier les fichiers en artefact
+        uses: actions/upload-artifact@v4
+        with:
+          name: prospection-huy
+          path: |
+            prospection/mails/
+            prospection/data/prospects.json
+            prospection/data/manifest.json
+            prospection/tableau_de_bord.html
+          retention-days: 30
+
+      - name: Sauvegarder dans le depot
+        run: |
+          git config user.name "IneArt AI Bot"
+          git config user.email "actions@github.com"
+          git add prospection/data prospection/mails prospection/sites prospection/tableau_de_bord.html
+          git diff --cached --quiet || git commit -m "Prospection Huy $(date '+%d/%m/%Y %H:%M')"
+          git push

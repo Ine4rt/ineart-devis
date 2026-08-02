@@ -1,0 +1,62 @@
+name: IneArt — Nettoyage des maquettes expirees
+
+# Rend la limite des 8 jours reelle : supprime du FTP toute maquette
+# dont la date d'expiration est depassee.
+
+on:
+  schedule:
+    - cron: '17 4 * * *'   # tous les jours a 04h17 UTC
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Simulation (ne supprime rien)'
+        required: true
+        default: false
+        type: boolean
+      slug:
+        description: 'Retrait immediat d une societe (slug)'
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  nettoyer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Telecharger le code
+        uses: actions/checkout@v4
+
+      - name: Installer Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Installer les dependances
+        run: pip install -r prospection/requirements.txt
+
+      - name: Supprimer les maquettes expirees
+        working-directory: prospection
+        env:
+          FTP_HOST: ${{ secrets.FTP_HOST }}
+          FTP_USER: ${{ secrets.FTP_USER }}
+          FTP_PASS: ${{ secrets.FTP_PASS }}
+          FTP_DIR: ${{ secrets.FTP_DIR }}
+        run: |
+          ARGS=""
+          if [ "${{ inputs.dry_run }}" = "true" ]; then ARGS="$ARGS --dry-run"; fi
+          if [ -n "${{ inputs.slug }}" ]; then ARGS="$ARGS --slug ${{ inputs.slug }}"; fi
+          python nettoyage.py $ARGS
+
+      - name: Sauvegarder le manifest
+        if: ${{ !inputs.dry_run }}
+        run: |
+          git config user.name "IneArt AI Bot"
+          git config user.email "actions@github.com"
+          git add prospection/data/manifest.json
+          git diff --cached --quiet || git commit -m "Nettoyage des maquettes expirees $(date '+%d/%m/%Y')"
+          git push

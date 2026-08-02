@@ -40,6 +40,13 @@ OVERPASS_MIRRORS = [
     "https://overpass.osm.ch/api/interpreter",
 ]
 
+NOMINATIM = "https://nominatim.openstreetmap.org/search"
+
+# Filet de securite : la Belgique entiere. Sans cela, une commune homonyme
+# ailleurs en Europe (il existe un Huy en Saxe-Anhalt) remonte dans les
+# resultats.
+BBOX_BELGIQUE = (49.40, 2.45, 51.55, 6.45)  # sud, ouest, nord, est
+
 USER_AGENT = "IneArt-Prospection/1.0 (contact: info@ineart.be)"
 
 # Categories OSM retenues : tout ce qui est une activite commerciale locale.
@@ -76,11 +83,47 @@ def slugifier(texte):
     return re.sub(r"-+", "-", texte) or "societe"
 
 
+def resoudre_communes(communes):
+    """Traduit des noms de communes en identifiants de zones OSM belges.
+
+    Passer par Nominatim avec countrycodes=be evite de ramasser les communes
+    homonymes d'autres pays.
+    """
+    identifiants = []
+    for commune in communes:
+        nom = commune.strip()
+        try:
+            reponse = requests.get(
+                NOMINATIM,
+                params={"q": nom, "countrycodes": "be", "format": "json",
+                        "limit": 3, "addressdetails": 1},
+                headers={"User-Agent": USER_AGENT},
+                timeout=30,
+            )
+            reponse.raise_for_status()
+            for resultat in reponse.json():
+                if resultat.get("osm_type") == "relation":
+                    identifiants.append(3600000000 + int(resultat["osm_id"]))
+                    print("  %s -> zone OSM %d" % (nom, identifiants[-1]))
+                    break
+            else:
+                print("  ! %s : aucune relation trouvee en Belgique" % nom)
+        except Exception as erreur:  # noqa: BLE001
+            print("  ! Nominatim indisponible pour %s (%s)" % (nom, erreur))
+    return identifiants
+
+
 def interroger_overpass(communes):
     """Interroge Overpass avec bascule automatique entre les miroirs."""
-    noms = "|".join(re.escape(c.strip()) for c in communes)
-    zones = ('area["name"~"^(%s)$"]["boundary"="administrative"]'
-             '["admin_level"="8"]->.z;' % noms)
+    identifiants = resoudre_communes(communes)
+    if identifiants:
+        zones = "(%s)->.z;" % "".join("area(%d);" % i for i in identifiants)
+    else:
+        # Repli : recherche par nom, bornee ensuite a la Belgique.
+        noms = "|".join(re.escape(c.strip()) for c in communes)
+        zones = ('area["name"~"^(%s)$"]["boundary"="administrative"]'
+                 '["admin_level"="8"]->.z;' % noms)
+        print("  repli sur la recherche par nom (filtrage Belgique applique)")
     requete = REQUETE_OVERPASS.replace("{zones}", zones)
 
     derniere_erreur = None
@@ -207,16 +250,24 @@ def collecter_osm(communes):
     elements = interroger_overpass(communes)
     print("  %d objets recus" % len(elements))
 
-    prospects, vus = [], set()
+    sud, ouest, nord, est = BBOX_BELGIQUE
+    prospects, vus, hors_zone = [], set(), 0
     for element in elements:
         fiche = normaliser(element)
         if not fiche:
+            continue
+        lat, lon = fiche.get("lat"), fiche.get("lon")
+        if lat is None or not (sud <= lat <= nord and ouest <= lon <= est):
+            hors_zone += 1
             continue
         cle = (fiche["nom"].lower(), fiche["adresse"]["ligne1"].lower())
         if cle in vus:
             continue
         vus.add(cle)
         prospects.append(fiche)
+
+    if hors_zone:
+        print("  %d objets ecartes : hors Belgique (commune homonyme)" % hors_zone)
 
     print("  %d etablissements nommes et dedoublonnes" % len(prospects))
     return prospects

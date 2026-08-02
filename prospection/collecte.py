@@ -66,6 +66,22 @@ out center tags;
 """
 
 CLES_SITE = ("website", "contact:website", "url", "website:menu", "brand:website")
+
+# Enseignes de chaine et services publics : ce ne sont pas des prospects.
+# Une franchise depend du site de son groupe, une administration a le sien.
+CLES_ENSEIGNE = ("brand", "brand:wikidata", "operator:wikidata")
+
+OPERATEURS_PUBLICS = re.compile(
+    r"\b(ville|commune|cpas|province|r[ée]gion|f[ée]d[ée]ration|"
+    r"communaut[ée]|asbl communale|infrabel|forem|onem)\b", re.I)
+
+NOMS_EXCLUS = re.compile(
+    r"\b(delhaize|carrefour|aldi|lidl|colruyt|okay|spar|intermarch[ée]|match|"
+    r"louis delhaize|cora|makro|action|casa|kruidvat|di\b|hubo|brico|gamma|"
+    r"basic.?fit|mcdonald|quick|burger\s?king|panos|hema|jbc|zeb|c&a|bel&bo|"
+    r"kr[ée]fel|mediamarkt|fnac|standaard boekhandel|club\b|torfs|"
+    r"espace public num[ée]rique|biblioth[èe]que|maison communale|h[ôo]tel de ville|"
+    r"office du tourisme|piscine communale|centre culturel)\b", re.I)
 CLES_SOCIAL = ("contact:facebook", "facebook", "contact:instagram", "instagram")
 CLES_TEL = ("phone", "contact:phone", "contact:mobile", "mobile")
 CLES_MAIL = ("email", "contact:email")
@@ -205,11 +221,27 @@ def segmenter(tags):
     return "A", "", ""
 
 
+def est_exclu(tags, nom):
+    """Chaines, franchises et services publics : hors cible."""
+    if any(tags.get(cle) for cle in CLES_ENSEIGNE):
+        return "enseigne de chaine"
+    if OPERATEURS_PUBLICS.search(tags.get("operator", "")):
+        return "service public"
+    if tags.get("office") == "government" or tags.get("government"):
+        return "administration"
+    if NOMS_EXCLUS.search(nom):
+        return "enseigne connue"
+    return ""
+
+
 def normaliser(element):
     tags = element.get("tags", {})
     nom = tags.get("name", "").strip()
     if not nom:
         return None
+    motif = est_exclu(tags, nom)
+    if motif:
+        return {"_exclu": motif, "nom": nom}
 
     segment, site, social = segmenter(tags)
     adresse = construire_adresse(tags)
@@ -251,10 +283,13 @@ def collecter_osm(communes):
     print("  %d objets recus" % len(elements))
 
     sud, ouest, nord, est = BBOX_BELGIQUE
-    prospects, vus, hors_zone = [], set(), 0
+    prospects, vus, hors_zone, exclus = [], set(), 0, []
     for element in elements:
         fiche = normaliser(element)
         if not fiche:
+            continue
+        if fiche.get("_exclu"):
+            exclus.append("%s (%s)" % (fiche["nom"], fiche["_exclu"]))
             continue
         lat, lon = fiche.get("lat"), fiche.get("lon")
         if lat is None or not (sud <= lat <= nord and ouest <= lon <= est):
@@ -268,6 +303,10 @@ def collecter_osm(communes):
 
     if hors_zone:
         print("  %d objets ecartes : hors Belgique (commune homonyme)" % hors_zone)
+    if exclus:
+        print("  %d objets ecartes : chaines et services publics" % len(exclus))
+        for libelle in exclus[:12]:
+            print("     - %s" % libelle)
 
     print("  %d etablissements nommes et dedoublonnes" % len(prospects))
     return prospects

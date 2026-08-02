@@ -126,73 +126,84 @@ Pour fermer réellement l'accès, retirez les fichiers du serveur.
 
 ## Les partis pris de conception
 
-### Épuré veut dire enlever, pas alléger
+### Ce qui a été refait, et pourquoi
 
-Une seule colonne de lecture, presque aucun cadre, aucune carte empilée. Les
-séparations viennent de l'espace et de rares filets d'un pixel. La seule chose
-qui échappe à la colonne, ce sont les photographies — un chantier se juge en
-grand.
+Une première version, blanche et très aérée avec une serif éditoriale, a été
+rejetée par le client. Le diagnostic était juste : élégante, mais froide, et
+sans rapport avec un artisan qui se déplace en camionnette. La page ressemblait
+à une revue de décoration, pas à quelqu'un qu'on appelle un dimanche parce que
+la chaudière a lâché.
 
-### Le rythme des bandes
+La direction actuelle vient de la base de styles `ui-ux-pro-max`, qui recommande
+pour ce type d'entreprise le registre **Vibrant & Block-based** : blocs pleins,
+contraste maximal, typographie énorme. Le site est bâti comme une signalétique
+de chantier.
+
+### Le système en une règle
+
+Chaque zone est un bloc plein, et sa couleur de fond décide de la couleur du
+texte. Il n'y a rien d'autre à retenir :
+
+| Fond | Texte | Contraste |
+|---|---|---|
+| noir `#0c0d10` | blanc | 19,4:1 |
+| orange `#f2570a` | **noir** | 5,7:1 |
+| bleu `#0b57bd` | blanc | 6,8:1 |
+| blanc / papier | noir | 17–19:1 |
+
+**L'orange porte du texte noir, pas blanc.** C'est ce qui donne le registre du
+panneau de chantier — orange et noir — et c'est aussi le seul choix lisible :
+le blanc n'y tient que 3,4:1, sous le seuil d'accessibilité.
+
+Les trois couleurs sont les siennes, relevées sur son camion. Chacune garde son
+domaine : l'orange pour la chaleur et l'urgence, le bleu pour l'eau, le noir
+pour la structure.
+
+### Les quatre pavés de métier
+
+Le cœur du système. Chaque activité occupe un pavé entier de couleur — orange,
+bleu, papier, noir — assez grand pour se lire de loin. Deux colonnes et non
+quatre : à quatre, les pavés deviennent des vignettes et l'effet disparaît.
+
+### Le rythme
 
 ```
-blanc   accueil          la photo fait l'événement
-brume   nos métiers      gris tiré vers l'eau
-NOIR    dépannage        bande pleine largeur, titre orange
-blanc   réalisations     les photos respirent
-BLEU    avis             son meilleur atout, sa propre zone
-sable   zone d'interv.   gris tiré vers la flamme
-blanc   contact          le formulaire doit être calme
-NOIR    pied de page
+noir     accueil + trois chiffres
+blanc    les quatre pavés de métier
+ORANGE   dépannage, bande pleine largeur
+papier   chantiers
+BLEU     avis
+blanc    zone d'intervention
+noir     contact
+noir     pied de page
 ```
 
-Une page d'un seul ton se lit comme un document ; une page qui change de sol à
-chaque section se parcourt. Les deux gris pâles — l'un vers le bleu, l'autre
-vers l'orange — sont presque indiscernables isolément, mais il suffit qu'ils
-soient différents pour que deux sections voisines ne se confondent pas.
+### La typographie
 
-Les trois zones fortes sont espacées, jamais accolées : noir, puis du clair,
-puis bleu. Deux aplats sombres à la suite feraient un bloc.
+- **Bricolage Grotesque**, figée en taille optique d'affiche (opsz 96), de 600
+  à 800. Ses terminaisons coupées tiennent le gros corps sans devenir molles —
+  ce qu'il faut pour des titres qui remplissent un bloc de couleur. Interlignes
+  à 0,94, interlettrage à −0,035em : le titre doit occuper sa zone.
+- **Public Sans** pour le texte. Dessinée pour l'administration américaine,
+  faite pour être lue par tout le monde, sans style à défendre. C'est
+  exactement le rôle qu'on lui demande à côté de titres aussi présents.
 
-C'est le troisième registre de la série, et il est distinct des deux autres :
-la ferronnerie était sombre et photographique, le garage dense et informatif,
-celui-ci est clair et aéré.
+### Les boutons sont rectangulaires
 
-### Ses trois couleurs, chacune son domaine
+Un rayon arrondi adoucirait un système qui tient justement par la franchise de
+ses angles.
 
-Relevées sur son camion : un bandeau noir, une flamme orange, des gouttes bleues.
+### Le mouvement
 
-- **Noir `#111418`** — la structure : l'encre, le bloc dépannage, le pied de page.
-- **Flamme `#e2601c`** — la chaleur : chauffage, chaudière, urgence.
-- **Bleu `#1f6fb2`** — l'eau : sanitaire, salle de bain.
+Deux gestes seulement. Le premier écran monte au chargement ; les quatre pavés
+de métier entrent en cascade décalée de 60 ms quand ils arrivent dans le champ,
+dans l'ordre de lecture.
 
-Aucune ne sert d'ornement, et c'est ce qui permet d'en tenir trois sans que la
-page devienne bariolée : un lecteur qui voit de l'orange sait qu'on parle de
-chaleur avant même d'avoir lu le mot.
-
-Le bloc dépannage est le seul aplat plein de la page — noir, titre orange,
-bouton orange. C'est exactement l'ordre des couleurs sur son camion.
-
-Le noir porte une pointe de bleu plutôt qu'un `#000` : le noir absolu écrase sur
-écran, et les gris qui en descendent gardent ainsi une parenté avec l'eau.
-
-**Deux valeurs d'orange**, parce qu'un même orange ne peut pas tout faire. La
-vive (`#e2601c`) sert de couleur d'écriture sur le noir ; la sourde
-(`#c44f13`) sert de fond sous du texte blanc. L'orange exact du camion tombe à
-3,6:1 avec du blanc dessus — juste, mais illisible pour qui a la vue basse.
-
-### Une serif, pour un chauffagiste
-
-Fraunces, figée en taille optique de titrage et légèrement adoucie. Le réflexe
-serait une grotesque technique ; mais la moitié de son métier, c'est la salle de
-bain — du confort domestique, pas de la tuyauterie industrielle. La serif dit
-la maison. Karla, humaniste, porte le texte.
-
-### Le dépannage isolé
-
-Une chaudière en panne en hiver est le seul moment où l'on cherche un
-chauffagiste dans l'urgence. Ce cas a donc son propre bloc, et c'est la seule
-zone chaude de la page.
+Le CSS ne masque les pavés que si l'attribut `data-cascade` vaut `attente`, et
+seul le script pose cette valeur — juste avant d'installer l'observateur qui
+saura les révéler. Sans JavaScript, ou sans `IntersectionObserver`, les blocs
+restent simplement visibles. Une animation d'apparition qui laisse le contenu
+invisible en cas d'échec est le défaut le plus courant du procédé.
 
 ### Le formulaire compose un e-mail
 

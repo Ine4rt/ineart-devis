@@ -45,15 +45,15 @@
     var page = document.createElement("div");
     page.className = "expire";
     page.innerHTML =
-      '<div class="expire__box">' +
+      '<div class="expire__boite">' +
       '<svg viewBox="0 0 32 32" aria-hidden="true">' +
-      '<path d="M16 3c3.4 4.6 5.7 7 5.7 10.3a5.7 5.7 0 0 1-11.4 0C10.3 10 12.6 7.6 16 3z" fill="#e2601c"/>' +
-      '<path d="M16 29.5c-2.4 0-4.3-1.9-4.3-4.2 0-2.5 2.4-4.5 4.3-7 1.9 2.5 4.3 4.5 4.3 7 0 2.3-1.9 4.2-4.3 4.2z" fill="#1f6fb2"/>' +
+      '<path d="M16 3c3.4 4.6 5.7 7 5.7 10.3a5.7 5.7 0 0 1-11.4 0C10.3 10 12.6 7.6 16 3z" fill="#f2570a"/>' +
+      '<path d="M16 29.5c-2.4 0-4.3-1.9-4.3-4.2 0-2.5 2.4-4.5 4.3-7 1.9 2.5 4.3 4.5 4.3 7 0 2.3-1.9 4.2-4.3 4.2z" fill="#0b57bd"/>' +
       "</svg>" +
       "<h1>Cette démonstration est terminée</h1>" +
       "<p>Ce site était une proposition présentée à Chauffage Demarche Pascal " +
       "par IneWeb. La période de consultation est écoulée.</p>" +
-      '<a class="btn btn--eau" href="mailto:' + DEMO.contact +
+      '<a class="btn btn--orange" href="mailto:' + DEMO.contact +
       '?subject=Site%20Chauffage%20Demarche">Nous écrire</a>' +
       "</div>";
     document.body.replaceChildren(page);
@@ -120,12 +120,41 @@
     });
   }
 
+  /* --- Cascade des blocs de métier ----------------------------------------
+     Les quatre pavés de couleur entrent l'un après l'autre, décalés de 60 ms,
+     dans l'ordre de lecture. C'est le seul mouvement au défilement de la page.
+
+     Le CSS ne masque les blocs que si l'attribut vaut « attente ». Ce script
+     est donc le seul à pouvoir les cacher, et il ne le fait qu'après s'être
+     assuré qu'il saura les révéler : sans lui, ou si IntersectionObserver
+     manque, les blocs restent simplement visibles.
+     ---------------------------------------------------------------------- */
+  var cascade = document.querySelector("[data-cascade]");
+
+  if (cascade && "IntersectionObserver" in window) {
+    /* On masque seulement maintenant : à cet instant, on sait qu'on saura
+       révéler. */
+    cascade.setAttribute("data-cascade", "attente");
+
+    var veilleuse = new IntersectionObserver(
+      function (entrees, obs) {
+        entrees.forEach(function (entree) {
+          if (!entree.isIntersecting) return;
+          cascade.setAttribute("data-cascade", "entre");
+          obs.disconnect();
+        });
+      },
+      { rootMargin: "0px 0px -12% 0px" }
+    );
+    veilleuse.observe(cascade);
+  }
+
   /* --- Navigation : marquer la section en cours ---------------------------
      Sur une page unique, savoir où l'on se trouve est la seule réponse à
      « où suis-je ». L'observateur ne fait qu'ajouter une couleur : s'il ne
      s'exécute pas, la navigation reste parfaitement utilisable.
      ---------------------------------------------------------------------- */
-  var liens = document.querySelectorAll('.nav__links a[href^="#"]');
+  var liens = document.querySelectorAll('.nav__liens a[href^="#"]');
   if (!liens.length || !("IntersectionObserver" in window)) return;
 
   var parId = {};

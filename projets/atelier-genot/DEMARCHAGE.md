@@ -13,40 +13,53 @@ Quatre textes prêts à envoyer, dans l'ordre où ils servent :
 
 ## 1. Premier mail — la version courte
 
-C'est celle à utiliser. Elle tient sur un écran de téléphone sans faire défiler,
-et elle n'a qu'un seul but : le faire cliquer sur le lien. Le site fait le
-reste du travail — c'est pour ça qu'on l'a construit.
+C'est celle à utiliser. Elle annonce la démarche sans détour, énumère ce que le
+site apporte, donne le prix et le lien. Aucun compliment : le destinataire sait
+juger son propre travail, et un artisan reconnaît un démarcheur qui l'amadoue.
 
 **Destinataire :** ateliergenot@hotmail.com
 
-**Objet :** `Votre portail rue du Frêne — et un site pour l'Atelier Genot`
+**Objet :** `Un site web pour l'Atelier Genot — 250 € puis 50 €/an`
 
 > *Variantes d'objet :*
-> - `J'ai fait un site pour l'Atelier Genot`
-> - `Introuvable sur Google — j'ai fait quelque chose`
+> - `Proposition : site web pour l'Atelier Genot`
+> - `J'ai réalisé un site pour l'Atelier Genot — à voir avant le 8 août`
 
 ---
 
 Bonjour,
 
-Votre portail à découpes florales rue du Frêne est un beau travail. Peu
-d'ateliers savent faire ça.
+Je m'appelle Dimitri Vedea. Je crée et j'entretiens des sites web pour les
+indépendants et les petites entreprises de la région.
 
-Dommage que personne ne le trouve sur Google. J'ai cherché « ferronnier
-Marchin » : vous n'y êtes pas, vos concurrents oui.
-
-Alors plutôt que de vous proposer un site, je l'ai fait. Avec vos photos, vos
-coordonnées, vos prestations :
+Je vous écris sans que vous m'ayez rien demandé, et je préfère le dire
+directement : j'ai réalisé un site pour l'Atelier Genot, avec vos photos, vos
+coordonnées et vos prestations. Vous pouvez le voir ici :
 
 **https://dev.ineart.be/atelier-genot/**
 
-Deux minutes suffisent pour le regarder, de préférence sur votre téléphone. Il
-reste en ligne jusqu'au 8 août.
+Ce qu'il vous apporte :
 
-250 € une seule fois pour la mise en service, puis 50 € par an pour le nom de
-domaine `atelier-genot.be`, l'hébergement et le suivi. Sans engagement.
+- **Vous apparaissez sur Google** quand quelqu'un cherche un ferronnier dans la
+  région. Aujourd'hui, en tapant « ferronnier Marchin », on ne vous trouve pas.
+- **Vos réalisations restent visibles en permanence**, au lieu de descendre dans
+  un fil Facebook au fil des publications.
+- **Les demandes de devis arrivent par écrit** dans votre boîte mail, avec le
+  type d'ouvrage, les dimensions et le délai souhaité.
+- **Votre numéro est cliquable sur chaque page.** Sur téléphone, un bouton
+  « Appeler » reste affiché en bas de l'écran en permanence.
+- **Un site rassure** quand quelqu'un s'apprête à commander un escalier ou un
+  portail à plusieurs milliers d'euros. Entre deux ateliers, c'est souvent ce
+  qui départage.
 
-Un mot en réponse suffit — même pour dire non.
+Le tarif : **250 €** une seule fois pour la mise en service, puis **50 € par
+an** pour le nom de domaine `atelier-genot.be`, l'hébergement et le suivi. Sans
+engagement de durée.
+
+Le site reste consultable jusqu'au 8 août.
+
+Si cela vous intéresse, répondez-moi simplement. Si ce n'est pas le cas,
+dites-le moi aussi : je n'insisterai pas.
 
 Bien à vous,
 
@@ -55,9 +68,11 @@ IneWeb — info@ineart.be
 
 ---
 
-*Environ 130 mots. Si vous joignez des captures : deux au maximum — l'accueil et
-les réalisations. Au-delà, le mail passe en « pièces jointes lourdes » chez
-certains fournisseurs et perd la moitié de ses lecteurs.*
+*Environ 210 mots. La liste se parcourt en diagonale, ce qui compte plus que le
+nombre de mots : l'œil accroche les cinq débuts de ligne en gras même sans lire
+le reste. Si vous joignez des captures : deux au maximum — l'accueil et les
+réalisations. Au-delà, le mail passe en « pièces jointes lourdes » chez certains
+fournisseurs et perd la moitié de ses lecteurs.*
 
 ---
 
@@ -74,29 +89,20 @@ déjà abouti et que rien n'est laissé au hasard.
 
 Bonjour,
 
-Je me permets de vous écrire parce que j'ai fait quelque chose d'inhabituel :
-plutôt que de vous proposer un site, je l'ai réalisé.
+Merci de votre retour. Voici le détail de ce que je propose.
 
-Il est en ligne, avec vos photos, vos coordonnées et vos prestations :
+Le site est en ligne, avec vos photos, vos coordonnées et vos prestations :
 
 **https://dev.ineart.be/atelier-genot/**
 
-Prenez deux minutes pour le parcourir, sur ordinateur ou sur téléphone. Rien à
-installer, rien à signer — regardez, simplement.
+### Le problème que ça résout
 
-### Pourquoi je vous ai contacté
+Facebook ne remonte pas dans les résultats Google, et un fil défile. La personne
+qui cherche aujourd'hui un portail sur mesure dans la région de Huy ne verra
+donc jamais vos publications, même les plus récentes.
 
-J'ai cherché « ferronnier Marchin » sur Google. Vous n'y êtes pas. Vos
-concurrents, oui.
-
-Votre page Facebook est bien tenue, et le portail à découpes florales que vous
-avez posé rue du Frêne est un travail que peu d'ateliers savent faire. Mais
-Facebook ne remonte pas dans les recherches Google, et un fil défile : la
-personne qui cherche aujourd'hui un portail sur mesure dans la région de Huy
-ne verra jamais ce portail-là.
-
-C'est exactement ce qu'un site répare. Pas de la publicité — de la visibilité
-au moment où quelqu'un cherche.
+Un site règle exactement ça. Ce n'est pas de la publicité — c'est de la
+visibilité au moment précis où quelqu'un cherche un ferronnier.
 
 ### Ce que ce site change concrètement
 

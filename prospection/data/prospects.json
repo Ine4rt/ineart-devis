@@ -1,41 +1,5 @@
 [
   {
-    "id": "n12088945255",
-    "nom": "Anila's choice",
-    "slug": "anila-s-choice",
-    "segment": "D",
-    "categorie_osm": "clothes",
-    "categorie_google": "Magasin de vêtements",
-    "adresse": {
-      "ligne1": "",
-      "ligne2": "",
-      "complete": "",
-      "code_postal": "",
-      "ville": ""
-    },
-    "lat": 50.5185819,
-    "lon": 5.2408467,
-    "telephone": "+32 470 37 52 16",
-    "email": "",
-    "facebook": "https://www.facebook.com/anilaschoice/",
-    "site_declare": "https://www.csbya.com/",
-    "horaires": [
-      [
-        "Mardi à Samedi",
-        "10:00-18:00"
-      ]
-    ],
-    "description": "",
-    "note": null,
-    "avis": null,
-    "photos": [],
-    "capture_google": "data/captures/anila-s-choice-google.png",
-    "capture_facebook": "",
-    "source": "openstreetmap+google",
-    "osm_url": "https://www.openstreetmap.org/node/12088945255",
-    "maps_url": "https://www.google.com/maps/search/Anila%27s%20choice%20Huy%20Belgique"
-  },
-  {
     "id": "n13152069883",
     "nom": "Arti-cuir",
     "slug": "arti-cuir",
@@ -62,8 +26,8 @@
       ]
     ],
     "description": "",
-    "note": null,
-    "avis": null,
+    "note": 5.0,
+    "avis": 6,
     "photos": [
       "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnVO2PVqLzqSxDnOlX6aalSXBlvB2SPG9TbLd4C3MNCNPyICW8WRes7aM572qAXow4IvTuY6TkB42tpsO-KM8mChc7Gf0vx4bjdUUupx1g6HpYSll9WpatyAu7Obh8ZhFIwjcRaSQ=w1200-h800-p-k-no",
       "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnVO2PVqLzqSxDnOlX6aalSXBlvB2SPG9TbLd4C3MNCNPyICW8WRes7aM572qAXow4IvTuY6TkB42tpsO-KM8mChc7Gf0vx4bjdUUupx1g6HpYSll9WpatyAu7Obh8ZhFIwjcRaSQ=w1200-h800-k-no",
@@ -152,8 +116,8 @@
       ]
     ],
     "description": "",
-    "note": null,
-    "avis": null,
+    "note": 4.6,
+    "avis": 134,
     "photos": [
       "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWl_Z9jzGJkRCtiB2O5ZuMn7mvqCVyy0Ch9ME0Fe-IIo6sLALpnL-MAThXbne7WR-zHi3dN4Hxh_68ZW54pv7paEKvXqz1_mSSr8oJv0X243Mka1Rf1Xfdvfac5mt7tp_p3Ja8Wx=w1200-h800-p-k-no",
       "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWl_Z9jzGJkRCtiB2O5ZuMn7mvqCVyy0Ch9ME0Fe-IIo6sLALpnL-MAThXbne7WR-zHi3dN4Hxh_68ZW54pv7paEKvXqz1_mSSr8oJv0X243Mka1Rf1Xfdvfac5mt7tp_p3Ja8Wx=w1200-h800-k-no",
@@ -188,8 +152,8 @@
     "site_declare": "",
     "horaires": [],
     "description": "",
-    "note": null,
-    "avis": null,
+    "note": 3.7,
+    "avis": 9,
     "photos": [
       "https://lh3.googleusercontent.com/a-/ALV-UjWw5Z_OJcPUaTuTB16nocWk3DTup3WGp7zitFgsfRnJx9HxPX8=w1200-h800-p-rp-mo-ba12-br100",
       "https://lh3.googleusercontent.com/a/ACg8ocLcPvNT1G6rHHGkBjtE1-QgXVNSoAifKvIDl3ENf_6zSatvbw=w1200-h800-p-rp-mo-br100",
@@ -237,8 +201,8 @@
       ]
     ],
     "description": "",
-    "note": null,
-    "avis": null,
+    "note": 4.5,
+    "avis": 186,
     "photos": [
       "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnDcCez2stIohg-juWO-W0ydD4c0HzTFAjwISpCsD49Tj7fo2_0jBeb4lH1Mk0taTqrp1THMnsNRYcQ0pvz2qtWrbQxa_C2xpSoKpR41ZB8NpHKuP5jvBNExGfFssKIikOM4XOyXCrf_gxE=w1200-h800-p-k-no",
       "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnDcCez2stIohg-juWO-W0ydD4c0HzTFAjwISpCsD49Tj7fo2_0jBeb4lH1Mk0taTqrp1THMnsNRYcQ0pvz2qtWrbQxa_C2xpSoKpR41ZB8NpHKuP5jvBNExGfFssKIikOM4XOyXCrf_gxE=w1200-h800-k-no",
@@ -250,88 +214,6 @@
     "source": "openstreetmap+google",
     "osm_url": "https://www.openstreetmap.org/node/13462210830",
     "maps_url": "https://www.google.com/maps/search/Frit%27Huy%204500%20Huy"
-  },
-  {
-    "id": "w753082709",
-    "nom": "L'ours à lunettes",
-    "slug": "l-ours-a-lunettes",
-    "segment": "D",
-    "categorie_osm": "books",
-    "categorie_google": "Librairie",
-    "adresse": {
-      "ligne1": "Grand'Place 9",
-      "ligne2": "",
-      "complete": "Grand'Place 9",
-      "code_postal": "",
-      "ville": ""
-    },
-    "lat": 50.5177932,
-    "lon": 5.2411093,
-    "telephone": "+32 85 31 58 52",
-    "email": "infours70@gmail.com",
-    "facebook": "https://www.facebook.com/people/Librairie-Lours-%C3%A0-lunettes/100075591890869/",
-    "site_declare": "https://www.librel.be/magasins/huy/L-ours-a-lunettes-6310/",
-    "horaires": [
-      [
-        "Lundi à Samedi",
-        "10:00-18:00"
-      ]
-    ],
-    "description": "",
-    "note": null,
-    "avis": null,
-    "photos": [
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWmeNPrOSOcloVrBRmvWgVg9rYfl_9GVEbQnUHTwqtlvLPSc0pzlda4mUwAZNuwMD-XupRHA5Eb0UFCtnWGVNFGyxS3Wm45ZR48NoAg361L47tliB18e6_ryFQGqz4--DIdot4WyC4D784MM=w1200-h800-p-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWmeNPrOSOcloVrBRmvWgVg9rYfl_9GVEbQnUHTwqtlvLPSc0pzlda4mUwAZNuwMD-XupRHA5Eb0UFCtnWGVNFGyxS3Wm45ZR48NoAg361L47tliB18e6_ryFQGqz4--DIdot4WyC4D784MM=w1200-h800-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWmeNPrOSOcloVrBRmvWgVg9rYfl_9GVEbQnUHTwqtlvLPSc0pzlda4mUwAZNuwMD-XupRHA5Eb0UFCtnWGVNFGyxS3Wm45ZR48NoAg361L47tliB18e6_ryFQGqz4--DIdot4WyC4D784MM=w1200-h800-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWkjYBQepeKzvDmcuRovDXdZvCwrtWF7lSKA58MMYZ9MgUmasVLBB6bwuH7R3QEZ7wMbXHJqCw4jlR_dGQILZesP8gr3Gy-p55I9kAy7dJPaLUc19ZEK03WGi5AfDw3a12F9R7Ot=w1200-h800-k-no"
-    ],
-    "capture_google": "data/captures/l-ours-a-lunettes-google.png",
-    "capture_facebook": "",
-    "source": "openstreetmap+google",
-    "osm_url": "https://www.openstreetmap.org/way/753082709",
-    "maps_url": "https://www.google.com/maps/search/L%27ours%20%C3%A0%20lunettes%20Huy%20Belgique"
-  },
-  {
-    "id": "w550274456",
-    "nom": "Le 31",
-    "slug": "le-31",
-    "segment": "D",
-    "categorie_osm": "fast_food",
-    "categorie_google": "Restaurant",
-    "adresse": {
-      "ligne1": "Avenue de l'Industrie 26",
-      "ligne2": "4500 Tihange",
-      "complete": "Avenue de l'Industrie 26, 4500 Tihange",
-      "code_postal": "4500",
-      "ville": "Tihange"
-    },
-    "lat": 50.5330177,
-    "lon": 5.261439,
-    "telephone": "+3285 21 65 40",
-    "email": "",
-    "facebook": "https://www.facebook.com/Le-31-339458939593109/",
-    "site_declare": "http://www.snacktavernele31.be/",
-    "horaires": [
-      [
-        "Lundi à Dimanche",
-        "10:00-21:30"
-      ]
-    ],
-    "description": "",
-    "note": null,
-    "avis": null,
-    "photos": [
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlz8ya8tVNlKyluenamcz93oVfGObzTui58OZIkbCCOitC_9H_E6Wnmf4ExlCKsP_odT6kAogW_jlpHNu-TqiBYvIQHICA7XHDpakzlzfHXXUNE-cg_aRoYux9iuU4iVj5U1dU79Q=w1200-h800-p-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlz8ya8tVNlKyluenamcz93oVfGObzTui58OZIkbCCOitC_9H_E6Wnmf4ExlCKsP_odT6kAogW_jlpHNu-TqiBYvIQHICA7XHDpakzlzfHXXUNE-cg_aRoYux9iuU4iVj5U1dU79Q=w1200-h800-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWmWkLpNoF4HRiMcWWw2x1udpEzz_rYtEchX9G6Hsizto-2d9fw1RMrYZ0ACau8NhSwVHTgrui41sXJZ2jWaQyHfKnIVGXuowQkgLdPz3posy8pbevarBbPf4VUDLVtTR5NRiuoLMw=w1200-h800-p-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWkLpoYbb04prSvt7lqkEYlF6fnWOgA1UmWxKPdrjRIxEC9okLAQVi6G5ElTc5pzexrNi1SXYvwm9UCt42dHqZ3i1428_OGo7bbxkYIUiDAfMrGS6-KCpsNW7cEfT8b8W9IHHC8=w1200-h800-p-k-no"
-    ],
-    "capture_google": "data/captures/le-31-google.png",
-    "capture_facebook": "",
-    "source": "openstreetmap+google",
-    "osm_url": "https://www.openstreetmap.org/way/550274456",
-    "maps_url": "https://www.google.com/maps/search/Le%2031%204500%20Tihange"
   },
   {
     "id": "n9962561407",
@@ -360,8 +242,8 @@
       ]
     ],
     "description": "",
-    "note": null,
-    "avis": null,
+    "note": 4.9,
+    "avis": 24,
     "photos": [
       "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnRPQ0Q22aXnz0_oh3FJsEdXtUUTriQFnXamkP3H4DL6oR66VNMLWD3NAjKtvVxpAJRI9jPmYouOvI_KSUs9mV22Gvl3j5Wg0XFGdO-SWL8KJnqd-3Ipq5UO5MvJAwGhR2Dx5aUrA=w1200-h800-p-k-no",
       "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnRPQ0Q22aXnz0_oh3FJsEdXtUUTriQFnXamkP3H4DL6oR66VNMLWD3NAjKtvVxpAJRI9jPmYouOvI_KSUs9mV22Gvl3j5Wg0XFGdO-SWL8KJnqd-3Ipq5UO5MvJAwGhR2Dx5aUrA=w1200-h800-k-no",
@@ -405,8 +287,8 @@
       ]
     ],
     "description": "",
-    "note": null,
-    "avis": null,
+    "note": 4.6,
+    "avis": 62,
     "photos": [
       "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlHSDlYdsUU_Q7fKxH38Q1LdDw-O0IawXwheataHFeNzmQBOWIrogrYkXXSItA1uLcYJnq5fez62ln-yS6C_YrgCWpZx9CUlfD7Z9l-XGf5BVL9pmnedRndAlPVj0RfGKepAkgn=w1200-h800-p-k-no",
       "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlHSDlYdsUU_Q7fKxH38Q1LdDw-O0IawXwheataHFeNzmQBOWIrogrYkXXSItA1uLcYJnq5fez62ln-yS6C_YrgCWpZx9CUlfD7Z9l-XGf5BVL9pmnedRndAlPVj0RfGKepAkgn=w1200-h800-k-no",
@@ -441,8 +323,8 @@
     "site_declare": "",
     "horaires": [],
     "description": "",
-    "note": null,
-    "avis": null,
+    "note": 4.7,
+    "avis": 58,
     "photos": [
       "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlP1SYL5asAccC9K5-fCnz3GoYaXB2Tzj_ei74wUDPpTsaEa6f696a2hxnLL-XfhhrwtEUcRz_SXZa2CnLNk9QxtjZInD8lUQrg6aEI-sIS1LVsO0RbrEhY51_WvxdwxUF4I5Jd=w1200-h800-p-k-no",
       "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlP1SYL5asAccC9K5-fCnz3GoYaXB2Tzj_ei74wUDPpTsaEa6f696a2hxnLL-XfhhrwtEUcRz_SXZa2CnLNk9QxtjZInD8lUQrg6aEI-sIS1LVsO0RbrEhY51_WvxdwxUF4I5Jd=w1200-h800-k-no",
@@ -477,8 +359,8 @@
     "site_declare": "",
     "horaires": [],
     "description": "",
-    "note": null,
-    "avis": null,
+    "note": 3.3,
+    "avis": 47,
     "photos": [
       "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWn1U-fJfTgWi-Bsrr96eHJnpmLhTsmS2VdJ4kGzcZCf80xfeJJrRhJHZrJ65AWKM8JigaKP3Z5ke4EK2h4DR4Q8ur86q1fATfppsPN05LmspTJOvuNbNuqGg0ApFtL1Ye5F8aFJ7fHr5FKf=w1200-h800-p-k-no",
       "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWn1U-fJfTgWi-Bsrr96eHJnpmLhTsmS2VdJ4kGzcZCf80xfeJJrRhJHZrJ65AWKM8JigaKP3Z5ke4EK2h4DR4Q8ur86q1fATfppsPN05LmspTJOvuNbNuqGg0ApFtL1Ye5F8aFJ7fHr5FKf=w1200-h800-k-no",
@@ -513,8 +395,8 @@
     "site_declare": "",
     "horaires": [],
     "description": "",
-    "note": null,
-    "avis": null,
+    "note": 4.6,
+    "avis": 180,
     "photos": [
       "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWld-bGHlMzSBN-4ttOaj1dM7U4cgD8vaVupnUn09duCOSogCVOND0glergdkzrEOm_k6NjbnjvTzzsYAUSW050epCt8CnsZPIL3y-FfRVYc0MzBiA7zBtieoPfFHHr4AkVQZxOhIO7007Vh=w1200-h800-p-k-no",
       "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWld-bGHlMzSBN-4ttOaj1dM7U4cgD8vaVupnUn09duCOSogCVOND0glergdkzrEOm_k6NjbnjvTzzsYAUSW050epCt8CnsZPIL3y-FfRVYc0MzBiA7zBtieoPfFHHr4AkVQZxOhIO7007Vh=w1200-h800-k-no",
@@ -554,8 +436,8 @@
       ]
     ],
     "description": "",
-    "note": null,
-    "avis": null,
+    "note": 4.9,
+    "avis": 8,
     "photos": [
       "https://lh3.googleusercontent.com/a/ACg8ocKiP7ja-4PKNzBgb-YEe-T-nw9djh2BhQm-SBQznKr8zaYSGg=w1200-h800-p-rp-mo-br100",
       "https://lh3.googleusercontent.com/a/ACg8ocLlIAlScaRKDeVlg57HktgniYp3w7On9IJWoEOxPlwGMc7f3P4=w1200-h800-p-rp-mo-br100",
@@ -567,78 +449,6 @@
     "source": "openstreetmap+google",
     "osm_url": "https://www.openstreetmap.org/node/11763360265",
     "maps_url": "https://www.google.com/maps/search/Le%20petit%20march%C3%A9%20d%27Adeline%20Huy%20Belgique"
-  },
-  {
-    "id": "n12088965140",
-    "nom": "Librairie Diachron",
-    "slug": "librairie-diachron",
-    "segment": "D",
-    "categorie_osm": "books",
-    "categorie_google": "Librairie",
-    "adresse": {
-      "ligne1": "Rue des Augustins 4",
-      "ligne2": "",
-      "complete": "Rue des Augustins 4",
-      "code_postal": "",
-      "ville": ""
-    },
-    "lat": 50.5191716,
-    "lon": 5.2408581,
-    "telephone": "",
-    "email": "diachron.librairie@gmail.com",
-    "facebook": "https://www.facebook.com/profile.php?id=61552245698169&locale=fr_FR",
-    "site_declare": "https://diachron-rapidle.be/",
-    "horaires": [],
-    "description": "",
-    "note": null,
-    "avis": null,
-    "photos": [
-      "https://lh3.googleusercontent.com/a-/ALV-UjWMVwxF7wxhGoye8hqhKnr5rfUDBhG-ICSY-LWCPE_P4Uf7Bwx7=w1200-h800-p-rp-mo-br100",
-      "https://lh3.googleusercontent.com/a-/ALV-UjUma1npLinvMb7f3gFfmzs7ntUKlfCJv67J7UdMJqlfAOeZPGEN=w1200-h800-p-rp-mo-ba12-br100",
-      "https://lh3.googleusercontent.com/a/ACg8ocJfZ5wdfQnWSgKGyvvxlawWTnxJaPYv5bEEqJ6kxAutARTZIw=w1200-h800-p-rp-mo-br100",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnO1aixI3g2EvdqrzZJ0sj-0CDuXC68Kbs9-mwb5nAbHTSflE6KHnbApD7PfkSafGor3x39daCAJNXbsecZQJw4ynbaxH5EUcQZI5ypJZscdmr9zfQHgbXnodRkc6R_swXLNfxx=w1200-h800-p-k-no"
-    ],
-    "capture_google": "data/captures/librairie-diachron-google.png",
-    "capture_facebook": "",
-    "source": "openstreetmap+google",
-    "osm_url": "https://www.openstreetmap.org/node/12088965140",
-    "maps_url": "https://www.google.com/maps/search/Librairie%20Diachron%20Huy%20Belgique"
-  },
-  {
-    "id": "n12088960339",
-    "nom": "Maroquinerie Marguerite & Opaline Shoes",
-    "slug": "maroquinerie-marguerite-opaline-shoes",
-    "segment": "D",
-    "categorie_osm": "leather",
-    "categorie_google": "Magasin de sacs",
-    "adresse": {
-      "ligne1": "",
-      "ligne2": "",
-      "complete": "",
-      "code_postal": "",
-      "ville": ""
-    },
-    "lat": 50.5185185,
-    "lon": 5.2408944,
-    "telephone": "",
-    "email": "isaleplat@hotmail.com",
-    "facebook": "https://www.facebook.com/profile.php?id=100050779790304",
-    "site_declare": "https://temp-tgvozfwbqlvjlhgnzrhw.webadorsite.com/",
-    "horaires": [],
-    "description": "",
-    "note": null,
-    "avis": null,
-    "photos": [
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWmZfeCItFPUbw4fCMBMkEIL6ZVW_Kz1BJHahBCd8S7SDyR8n5nDfRb1H8-0pAXyT3gJbOVx-E9a9zZrVuF3hyN5UVV_0pKT4MSezU2o1jRZXrRk386426g3N12FYO06PCb9chEkRA=w1200-h800-p-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWmZfeCItFPUbw4fCMBMkEIL6ZVW_Kz1BJHahBCd8S7SDyR8n5nDfRb1H8-0pAXyT3gJbOVx-E9a9zZrVuF3hyN5UVV_0pKT4MSezU2o1jRZXrRk386426g3N12FYO06PCb9chEkRA=w1200-h800-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWmZfeCItFPUbw4fCMBMkEIL6ZVW_Kz1BJHahBCd8S7SDyR8n5nDfRb1H8-0pAXyT3gJbOVx-E9a9zZrVuF3hyN5UVV_0pKT4MSezU2o1jRZXrRk386426g3N12FYO06PCb9chEkRA=w1200-h800-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlDs_qtv6_qHCYIOj3w4oJmiZxmk1ncbLowbHadvGz-A36ImPLKoHrU9w2oGTIFT5Y7GJjA0W2wB4upOumJ3qakLg6kLhP7BMpOfiD5eJi-1FA43HeLcYfub8g7VgyDkaBI8iJn=w1200-h800-k-no"
-    ],
-    "capture_google": "data/captures/maroquinerie-marguerite-opaline-shoes-google.png",
-    "capture_facebook": "",
-    "source": "openstreetmap+google",
-    "osm_url": "https://www.openstreetmap.org/node/12088960339",
-    "maps_url": "https://www.google.com/maps/search/Maroquinerie%20Marguerite%20%26%20Opaline%20Shoes%20Huy%20Belgique"
   },
   {
     "id": "n12894409787",
@@ -671,8 +481,8 @@
       ]
     ],
     "description": "",
-    "note": null,
-    "avis": null,
+    "note": 4.8,
+    "avis": 13,
     "photos": [
       "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWkR7X11s-DiOlMjVrxvHPa5Jx-jC1kHW8spcdVpXnJQvr2q6Uo-b9FGGEVLRGJ-6FVxDzvBnEOe8XlwxQI8G9jTvqbb7Ypm7vYrzS3wdvtzBlNkGO-XdaGhDUBqFFW5YJBKksxpKhZwq3pT=w1200-h800-p-k-no",
       "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWkR7X11s-DiOlMjVrxvHPa5Jx-jC1kHW8spcdVpXnJQvr2q6Uo-b9FGGEVLRGJ-6FVxDzvBnEOe8XlwxQI8G9jTvqbb7Ypm7vYrzS3wdvtzBlNkGO-XdaGhDUBqFFW5YJBKksxpKhZwq3pT=w1200-h800-k-no",
@@ -712,8 +522,8 @@
       ]
     ],
     "description": "",
-    "note": null,
-    "avis": null,
+    "note": 4.8,
+    "avis": 44,
     "photos": [
       "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnFBM0v5tEZ_9O54Ieka5q6aMHOt_u4yRrBP3CJRr4YXGBGaR7CicbsDUYdZWkH7G-8-Oa-sIhECxINAQ737zH2Ocnz2JH2dy82Ujjos1aC1Xt_o-FCSIHa3s9ybYPbi6hXJGN0iQ=w1200-h800-p-k-no",
       "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnFBM0v5tEZ_9O54Ieka5q6aMHOt_u4yRrBP3CJRr4YXGBGaR7CicbsDUYdZWkH7G-8-Oa-sIhECxINAQ737zH2Ocnz2JH2dy82Ujjos1aC1Xt_o-FCSIHa3s9ybYPbi6hXJGN0iQ=w1200-h800-k-no",
@@ -757,8 +567,8 @@
       ]
     ],
     "description": "",
-    "note": null,
-    "avis": null,
+    "note": 5.0,
+    "avis": 42,
     "photos": [
       "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlgcdoTyuYCWmIjJ-sg0y-xa06hh6vm07eoWJgVAnCGGea1AOIwYnbGoGRSFrAeNif-9Z2UtFawBydCY71hAPhDlhPUvqTttkbjKEyfUsW1wNZRkwsNVghoPsRU-NDFgj8lZGo=w1200-h800-p-k-no",
       "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlgcdoTyuYCWmIjJ-sg0y-xa06hh6vm07eoWJgVAnCGGea1AOIwYnbGoGRSFrAeNif-9Z2UtFawBydCY71hAPhDlhPUvqTttkbjKEyfUsW1wNZRkwsNVghoPsRU-NDFgj8lZGo=w1200-h800-k-no",
@@ -806,5 +616,214 @@
     "source": "openstreetmap+google",
     "osm_url": "https://www.openstreetmap.org/node/9466687889",
     "maps_url": "https://www.google.com/maps/search/Proxie%20Delhaize%20Huy%20Belgique"
+  },
+  {
+    "id": "n10774845849",
+    "nom": "CASA",
+    "slug": "casa",
+    "segment": "C",
+    "categorie_osm": "interior_decoration",
+    "categorie_google": "",
+    "adresse": {
+      "ligne1": "Avenue du Bosquet 41",
+      "ligne2": "4500 Huy",
+      "complete": "Avenue du Bosquet 41, 4500 Huy",
+      "code_postal": "4500",
+      "ville": "Huy"
+    },
+    "lat": 50.5238044,
+    "lon": 5.2168587,
+    "telephone": "+32 85 84 23 14",
+    "email": "",
+    "facebook": "",
+    "site_declare": "https://be.casashops.com/fr/",
+    "horaires": [
+      [
+        "Lundi à Samedi",
+        "10:00-18:00"
+      ]
+    ],
+    "description": "",
+    "note": null,
+    "avis": null,
+    "photos": [],
+    "capture_google": "data/captures/casa-google.png",
+    "capture_facebook": "",
+    "source": "openstreetmap+google",
+    "osm_url": "https://www.openstreetmap.org/node/10774845849",
+    "maps_url": "https://www.google.com/maps/search/CASA%204500%20Huy",
+    "motif_segment": "site injoignable (ConnectionError)"
+  },
+  {
+    "id": "n12388795585",
+    "nom": "Chlorophyl",
+    "slug": "chlorophyl",
+    "segment": "B",
+    "categorie_osm": "florist",
+    "categorie_google": "Fleuriste",
+    "adresse": {
+      "ligne1": "Rue sous le Château 10",
+      "ligne2": "4500 Huy",
+      "complete": "Rue sous le Château 10, 4500 Huy",
+      "code_postal": "4500",
+      "ville": "Huy"
+    },
+    "lat": 50.5182227,
+    "lon": 5.2390585,
+    "telephone": "+32 85 23 54 74",
+    "email": "info@chlorophyl.be",
+    "facebook": "https://www.facebook.com/chlorophyl.huy",
+    "site_declare": "https://www.chlorophyl.be/",
+    "horaires": [
+      [
+        "Lundi à Samedi",
+        "09:00-18:00"
+      ],
+      [
+        "Dimanche",
+        "09:00-13:00"
+      ]
+    ],
+    "description": "",
+    "note": 4.5,
+    "avis": 40,
+    "photos": [
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlg4buqIxEQyKHP7oDLkxdJ9FUP1y16hIM16-XGvQQMUPjU6hRgqgomYt3Gk5gSh5zf3CZcB74jDWybbpTvwpuJpiHrG9epvWC3CShlwU7C7DN3-TU3L3KLkcFehUdp2owOPgrb9TpQb6XP=w1200-h800-p-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlg4buqIxEQyKHP7oDLkxdJ9FUP1y16hIM16-XGvQQMUPjU6hRgqgomYt3Gk5gSh5zf3CZcB74jDWybbpTvwpuJpiHrG9epvWC3CShlwU7C7DN3-TU3L3KLkcFehUdp2owOPgrb9TpQb6XP=w1200-h800-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlg4buqIxEQyKHP7oDLkxdJ9FUP1y16hIM16-XGvQQMUPjU6hRgqgomYt3Gk5gSh5zf3CZcB74jDWybbpTvwpuJpiHrG9epvWC3CShlwU7C7DN3-TU3L3KLkcFehUdp2owOPgrb9TpQb6XP=w1200-h800-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlK2zV_CTqlBiwCjS_nKQoRnvni-QY0ibTfBM1SloccqMNSB5YsRz-Z_722t4Ts6O6i8xhwGI9IQ4l6RuTr7ePIHj6BOm9gjzrR2husMKGf9ZFn8QlFeAMlSnF_eZZRSBjTHWUI6Q-3Uh4H=w1200-h800-k-no"
+    ],
+    "capture_google": "data/captures/chlorophyl-google.png",
+    "capture_facebook": "",
+    "source": "openstreetmap+google",
+    "osm_url": "https://www.openstreetmap.org/node/12388795585",
+    "maps_url": "https://www.google.com/maps/search/Chlorophyl%204500%20Huy",
+    "motif_segment": "site en erreur (503)"
+  },
+  {
+    "id": "n2845479802",
+    "nom": "Espace Public Numérique",
+    "slug": "espace-public-numerique",
+    "segment": "C",
+    "categorie_osm": "it",
+    "categorie_google": "Services publics",
+    "adresse": {
+      "ligne1": "Rue des Augustins 18B",
+      "ligne2": "4500 Huy",
+      "complete": "Rue des Augustins 18B, 4500 Huy",
+      "code_postal": "4500",
+      "ville": "Huy"
+    },
+    "lat": 50.5200159,
+    "lon": 5.2417954,
+    "telephone": "+32 85 23 07 41",
+    "email": "epn@huy.be",
+    "facebook": "",
+    "site_declare": "https://huy.epn-wallonie.be/",
+    "horaires": [
+      [
+        "Mardi, ",
+        "Th 14:00-17:00"
+      ],
+      [
+        "Mercredi, ",
+        "Fr 14:00-18:00"
+      ],
+      [
+        "Samedi",
+        "09:00-12:30"
+      ],
+      [
+        "PH",
+        "off"
+      ]
+    ],
+    "description": "",
+    "note": null,
+    "avis": null,
+    "photos": [
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnNT3Qxiq8S-Vwa5JeChk-jR22ZgjjW9mMYo_NdnNWmcVl22fzQq-RTWyg5ZLBJ2Cf4xWciL9MPuRQPHwm6riSF7C0BOWggPgUS9oj_4EPuHWjJ6l1Vi3iytmbL3A1l=w1200-h800-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlFruMBZWxaNWCzChamFx33SBE7ax5Q3NxNRhNhxTqshiB_GJH7DYqnNxNxp_RaTRMpmUWqtLHKNKFmDnnjx8YNGKVOVA8BEyYjZevsGhzPAFCv772GCmYTFup6IeAibknlNaxJlQ=w1200-h800-p-k-no"
+    ],
+    "capture_google": "data/captures/espace-public-numerique-google.png",
+    "capture_facebook": "",
+    "source": "openstreetmap+google",
+    "osm_url": "https://www.openstreetmap.org/node/2845479802",
+    "maps_url": "https://www.google.com/maps/search/Espace%20Public%20Num%C3%A9rique%204500%20Huy",
+    "motif_segment": "site injoignable (ConnectionError)"
+  },
+  {
+    "id": "n5059727353",
+    "nom": "Il Ficodindia",
+    "slug": "il-ficodindia",
+    "segment": "C",
+    "categorie_osm": "restaurant",
+    "categorie_google": "",
+    "adresse": {
+      "ligne1": "Rue des Brasseurs 21",
+      "ligne2": "",
+      "complete": "Rue des Brasseurs 21",
+      "code_postal": "",
+      "ville": ""
+    },
+    "lat": 50.5172294,
+    "lon": 5.2409095,
+    "telephone": "+32 85 61 28 69",
+    "email": "ficodindia.huy@gmail.com",
+    "facebook": "",
+    "site_declare": "https://www.ilficodindia.be/",
+    "horaires": [],
+    "description": "",
+    "note": null,
+    "avis": null,
+    "photos": [],
+    "capture_google": "data/captures/il-ficodindia-google.png",
+    "capture_facebook": "",
+    "source": "openstreetmap+google",
+    "osm_url": "https://www.openstreetmap.org/node/5059727353",
+    "maps_url": "https://www.google.com/maps/search/Il%20Ficodindia%20Huy%20Belgique",
+    "motif_segment": "site injoignable (ConnectionError)"
+  },
+  {
+    "id": "w960981634",
+    "nom": "JC Cycles Huy",
+    "slug": "jc-cycles-huy",
+    "segment": "C",
+    "categorie_osm": "bicycle",
+    "categorie_google": "Magasin de réparation de vélos",
+    "adresse": {
+      "ligne1": "Quai de Compiègne 50",
+      "ligne2": "4500 Huy",
+      "complete": "Quai de Compiègne 50, 4500 Huy",
+      "code_postal": "4500",
+      "ville": "Huy"
+    },
+    "lat": 50.5297219,
+    "lon": 5.240939,
+    "telephone": "+32 475 90 51 97",
+    "email": "",
+    "facebook": "",
+    "site_declare": "https://jc-cycles-huy.business.site/",
+    "horaires": [
+      [
+        "Mercredi à Samedi",
+        "10:00-12:00, 13:00-17:30"
+      ]
+    ],
+    "description": "",
+    "note": 4.9,
+    "avis": 82,
+    "photos": [
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWndy70IWlInVDZoXBKVgzK4bxbhHOFYyZeWuK-GhMMVbL2AkwlM3Y0ng97KM-WcXrWtSEb4XJY_3g5pGHv2C5cmys64ezfIznJhdR5FMS_DTRkpOJYXmzaipMQDUpRzMJ18DNwN=w1200-h800-p-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWndy70IWlInVDZoXBKVgzK4bxbhHOFYyZeWuK-GhMMVbL2AkwlM3Y0ng97KM-WcXrWtSEb4XJY_3g5pGHv2C5cmys64ezfIznJhdR5FMS_DTRkpOJYXmzaipMQDUpRzMJ18DNwN=w1200-h800-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWndy70IWlInVDZoXBKVgzK4bxbhHOFYyZeWuK-GhMMVbL2AkwlM3Y0ng97KM-WcXrWtSEb4XJY_3g5pGHv2C5cmys64ezfIznJhdR5FMS_DTRkpOJYXmzaipMQDUpRzMJ18DNwN=w1200-h800-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlPd2a6UBqqJ7HmBQhlvBnA467DD67P0c7pUTQLC3Q56F3cwIGmsJo_kNfjUptAfYnJVi10io5B2aMTY8c8KE3ExyVBc5Ifu48Testttsh4HAv_KzcrYJsYWqYXucoKIxcyb0SG-DS62vYt=w1200-h800-k-no"
+    ],
+    "capture_google": "data/captures/jc-cycles-huy-google.png",
+    "capture_facebook": "",
+    "source": "openstreetmap+google",
+    "osm_url": "https://www.openstreetmap.org/way/960981634",
+    "maps_url": "https://www.google.com/maps/search/JC%20Cycles%20Huy%204500%20Huy",
+    "motif_segment": "site en erreur (404)"
   }
 ]

@@ -60,9 +60,9 @@ FTP = {
     "user": os.environ.get("FTP_USER", ""),
     "password": os.environ.get("FTP_PASS", ""),
     # Dossier distant racine des demos.
-    "dossier": os.environ.get("FTP_DIR", "/demos"),
+    "dossier": os.environ.get("FTP_DIR", "/dev.ineart.be"),
     # URL publique correspondant a FTP_DIR (sert a construire les liens).
-    "url_publique": os.environ.get("DEMO_BASE_URL", "https://www.ineart.be/demos"),
+    "url_publique": os.environ.get("DEMO_BASE_URL", "https://dev.ineart.be"),
     "tls": os.environ.get("FTP_TLS", "1") == "1",
 }
 

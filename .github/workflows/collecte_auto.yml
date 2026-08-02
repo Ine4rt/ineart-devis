@@ -1,0 +1,73 @@
+name: IneArt — Collecte automatique Huy
+
+# Se declenche lorsque le marqueur prospection/LANCER_COLLECTE change.
+# Collecte les entreprises reelles, genere les sites et prepare les mails,
+# puis renvoie tout dans la branche. Aucun deploiement FTP : les fichiers
+# sont deposes a la main sur dev.ineart.be.
+
+on:
+  push:
+    paths:
+      - 'prospection/LANCER_COLLECTE'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  collecter:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    env:
+      COMMUNES: Huy
+      LIMITE_PROSPECTS: '20'
+      DEMO_BASE_URL: https://dev.ineart.be
+      FTP_DIR: /dev.ineart.be
+
+    steps:
+      - name: Telecharger le code
+        uses: actions/checkout@v4
+
+      - name: Installer Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Installer les dependances
+        run: pip install -r prospection/requirements.txt
+
+      - name: Installer Chromium
+        run: python -m playwright install --with-deps chromium
+
+      - name: Collecter les entreprises de Huy
+        working-directory: prospection
+        run: python collecte.py --enrich --limite 20 --communes "Huy"
+
+      - name: Generer les sites
+        working-directory: prospection
+        run: python generateur.py
+
+      - name: Preparer les mails et fiches d'appel
+        working-directory: prospection
+        run: python mailer.py
+
+      - name: Publier l'artefact
+        uses: actions/upload-artifact@v4
+        with:
+          name: prospection-huy-reelle
+          path: |
+            prospection/sites/
+            prospection/mails/
+            prospection/data/
+            prospection/tableau_de_bord.html
+          retention-days: 30
+
+      - name: Renvoyer les resultats dans la branche
+        run: |
+          git config user.name "IneArt AI Bot"
+          git config user.email "actions@github.com"
+          git add prospection/data prospection/mails prospection/sites prospection/tableau_de_bord.html
+          git diff --cached --quiet || git commit -m "Collecte reelle Huy $(date '+%d/%m/%Y %H:%M')"
+          git push

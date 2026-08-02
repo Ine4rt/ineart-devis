@@ -395,7 +395,13 @@ def main():
 
     if arguments.enrich:
         print("Enrichissement Google Maps...")
-        retenus = enrichir_google(retenus, os.path.join(config.DOSSIER_DATA, "captures"))
+        try:
+            retenus = enrichir_google(retenus,
+                                      os.path.join(config.DOSSIER_DATA, "captures"))
+        except Exception as erreur:  # noqa: BLE001
+            # Google peut bloquer les IP de datacenter : on garde les donnees OSM.
+            print("! enrichissement abandonne (%s) : donnees OSM conservees."
+                  % type(erreur).__name__)
 
     os.makedirs(config.DOSSIER_DATA, exist_ok=True)
     with open(config.FICHIER_PROSPECTS, "w", encoding="utf-8") as fichier:

@@ -164,9 +164,19 @@ h3 { font-size: 1.25rem; letter-spacing: -0.005em; }
   color: var(--ember-bright); border: 1px solid currentColor;
   padding: 0.15rem 0.5rem; flex: none;
 }
-.demo__text { flex: 1 1 16rem; }
+.demo__text { flex: 1 1 12rem; }
 .demo__text b { color: var(--on-dark); font-weight: 600; }
 .demo__link { color: var(--on-dark); text-decoration: none; border-bottom: 1px solid var(--ember); }
+
+/* Sous 46rem le bandeau se réduit à l'essentiel : l'auteur et l'échéance.
+   Le lien de contact disparaît — sur un téléphone, le numéro de l'atelier est
+   déjà à un pouce, et ce bandeau ne doit pas coûter un tiers du premier écran. */
+@media (max-width: 45.99rem) {
+  .demo { font-size: 0.8125rem; }
+  .demo__inner { gap: 0.5rem 0.75rem; padding-block: 0.55rem; }
+  .demo__tag { font-size: 0.625rem; padding: 0.1rem 0.4rem; }
+  .demo__long, .demo__link { display: none; }
+}
 
 /* --- Écran de fin de démonstration ---------------------------------------- */
 .expire {

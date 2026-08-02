@@ -79,9 +79,9 @@
     "avis": null,
     "photos": [
       "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWn5SCiAEqKLZYBkRUEU4VhH6NYW_LDPIW6fy_0raTXYF7aCsqtIj3SH6f8xYYED1bELWQbtBigmhDQQSsFRWk2BTFYkje2hEGjAGVvTLUPqD26llBvmUTO5PcpOVaVurQ_Whb9f=w1200-h800-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlRx0pyvG9W4gaw1gXJkZ89Lf4TX1CLfJmMST598urhGQnNtG9imhHrGoOZKOlFZPV79mdbR6ggsD8a9gMjbPEXUvMTgsMrhYO3csxFj9SCppWjS2D3y1R29PSdkqaFP2mLDiSo0g=w1200-h800-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWklTGM0GjP-U-KqmwbP7fNDEmN-zX35avJjm8gpsaYMAoJ7hHluQJBPApcCOJt9HomWg8WrPTcAYfPALinIUntkm620MlkSbPx5zUXpZXOA6VASy3q_ULi86tmAOEi1Qif6y4EeDw=w1200-h800-k-no",
       "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWn2l5pqxovVs-_zG3a8BhbtDOoLURYDxd5kIU4W8siyqYTSBmTsMvPPOFoxmUE7edl0lNaDFmE-5x7aaqUaykYA2aHsQEXH0NLvWrQzX2tVXngSalTW4uZ07gImBoRk_nFe0Sl4=w1200-h800-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWklTGM0GjP-U-KqmwbP7fNDEmN-zX35avJjm8gpsaYMAoJ7hHluQJBPApcCOJt9HomWg8WrPTcAYfPALinIUntkm620MlkSbPx5zUXpZXOA6VASy3q_ULi86tmAOEi1Qif6y4EeDw=w1200-h800-k-no"
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlRx0pyvG9W4gaw1gXJkZ89Lf4TX1CLfJmMST598urhGQnNtG9imhHrGoOZKOlFZPV79mdbR6ggsD8a9gMjbPEXUvMTgsMrhYO3csxFj9SCppWjS2D3y1R29PSdkqaFP2mLDiSo0g=w1200-h800-k-no"
     ],
     "capture_google": "data/captures/brasserie-hutoise-google.png",
     "capture_facebook": "",
@@ -582,79 +582,6 @@
     "maps_url": "https://www.google.com/maps/search/Ose%26vous%20Huy%20Belgique"
   },
   {
-    "id": "n9466687889",
-    "nom": "Proxie Delhaize",
-    "slug": "proxie-delhaize",
-    "segment": "B",
-    "categorie_osm": "supermarket",
-    "categorie_google": "Supermarché",
-    "adresse": {
-      "ligne1": "Rue Delloye-Matthieu 9",
-      "ligne2": "",
-      "complete": "Rue Delloye-Matthieu 9",
-      "code_postal": "",
-      "ville": ""
-    },
-    "lat": 50.5197776,
-    "lon": 5.2425228,
-    "telephone": "",
-    "email": "",
-    "facebook": "https://www.facebook.com/Proxydelhaizehuy/",
-    "site_declare": "",
-    "horaires": [],
-    "description": "",
-    "note": null,
-    "avis": null,
-    "photos": [
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWl3MA4vG8FGZ1TbJrF8OwJS1PhX761CoTavU7yM834zafhk_IzXT7nrPfaIgQw-r5ngQ9XixGZCp9qFIh4xSOH5BJuPpX-eH38ZcOsDCB6klpNO6iphqbXXZ4gZh0VG86T-S7kSlA=w1200-h800-p-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWl3MA4vG8FGZ1TbJrF8OwJS1PhX761CoTavU7yM834zafhk_IzXT7nrPfaIgQw-r5ngQ9XixGZCp9qFIh4xSOH5BJuPpX-eH38ZcOsDCB6klpNO6iphqbXXZ4gZh0VG86T-S7kSlA=w1200-h800-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWl3MA4vG8FGZ1TbJrF8OwJS1PhX761CoTavU7yM834zafhk_IzXT7nrPfaIgQw-r5ngQ9XixGZCp9qFIh4xSOH5BJuPpX-eH38ZcOsDCB6klpNO6iphqbXXZ4gZh0VG86T-S7kSlA=w1200-h800-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlUG7IF0SOIvbFDHtDL6g_eXWEE0u5vFyddd3AloXqLGYNnJL1VInNKONG1nOfUim8eTdmf9hszXfesEKt0u419h-zQ1sG9TSC6UGiQS7XcavL_hD-83qOZIiHy9B_8tQBYPESosA=w1200-h800-k-no"
-    ],
-    "capture_google": "data/captures/proxie-delhaize-google.png",
-    "capture_facebook": "",
-    "source": "openstreetmap+google",
-    "osm_url": "https://www.openstreetmap.org/node/9466687889",
-    "maps_url": "https://www.google.com/maps/search/Proxie%20Delhaize%20Huy%20Belgique"
-  },
-  {
-    "id": "n10774845849",
-    "nom": "CASA",
-    "slug": "casa",
-    "segment": "C",
-    "categorie_osm": "interior_decoration",
-    "categorie_google": "",
-    "adresse": {
-      "ligne1": "Avenue du Bosquet 41",
-      "ligne2": "4500 Huy",
-      "complete": "Avenue du Bosquet 41, 4500 Huy",
-      "code_postal": "4500",
-      "ville": "Huy"
-    },
-    "lat": 50.5238044,
-    "lon": 5.2168587,
-    "telephone": "+32 85 84 23 14",
-    "email": "",
-    "facebook": "",
-    "site_declare": "https://be.casashops.com/fr/",
-    "horaires": [
-      [
-        "Lundi à Samedi",
-        "10:00-18:00"
-      ]
-    ],
-    "description": "",
-    "note": null,
-    "avis": null,
-    "photos": [],
-    "capture_google": "data/captures/casa-google.png",
-    "capture_facebook": "",
-    "source": "openstreetmap+google",
-    "osm_url": "https://www.openstreetmap.org/node/10774845849",
-    "maps_url": "https://www.google.com/maps/search/CASA%204500%20Huy",
-    "motif_segment": "site injoignable (ConnectionError)"
-  },
-  {
     "id": "n12388795585",
     "nom": "Chlorophyl",
     "slug": "chlorophyl",
@@ -699,58 +626,6 @@
     "osm_url": "https://www.openstreetmap.org/node/12388795585",
     "maps_url": "https://www.google.com/maps/search/Chlorophyl%204500%20Huy",
     "motif_segment": "site en erreur (503)"
-  },
-  {
-    "id": "n2845479802",
-    "nom": "Espace Public Numérique",
-    "slug": "espace-public-numerique",
-    "segment": "C",
-    "categorie_osm": "it",
-    "categorie_google": "Services publics",
-    "adresse": {
-      "ligne1": "Rue des Augustins 18B",
-      "ligne2": "4500 Huy",
-      "complete": "Rue des Augustins 18B, 4500 Huy",
-      "code_postal": "4500",
-      "ville": "Huy"
-    },
-    "lat": 50.5200159,
-    "lon": 5.2417954,
-    "telephone": "+32 85 23 07 41",
-    "email": "epn@huy.be",
-    "facebook": "",
-    "site_declare": "https://huy.epn-wallonie.be/",
-    "horaires": [
-      [
-        "Mardi, ",
-        "Th 14:00-17:00"
-      ],
-      [
-        "Mercredi, ",
-        "Fr 14:00-18:00"
-      ],
-      [
-        "Samedi",
-        "09:00-12:30"
-      ],
-      [
-        "PH",
-        "off"
-      ]
-    ],
-    "description": "",
-    "note": null,
-    "avis": null,
-    "photos": [
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnNT3Qxiq8S-Vwa5JeChk-jR22ZgjjW9mMYo_NdnNWmcVl22fzQq-RTWyg5ZLBJ2Cf4xWciL9MPuRQPHwm6riSF7C0BOWggPgUS9oj_4EPuHWjJ6l1Vi3iytmbL3A1l=w1200-h800-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlFruMBZWxaNWCzChamFx33SBE7ax5Q3NxNRhNhxTqshiB_GJH7DYqnNxNxp_RaTRMpmUWqtLHKNKFmDnnjx8YNGKVOVA8BEyYjZevsGhzPAFCv772GCmYTFup6IeAibknlNaxJlQ=w1200-h800-p-k-no"
-    ],
-    "capture_google": "data/captures/espace-public-numerique-google.png",
-    "capture_facebook": "",
-    "source": "openstreetmap+google",
-    "osm_url": "https://www.openstreetmap.org/node/2845479802",
-    "maps_url": "https://www.google.com/maps/search/Espace%20Public%20Num%C3%A9rique%204500%20Huy",
-    "motif_segment": "site injoignable (ConnectionError)"
   },
   {
     "id": "n5059727353",
@@ -825,5 +700,128 @@
     "osm_url": "https://www.openstreetmap.org/way/960981634",
     "maps_url": "https://www.google.com/maps/search/JC%20Cycles%20Huy%204500%20Huy",
     "motif_segment": "site en erreur (404)"
+  },
+  {
+    "id": "w875712577",
+    "nom": "Le Petit Maurice",
+    "slug": "le-petit-maurice",
+    "segment": "C",
+    "categorie_osm": "grocery",
+    "categorie_google": "",
+    "adresse": {
+      "ligne1": "Rue de la Neuville 3",
+      "ligne2": "4500 Huy",
+      "complete": "Rue de la Neuville 3, 4500 Huy",
+      "code_postal": "4500",
+      "ville": "Huy"
+    },
+    "lat": 50.5305229,
+    "lon": 5.289243,
+    "telephone": "",
+    "email": "",
+    "facebook": "",
+    "site_declare": "http://www.lepetitmaurice.be/",
+    "horaires": [
+      [
+        "Jeudi, Vendredi",
+        "16:00-20:00"
+      ],
+      [
+        "Samedi",
+        "10:00-18:00"
+      ]
+    ],
+    "description": "Epicerie participative et locale à la ferme de la Neuville. Ils proposent des produits locaux, de qualité, à un prix juste pour le producteur et le consommateur.",
+    "note": 4.9,
+    "avis": 14,
+    "photos": [
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnpkJtZshjG23J0EEYndneaoSHTzLDUBYHYo9FfV50wK5qWhpSC3ItGHZu_Y8ibMs9ZCmcvljBHY2oIYPgnFHFqJhlC29bfTzqEkldiIllK_vUYPUZ1YLgpSaDk5k5ccOnm_8bhxw=w1200-h800-p-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnpkJtZshjG23J0EEYndneaoSHTzLDUBYHYo9FfV50wK5qWhpSC3ItGHZu_Y8ibMs9ZCmcvljBHY2oIYPgnFHFqJhlC29bfTzqEkldiIllK_vUYPUZ1YLgpSaDk5k5ccOnm_8bhxw=w1200-h800-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnpkJtZshjG23J0EEYndneaoSHTzLDUBYHYo9FfV50wK5qWhpSC3ItGHZu_Y8ibMs9ZCmcvljBHY2oIYPgnFHFqJhlC29bfTzqEkldiIllK_vUYPUZ1YLgpSaDk5k5ccOnm_8bhxw=w1200-h800-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWmYQ61qCYav-1IqyhyFlL_me0rmlObEcKyqrM9BNO7AHvO6GStn5zVuVYfLa4mjcIbvw8JLZA3KuHMviMX2TUALJSTIsqXEVbsVizx4FtcBqe2gXFrKfq-zMVxve4sM2tLchtrZ=w1200-h800-k-no"
+    ],
+    "capture_google": "data/captures/le-petit-maurice-google.png",
+    "capture_facebook": "",
+    "source": "openstreetmap+google",
+    "osm_url": "https://www.openstreetmap.org/way/875712577",
+    "maps_url": "https://www.google.com/maps/search/Le%20Petit%20Maurice%204500%20Huy",
+    "motif_segment": "site injoignable (ConnectionError)"
+  },
+  {
+    "id": "n5878222706",
+    "nom": "Multipharma",
+    "slug": "multipharma",
+    "segment": "C",
+    "categorie_osm": "pharmacy",
+    "categorie_google": "",
+    "adresse": {
+      "ligne1": "",
+      "ligne2": "",
+      "complete": "",
+      "code_postal": "",
+      "ville": ""
+    },
+    "lat": 50.5225297,
+    "lon": 5.2425911,
+    "telephone": "",
+    "email": "",
+    "facebook": "",
+    "site_declare": "https://www.multipharma.be/be_fr/uw-verkooppunt/multipharma-huy-735",
+    "horaires": [
+      [
+        "Lundi à Vendredi",
+        "08:30-13:00,14:00-18:30"
+      ],
+      [
+        "Samedi",
+        "09:00-12:30"
+      ]
+    ],
+    "description": "",
+    "note": null,
+    "avis": null,
+    "photos": [],
+    "capture_google": "data/captures/multipharma-google.png",
+    "capture_facebook": "",
+    "source": "openstreetmap+google",
+    "osm_url": "https://www.openstreetmap.org/node/5878222706",
+    "maps_url": "https://www.google.com/maps/search/Multipharma%20Huy%20Belgique",
+    "motif_segment": "site en erreur (410)"
+  },
+  {
+    "id": "n2884161263",
+    "nom": "Pizzeria Da nunzio",
+    "slug": "pizzeria-da-nunzio",
+    "segment": "C",
+    "categorie_osm": "restaurant",
+    "categorie_google": "",
+    "adresse": {
+      "ligne1": "Porte des Aveugles 26",
+      "ligne2": "4520 Huy",
+      "complete": "Porte des Aveugles 26, 4520 Huy",
+      "code_postal": "4520",
+      "ville": "Huy"
+    },
+    "lat": 50.5253847,
+    "lon": 5.2301186,
+    "telephone": "",
+    "email": "",
+    "facebook": "",
+    "site_declare": "http://danunzio.be/",
+    "horaires": [],
+    "description": "",
+    "note": 4.3,
+    "avis": 4,
+    "photos": [
+      "https://lh3.googleusercontent.com/a-/ALV-UjUAV8xAAmTTbL7AVxgW51nhr9SWggWEa26CPyf_IEPbFVZ4G7k=w1200-h800-p-rp-mo-br100",
+      "https://lh3.googleusercontent.com/a-/ALV-UjWQxHyXmAfDm7yf3Ut07WiWGaCdMbNfHDQsNPSZC9gRZZopNgaUeg=w1200-h800-p-rp-mo-ba12-br100",
+      "https://lh3.googleusercontent.com/a-/ALV-UjXTfrODaBm1IxqhPA6LbJY7jhB6p55TkaIt74x9-bJ5yCpFDZ8L=w1200-h800-p-rp-mo-br100"
+    ],
+    "capture_google": "data/captures/pizzeria-da-nunzio-google.png",
+    "capture_facebook": "",
+    "source": "openstreetmap+google",
+    "osm_url": "https://www.openstreetmap.org/node/2884161263",
+    "maps_url": "https://www.google.com/maps/search/Pizzeria%20Da%20nunzio%204520%20Huy",
+    "motif_segment": "site injoignable (ConnectionError)"
   }
 ]

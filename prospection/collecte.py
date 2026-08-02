@@ -80,6 +80,7 @@ NOMS_EXCLUS = re.compile(
     r"louis delhaize|cora|makro|action|casa|kruidvat|di\b|hubo|brico|gamma|"
     r"basic.?fit|mcdonald|quick|burger\s?king|panos|hema|jbc|zeb|c&a|bel&bo|"
     r"kr[ée]fel|mediamarkt|fnac|standaard boekhandel|club\b|torfs|"
+    r"multipharma|medi.?market|pharmacie du peuple|dp pharma|"
     r"espace public num[ée]rique|biblioth[èe]que|maison communale|h[ôo]tel de ville|"
     r"office du tourisme|piscine communale|centre culturel)\b", re.I)
 CLES_SOCIAL = ("contact:facebook", "facebook", "contact:instagram", "instagram")

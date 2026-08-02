@@ -180,6 +180,11 @@ def telecharger_photos(fiche, dossier):
     locales = []
     for index, url in enumerate(urls[:6], 1):
         chemin = os.path.join(dossier_img, "photo%d.jpg" % index)
+        # Photo deja recuperee lors d'un run precedent : on la garde, les URL
+        # Google expirent et ne sont pas rejouables.
+        if os.path.exists(chemin) and os.path.getsize(chemin) > 1024:
+            locales.append("img/photo%d.jpg" % index)
+            continue
         try:
             if url.startswith(("http://", "https://")):
                 reponse = requests.get(url, timeout=20)

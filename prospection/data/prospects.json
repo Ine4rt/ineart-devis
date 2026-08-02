@@ -80,8 +80,8 @@
     "photos": [
       "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWn5SCiAEqKLZYBkRUEU4VhH6NYW_LDPIW6fy_0raTXYF7aCsqtIj3SH6f8xYYED1bELWQbtBigmhDQQSsFRWk2BTFYkje2hEGjAGVvTLUPqD26llBvmUTO5PcpOVaVurQ_Whb9f=w1200-h800-k-no",
       "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWklTGM0GjP-U-KqmwbP7fNDEmN-zX35avJjm8gpsaYMAoJ7hHluQJBPApcCOJt9HomWg8WrPTcAYfPALinIUntkm620MlkSbPx5zUXpZXOA6VASy3q_ULi86tmAOEi1Qif6y4EeDw=w1200-h800-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWn2l5pqxovVs-_zG3a8BhbtDOoLURYDxd5kIU4W8siyqYTSBmTsMvPPOFoxmUE7edl0lNaDFmE-5x7aaqUaykYA2aHsQEXH0NLvWrQzX2tVXngSalTW4uZ07gImBoRk_nFe0Sl4=w1200-h800-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlRx0pyvG9W4gaw1gXJkZ89Lf4TX1CLfJmMST598urhGQnNtG9imhHrGoOZKOlFZPV79mdbR6ggsD8a9gMjbPEXUvMTgsMrhYO3csxFj9SCppWjS2D3y1R29PSdkqaFP2mLDiSo0g=w1200-h800-k-no"
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlRx0pyvG9W4gaw1gXJkZ89Lf4TX1CLfJmMST598urhGQnNtG9imhHrGoOZKOlFZPV79mdbR6ggsD8a9gMjbPEXUvMTgsMrhYO3csxFj9SCppWjS2D3y1R29PSdkqaFP2mLDiSo0g=w1200-h800-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlo4p_utaNcbmoL0G_LfQEvyBGto9f8PFZ1dPHM9iRR2gXZscHdzxIY6gn5Pp4_Ljdbe-ZM-VdY-jmfzIFIZ-F1tvVbPV1nOGTFWUG9dHfaCmixFp_15BRFUCe9LaDEz0GLzWAJ=w1200-h800-k-no"
     ],
     "capture_google": "data/captures/brasserie-hutoise-google.png",
     "capture_facebook": "",
@@ -748,47 +748,6 @@
     "motif_segment": "site injoignable (ConnectionError)"
   },
   {
-    "id": "n5878222706",
-    "nom": "Multipharma",
-    "slug": "multipharma",
-    "segment": "C",
-    "categorie_osm": "pharmacy",
-    "categorie_google": "",
-    "adresse": {
-      "ligne1": "",
-      "ligne2": "",
-      "complete": "",
-      "code_postal": "",
-      "ville": ""
-    },
-    "lat": 50.5225297,
-    "lon": 5.2425911,
-    "telephone": "",
-    "email": "",
-    "facebook": "",
-    "site_declare": "https://www.multipharma.be/be_fr/uw-verkooppunt/multipharma-huy-735",
-    "horaires": [
-      [
-        "Lundi à Vendredi",
-        "08:30-13:00,14:00-18:30"
-      ],
-      [
-        "Samedi",
-        "09:00-12:30"
-      ]
-    ],
-    "description": "",
-    "note": null,
-    "avis": null,
-    "photos": [],
-    "capture_google": "data/captures/multipharma-google.png",
-    "capture_facebook": "",
-    "source": "openstreetmap+google",
-    "osm_url": "https://www.openstreetmap.org/node/5878222706",
-    "maps_url": "https://www.google.com/maps/search/Multipharma%20Huy%20Belgique",
-    "motif_segment": "site en erreur (410)"
-  },
-  {
     "id": "n2884161263",
     "nom": "Pizzeria Da nunzio",
     "slug": "pizzeria-da-nunzio",
@@ -823,5 +782,41 @@
     "osm_url": "https://www.openstreetmap.org/node/2884161263",
     "maps_url": "https://www.google.com/maps/search/Pizzeria%20Da%20nunzio%204520%20Huy",
     "motif_segment": "site injoignable (ConnectionError)"
+  },
+  {
+    "id": "n12388823963",
+    "nom": "Au Pingouin",
+    "slug": "au-pingouin",
+    "segment": "A",
+    "categorie_osm": "ice_cream",
+    "categorie_google": "Marchand de glaces",
+    "adresse": {
+      "ligne1": "Rue sous le Château 17",
+      "ligne2": "4500 Huy",
+      "complete": "Rue sous le Château 17, 4500 Huy",
+      "code_postal": "4500",
+      "ville": "Huy"
+    },
+    "lat": 50.5178792,
+    "lon": 5.2392431,
+    "telephone": "+32 85 21 41 23",
+    "email": "",
+    "facebook": "",
+    "site_declare": "",
+    "horaires": [],
+    "description": "",
+    "note": 4.5,
+    "avis": 280,
+    "photos": [
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWmDz7sX_eF1rtjDFtwMW80HPmpsBQQbevThxF-994SYjgfQbQYYGAybMY_NaV4LNQnFIP8Hw4-S0MEGqZ4jrjgneMw4F3xBz1U7X4xiJs8_RbNiCJMlFpzqHpDRSc_YcyhG4Jt9=w1200-h800-p-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWmDz7sX_eF1rtjDFtwMW80HPmpsBQQbevThxF-994SYjgfQbQYYGAybMY_NaV4LNQnFIP8Hw4-S0MEGqZ4jrjgneMw4F3xBz1U7X4xiJs8_RbNiCJMlFpzqHpDRSc_YcyhG4Jt9=w1200-h800-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlsIaK8FY3B4UP4p1tielwf-rUi1MM47F0MaQDdueFLvGmfmVCyNZjphmXR6to8bbEw7hf5j_zQMCVD3t_4FSy_5BEE8G1D0jMbuonCPt5qmDWRn-tyoZthKp48hS0toRB1_y093Q=w1200-h800-p-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlnrWbseCv3fNqC1YjEX1Izwa4WzXFDFfY6pjUNCdSHP6sJn4IlYXJURAYx47W64CaPSwgbnhsbs18y9dfFvAWJAfJId8QZDT1iiCx0m0hL5r7ebMzu0IwLhm2n4DFO1SrzkgO_qw=w1200-h800-p-k-no"
+    ],
+    "capture_google": "data/captures/au-pingouin-google.png",
+    "capture_facebook": "",
+    "source": "openstreetmap+google",
+    "osm_url": "https://www.openstreetmap.org/node/12388823963",
+    "maps_url": "https://www.google.com/maps/search/Au%20Pingouin%204500%20Huy"
   }
 ]

@@ -69,5 +69,13 @@ jobs:
           git config user.name "IneArt AI Bot"
           git config user.email "actions@github.com"
           git add prospection/data prospection/mails prospection/sites prospection/tableau_de_bord.html
-          git diff --cached --quiet || git commit -m "Collecte reelle Huy $(date '+%d/%m/%Y %H:%M')"
-          git push
+          git diff --cached --quiet && exit 0
+          git commit -m "Collecte reelle Huy $(date '+%d/%m/%Y %H:%M')"
+          # La branche a pu avancer pendant le run : on rebase avant de pousser.
+          for tentative in 1 2 3 4; do
+            git pull --rebase origin "${GITHUB_REF_NAME}" && git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0
+            echo "Push refuse, nouvelle tentative dans $((tentative * 5))s"
+            sleep $((tentative * 5))
+          done
+          echo "Impossible de pousser les resultats (l'artefact reste disponible)."
+          exit 1

@@ -32,7 +32,7 @@ Je vous écris sans que vous m'ayez rien demandé, et je préfère le dire
 directement : j'ai réalisé un site pour le Garage J.C.A.S., avec vos
 coordonnées, vos services et une photo de l'atelier. Vous pouvez le voir ici :
 
-**⟨ADRESSE DU SITE⟩**
+**https://dev.ineart.be/garage-jcas/**
 
 Ce qu'il vous apporte :
 
@@ -84,7 +84,7 @@ Bonjour,
 
 Merci de votre retour. Voici le détail.
 
-**⟨ADRESSE DU SITE⟩**
+**https://dev.ineart.be/garage-jcas/**
 
 ### Ce que le site contient
 
@@ -159,7 +159,7 @@ Bonjour,
 Je reviens brièvement : le site que j'ai réalisé pour votre garage ferme
 après-demain.
 
-**⟨ADRESSE DU SITE⟩**
+**https://dev.ineart.be/garage-jcas/**
 
 Si vous ne l'avez pas encore ouvert, deux minutes suffisent. Si vous l'avez vu
 et que ça ne vous intéresse pas, dites-le moi simplement — je n'insisterai pas.
@@ -203,10 +203,12 @@ Bien à vous,
 
 ## À vérifier avant d'envoyer
 
-**1. L'adresse du site.** Remplacez `⟨ADRESSE DU SITE⟩` dans les trois mails
-par l'adresse réelle une fois le site déployé. Activez le certificat SSL :
-sans lui, Chrome écrit « Non sécurisé » à côté de l'adresse, ce qui est le pire
-message possible sur une page destinée à un prospect.
+**1. L'adresse du site.** Les mails annoncent
+`https://dev.ineart.be/garage-jcas/` — déposez le dossier là, ou corrigez
+l'adresse dans les trois textes. Ouvrez-la vous-même avant d'envoyer, et
+vérifiez que le cadenas apparaît : sans certificat, Chrome écrit « Non
+sécurisé » à côté de l'adresse, ce qui est le pire message possible sur une
+page destinée à un prospect.
 
 **2. La date de fermeture.** Les mails disent « 9 août », ce qui correspond à
 `DEMO.expire` dans `assets/js/main.js`. Si vous envoyez plus tard, reculez les

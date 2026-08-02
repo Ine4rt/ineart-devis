@@ -40,3 +40,5 @@ __pycache__/
 # Tirages « un seul fichier » du site Atelier Genot (régénérés par build-embed.mjs)
 projets/atelier-genot/atelier-genot.embed.html
 projets/atelier-genot/atelier-genot.artifact.html
+projets/garage-jcas/garage-jcas.embed.html
+projets/garage-jcas/garage-jcas.artifact.html

@@ -133,6 +133,27 @@ séparations viennent de l'espace et de rares filets d'un pixel. La seule chose
 qui échappe à la colonne, ce sont les photographies — un chantier se juge en
 grand.
 
+### Le rythme des bandes
+
+```
+blanc   accueil          la photo fait l'événement
+brume   nos métiers      gris tiré vers l'eau
+NOIR    dépannage        bande pleine largeur, titre orange
+blanc   réalisations     les photos respirent
+BLEU    avis             son meilleur atout, sa propre zone
+sable   zone d'interv.   gris tiré vers la flamme
+blanc   contact          le formulaire doit être calme
+NOIR    pied de page
+```
+
+Une page d'un seul ton se lit comme un document ; une page qui change de sol à
+chaque section se parcourt. Les deux gris pâles — l'un vers le bleu, l'autre
+vers l'orange — sont presque indiscernables isolément, mais il suffit qu'ils
+soient différents pour que deux sections voisines ne se confondent pas.
+
+Les trois zones fortes sont espacées, jamais accolées : noir, puis du clair,
+puis bleu. Deux aplats sombres à la suite feraient un bloc.
+
 C'est le troisième registre de la série, et il est distinct des deux autres :
 la ferronnerie était sombre et photographique, le garage dense et informatif,
 celui-ci est clair et aéré.

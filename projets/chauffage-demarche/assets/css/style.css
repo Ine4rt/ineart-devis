@@ -44,8 +44,17 @@
   --encre-3: #6b757e;
 
   --blanc: #ffffff;
-  --brume: #f4f6f8;
+  /* Deux gris pâles plutôt qu'un : l'un tiré vers l'eau, l'autre vers la
+     flamme. La différence est presque imperceptible isolément, mais elle
+     suffit à ce que deux sections voisines ne se confondent pas. */
+  --brume: #eef3f7;
+  --sable: #faf6f3;
   --trait: #e4e8ec;
+
+  /* Bande profonde : le bleu du logo assombri jusqu'à porter du texte blanc.
+     Réservée aux avis — c'est ce qu'il a de plus fort, ça mérite sa zone. */
+  --bleu-nuit: #0f3a5a;
+  --bleu-nuit-2: #b9cddc;
 
   /* L'eau : sanitaire, salle de bain. */
   --eau: #1f6fb2;
@@ -114,7 +123,23 @@ h3 { font-size: 1.3125rem; }
 .wrap { width: min(100% - 2 * var(--pad), 64rem); margin-inline: auto; }
 .wrap--large { width: min(100% - 2 * var(--pad), 82rem); margin-inline: auto; }
 .section { padding-block: clamp(4rem, 9vw, 7.5rem); }
+
+/* Le rythme de la page tient à l'alternance de ces fonds :
+   blanc → brume → noir → blanc → bleu → sable → blanc → noir.
+   Une page d'un seul ton se lit comme un document ; une page qui change de
+   sol à chaque section se parcourt. */
 .section--brume { background: var(--brume); }
+.section--sable { background: var(--sable); }
+
+.section--noir { background: var(--noir); color: #d3d9df; }
+.section--noir h2, .section--noir h3 { color: #fff; }
+.section--noir .lede { color: #a7b1ba; }
+.section--noir .sur { color: #8f9aa4; }
+
+.section--bleu { background: var(--bleu-nuit); color: var(--bleu-nuit-2); }
+.section--bleu h2, .section--bleu h3 { color: #fff; }
+.section--bleu .lede { color: var(--bleu-nuit-2); }
+.section--bleu .sur { color: #8fadc4; }
 
 .head { max-width: 40rem; display: grid; gap: 1rem; }
 
@@ -188,18 +213,14 @@ h3 { font-size: 1.3125rem; }
 .hero__legend { display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; margin-top: 0.85rem; font-size: 0.875rem; color: var(--encre-3); }
 
 /* --- Dépannage : la seule zone chaude de la page -------------------------- */
-/* Le seul bloc plein de la page : noir, avec la flamme dessus. C'est
-   exactement l'ordre des couleurs sur son camion, et c'est le seul endroit où
-   l'œil doit s'arrêter en parcourant. */
-.urgence {
-  margin-top: clamp(2.5rem, 5vw, 3.5rem);
-  background: var(--noir); color: #fff;
-  border-radius: 6px; padding: clamp(1.75rem, 3.5vw, 2.5rem);
-  display: grid; gap: 1.25rem;
-}
-@media (min-width: 48rem) { .urgence { grid-template-columns: 1fr auto; align-items: center; gap: 2.5rem; } }
-.urgence h2 { font-size: clamp(1.5rem, 1.1rem + 1.3vw, 2rem); color: var(--flamme); }
-.urgence p { color: #b6bec6; max-width: 46ch; margin-top: 0.45rem; }
+/* Bande pleine largeur plutôt qu'encadré : la panne de chaudière est la seule
+   urgence du métier, elle coupe la page en deux au lieu de s'y loger.
+   Noir, titre orange — l'ordre exact des couleurs de son camion. */
+.urgence { background: var(--noir); color: #fff; }
+.urgence__inner { padding-block: clamp(2.5rem, 5vw, 3.75rem); display: grid; gap: 1.25rem; }
+@media (min-width: 48rem) { .urgence__inner { grid-template-columns: 1fr auto; align-items: center; gap: 3rem; } }
+.urgence h2 { font-size: clamp(1.6rem, 1.1rem + 1.6vw, 2.35rem); color: var(--flamme); }
+.urgence p { color: #b6bec6; max-width: 48ch; margin-top: 0.5rem; }
 
 /* --- Métiers -------------------------------------------------------------
    Une liste, pas des cartes : quatre lignes qui se lisent, séparées par un
@@ -229,19 +250,22 @@ h3 { font-size: 1.3125rem; }
 /* --- Avis ---------------------------------------------------------------- */
 .reviews { display: grid; gap: clamp(2rem, 4vw, 3rem); margin-top: clamp(2.5rem, 5vw, 3.5rem); }
 @media (min-width: 52rem) { .reviews { grid-template-columns: repeat(2, 1fr); } }
+/* La citation est le contenu, pas un commentaire : elle prend le blanc plein,
+   la signature garde le bleu pâle. */
+.section--bleu .review blockquote { color: #fff; }
 .review blockquote {
   margin: 0; font-family: "Demarche Display", serif; font-weight: 300;
   font-size: clamp(1.25rem, 1.1rem + 0.8vw, 1.5rem); line-height: 1.35;
   letter-spacing: -0.01em;
 }
-.review figcaption { margin-top: 1rem; font-size: 0.9375rem; color: var(--encre-3); }
-.review figcaption b { color: var(--encre); font-weight: 600; }
+.review figcaption { margin-top: 1rem; font-size: 0.9375rem; color: #8fadc4; }
+.review figcaption b { color: #fff; font-weight: 600; }
 .reviews__link { margin-top: clamp(2rem, 4vw, 2.5rem); font-size: 0.9375rem; }
-.reviews__link a { color: var(--eau); text-decoration: none; border-bottom: 1px solid currentColor; }
+.reviews__link a { color: #fff; text-decoration: none; border-bottom: 1px solid #43708f; }
 
 /* --- Zone d'intervention -------------------------------------------------- */
 .area { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem; }
-.area li { padding: 0.35rem 0.85rem; border: 1px solid var(--trait); border-radius: 999px; font-size: 0.875rem; color: var(--encre-2); }
+.area li { padding: 0.35rem 0.85rem; border: 1px solid #e6ded7; background: var(--blanc); border-radius: 999px; font-size: 0.875rem; color: var(--encre-2); }
 
 /* --- Contact -------------------------------------------------------------- */
 .contact { display: grid; gap: clamp(2.5rem, 5vw, 4rem); }

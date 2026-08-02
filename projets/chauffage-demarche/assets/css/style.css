@@ -4,11 +4,14 @@
    Épuré : une seule colonne, beaucoup de blanc, presque aucun cadre. Les
    séparations viennent de l'espace, pas de filets ou de cartes empilées.
 
-   Deux accents, et c'est volontaire : ils encodent le métier au lieu de le
-   décorer. Le bleu porte l'eau — sanitaire, salle de bain, ce qui coule. La
-   flamme orange porte la chaleur — chauffage, chaudière, dépannage urgent.
-   C'est déjà la logique de son logo, une flamme et des gouttes sur le camion.
-   Chacun a son domaine ; aucun des deux ne sert d'ornement.
+   Les trois couleurs sont les siennes, relevées sur son camion : un bandeau
+   noir, une flamme orange, des gouttes bleues. Le noir structure — encre,
+   bloc de dépannage, pied de page. L'orange porte la chaleur : chauffage,
+   chaudière, urgence. Le bleu porte l'eau : sanitaire, salle de bain.
+
+   Chacun a son domaine et aucun ne sert d'ornement. C'est ce qui permet d'en
+   tenir trois sans que la page devienne bariolée — un lecteur qui voit de
+   l'orange sait qu'on parle de chaleur avant d'avoir lu le mot.
 
    Serif contrastée pour les titres plutôt qu'une grotesque technique : la
    moitié de son métier, c'est la salle de bain et le confort de la maison.
@@ -32,22 +35,30 @@
 :root {
   color-scheme: light;
 
-  /* Neutres tirés vers le bleu : le gris pur aurait été un défaut d'attention. */
-  --encre: #10243a;
-  --encre-2: #4b6072;
-  --encre-3: #7d8f9e;
+  /* Le noir de son bandeau. Une pointe de bleu dedans plutôt qu'un #000 :
+     le noir absolu écrase sur écran, et les gris qui en descendent gardent
+     ainsi une parenté avec l'eau. */
+  --noir: #111418;
+  --encre: var(--noir);
+  --encre-2: #565f68;
+  --encre-3: #6b757e;
 
   --blanc: #ffffff;
-  --brume: #f3f7fa;
-  --trait: #e2e9ef;
+  --brume: #f4f6f8;
+  --trait: #e4e8ec;
 
-  /* L'eau : sanitaire, salle de bain. Accent principal. */
-  --eau: #2f6f9e;
-  --eau-fonce: #245b82;
+  /* L'eau : sanitaire, salle de bain. */
+  --eau: #1f6fb2;
+  --eau-fonce: #175a93;
 
-  /* La flamme : chauffage, chaudière, dépannage. Repris de son logo. */
-  --flamme: #d9551a;
-  --flamme-clair: #fdf0e9;
+  /* La flamme : chauffage, chaudière, dépannage.
+     Deux valeurs, parce qu'un même orange ne peut pas tout faire : la vive
+     sert de couleur d'écriture sur le noir, la sourde de fond sous du blanc.
+     L'orange de son camion passe à 3,6:1 avec du texte blanc dessus — joli
+     mais illisible pour qui a la vue basse. */
+  --flamme: #e2601c;
+  --flamme-fond: #c44f13;
+  --flamme-fond-survol: #a94210;
 
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --pad: clamp(1.25rem, 5vw, 3rem);
@@ -121,8 +132,8 @@ h3 { font-size: 1.3125rem; }
 .btn--eau { background: var(--eau); color: #fff; }
 .btn--eau:hover { background: var(--eau-fonce); }
 
-.btn--flamme { background: var(--flamme); color: #fff; }
-.btn--flamme:hover { background: #bf4713; }
+.btn--flamme { background: var(--flamme-fond); color: #fff; }
+.btn--flamme:hover { background: var(--flamme-fond-survol); }
 
 .btn--ligne { border-color: var(--trait); color: var(--encre); background: var(--blanc); }
 .btn--ligne:hover { border-color: var(--encre); }
@@ -159,7 +170,7 @@ h3 { font-size: 1.3125rem; }
   transition: background-color 180ms var(--ease-out), transform 110ms var(--ease-out);
 }
 @media (min-width: 62rem) { .nav__tel { margin-left: 0; } }
-.nav__tel:hover { background: #1d3a56; }
+.nav__tel:hover { background: #2a2f36; }
 .nav__tel:active { transform: scale(0.975); }
 .nav__tel span { display: none; }
 @media (min-width: 26rem) { .nav__tel span { display: inline; } }
@@ -177,15 +188,18 @@ h3 { font-size: 1.3125rem; }
 .hero__legend { display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; margin-top: 0.85rem; font-size: 0.875rem; color: var(--encre-3); }
 
 /* --- Dépannage : la seule zone chaude de la page -------------------------- */
+/* Le seul bloc plein de la page : noir, avec la flamme dessus. C'est
+   exactement l'ordre des couleurs sur son camion, et c'est le seul endroit où
+   l'œil doit s'arrêter en parcourant. */
 .urgence {
   margin-top: clamp(2.5rem, 5vw, 3.5rem);
-  background: var(--flamme-clair);
-  border-radius: 6px; padding: clamp(1.5rem, 3vw, 2rem);
-  display: grid; gap: 1rem;
+  background: var(--noir); color: #fff;
+  border-radius: 6px; padding: clamp(1.75rem, 3.5vw, 2.5rem);
+  display: grid; gap: 1.25rem;
 }
-@media (min-width: 48rem) { .urgence { grid-template-columns: 1fr auto; align-items: center; gap: 2rem; } }
-.urgence h2 { font-size: clamp(1.35rem, 1.1rem + 1vw, 1.75rem); color: var(--flamme); }
-.urgence p { color: #8a4526; max-width: 46ch; margin-top: 0.35rem; }
+@media (min-width: 48rem) { .urgence { grid-template-columns: 1fr auto; align-items: center; gap: 2.5rem; } }
+.urgence h2 { font-size: clamp(1.5rem, 1.1rem + 1.3vw, 2rem); color: var(--flamme); }
+.urgence p { color: #b6bec6; max-width: 46ch; margin-top: 0.45rem; }
 
 /* --- Métiers -------------------------------------------------------------
    Une liste, pas des cartes : quatre lignes qui se lisent, séparées par un
@@ -258,14 +272,14 @@ h3 { font-size: 1.3125rem; }
 .form__note { margin-top: 1rem; font-size: 0.8125rem; color: var(--encre-3); }
 
 /* --- Pied ----------------------------------------------------------------- */
-.footer { border-top: 1px solid var(--trait); }
+.footer { background: var(--noir); color: #97a1aa; }
 .footer__inner {
-  padding-block: 2.25rem; display: flex; flex-wrap: wrap;
+  padding-block: 2.5rem; display: flex; flex-wrap: wrap;
   gap: 0.6rem 2rem; justify-content: space-between; align-items: center;
-  font-size: 0.875rem; color: var(--encre-3);
+  font-size: 0.875rem;
 }
 .footer a { text-decoration: none; }
-.footer a:hover { color: var(--encre); }
+.footer a:hover { color: #fff; }
 .footer__links { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; }
 
 /* --- Barre d'appel mobile ------------------------------------------------- */
@@ -281,11 +295,11 @@ body { padding-bottom: 3.4rem; }
 @media (min-width: 62rem) { body { padding-bottom: 0; } }
 
 /* --- Bandeau de démonstration --------------------------------------------- */
-.demo { background: var(--encre); color: #9db0c0; font-size: 0.875rem; }
+.demo { background: var(--noir); color: #949da6; font-size: 0.875rem; }
 .demo__inner { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; padding-block: 0.65rem; }
 .demo__tag {
   font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
-  color: #fff; border: 1px solid #3c5a76;
+  color: #fff; border: 1px solid #3a4048;
   padding: 0.15rem 0.55rem; border-radius: 999px; flex: none;
 }
 .demo__text { flex: 1 1 12rem; }
@@ -298,10 +312,10 @@ body { padding-bottom: 3.4rem; }
 }
 
 /* --- Fin de démonstration -------------------------------------------------- */
-.expire { min-height: 100svh; display: grid; place-items: center; padding: var(--pad); background: var(--encre); color: #fff; text-align: center; }
+.expire { min-height: 100svh; display: grid; place-items: center; padding: var(--pad); background: var(--noir); color: #fff; text-align: center; }
 .expire__box { display: grid; justify-items: center; gap: 1.5rem; max-width: 34rem; }
 .expire svg { width: 44px; height: 44px; }
-.expire p { color: #9db0c0; }
+.expire p { color: #949da6; }
 
 /* --- Mouvement ------------------------------------------------------------ */
 .rise { animation: rise 750ms var(--ease-out) both; }

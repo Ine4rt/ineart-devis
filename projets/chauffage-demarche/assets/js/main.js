@@ -47,8 +47,8 @@
     page.innerHTML =
       '<div class="expire__box">' +
       '<svg viewBox="0 0 32 32" aria-hidden="true">' +
-      '<path d="M16 3c3.4 4.6 5.7 7 5.7 10.3a5.7 5.7 0 0 1-11.4 0C10.3 10 12.6 7.6 16 3z" fill="#d9551a"/>' +
-      '<path d="M16 29.5c-2.4 0-4.3-1.9-4.3-4.2 0-2.5 2.4-4.5 4.3-7 1.9 2.5 4.3 4.5 4.3 7 0 2.3-1.9 4.2-4.3 4.2z" fill="#2f6f9e"/>' +
+      '<path d="M16 3c3.4 4.6 5.7 7 5.7 10.3a5.7 5.7 0 0 1-11.4 0C10.3 10 12.6 7.6 16 3z" fill="#e2601c"/>' +
+      '<path d="M16 29.5c-2.4 0-4.3-1.9-4.3-4.2 0-2.5 2.4-4.5 4.3-7 1.9 2.5 4.3 4.5 4.3 7 0 2.3-1.9 4.2-4.3 4.2z" fill="#1f6fb2"/>' +
       "</svg>" +
       "<h1>Cette démonstration est terminée</h1>" +
       "<p>Ce site était une proposition présentée à Chauffage Demarche Pascal " +
@@ -143,7 +143,7 @@
       entrees.forEach(function (entree) {
         var lien = parId[entree.target.id];
         if (!lien) return;
-        lien.style.color = entree.isIntersecting ? "var(--encre)" : "";
+        lien.style.color = entree.isIntersecting ? "var(--noir)" : "";
       });
     },
     { rootMargin: "-45% 0px -50% 0px" }

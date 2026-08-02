@@ -29,7 +29,7 @@ juger son propre travail, et un artisan reconnaît un démarcheur qui l'amadoue.
 
 Bonjour,
 
-Je m'appelle Dimitri Vedea. Je crée et j'entretiens des sites web pour les
+Je m'appelle Dimitri Van den Ackerveken. Je crée et j'entretiens des sites web pour les
 indépendants et les petites entreprises de la région.
 
 Je vous écris sans que vous m'ayez rien demandé, et je préfère le dire
@@ -63,7 +63,7 @@ dites-le moi aussi : je n'insisterai pas.
 
 Bien à vous,
 
-**Dimitri Vedea**
+**Dimitri Van den Ackerveken**
 IneWeb — info@ineart.be
 
 ---
@@ -180,7 +180,7 @@ Un mot en réponse à ce mail suffit — même « ça m'intéresse, expliquez-mo
 
 Bien à vous,
 
-**Dimitri Vedea**
+**Dimitri Van den Ackerveken**
 IneWeb
 info@ineart.be
 
@@ -205,7 +205,7 @@ et le suivi.
 
 Bien à vous,
 
-**Dimitri Vedea** — IneWeb — info@ineart.be
+**Dimitri Van den Ackerveken** — IneWeb — info@ineart.be
 
 ---
 
@@ -240,7 +240,7 @@ correspond à la date inscrite dans `assets/js/main.js` (`DEMO.expire`). Si vous
 envoyez plus tard, reculez les deux ensemble — un compte à rebours qui
 contredit le mail se remarque immédiatement.
 
-**3. La signature.** J'ai mis Dimitri Vedea / IneWeb / info@ineart.be. Ajoutez
+**3. La signature.** J'ai mis Dimitri Van den Ackerveken / IneWeb / info@ineart.be. Ajoutez
 un numéro si vous en avez un pour l'activité web ; sinon laissez tel quel, tout
 passe par mail.
 

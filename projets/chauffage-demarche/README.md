@@ -137,17 +137,28 @@ C'est le troisième registre de la série, et il est distinct des deux autres :
 la ferronnerie était sombre et photographique, le garage dense et informatif,
 celui-ci est clair et aéré.
 
-### Deux accents, et chacun son domaine
+### Ses trois couleurs, chacune son domaine
 
-- **Bleu `#2f6f9e`** — l'eau : sanitaire, salle de bain, ce qui coule.
-- **Flamme `#d9551a`** — la chaleur : chauffage, chaudière, dépannage urgent.
+Relevées sur son camion : un bandeau noir, une flamme orange, des gouttes bleues.
 
-Ce n'est pas de la décoration : c'est la logique de son propre logo, une flamme
-et des gouttes peintes sur son camion. Sur la page, l'orange n'apparaît que sur
-les deux métiers « chauds » et sur le bloc dépannage. Partout ailleurs, le bleu.
+- **Noir `#111418`** — la structure : l'encre, le bloc dépannage, le pied de page.
+- **Flamme `#e2601c`** — la chaleur : chauffage, chaudière, urgence.
+- **Bleu `#1f6fb2`** — l'eau : sanitaire, salle de bain.
 
-Les neutres sont tirés vers le bleu plutôt que gris purs — un gris neutre aurait
-été un défaut d'attention, pas une décision.
+Aucune ne sert d'ornement, et c'est ce qui permet d'en tenir trois sans que la
+page devienne bariolée : un lecteur qui voit de l'orange sait qu'on parle de
+chaleur avant même d'avoir lu le mot.
+
+Le bloc dépannage est le seul aplat plein de la page — noir, titre orange,
+bouton orange. C'est exactement l'ordre des couleurs sur son camion.
+
+Le noir porte une pointe de bleu plutôt qu'un `#000` : le noir absolu écrase sur
+écran, et les gris qui en descendent gardent ainsi une parenté avec l'eau.
+
+**Deux valeurs d'orange**, parce qu'un même orange ne peut pas tout faire. La
+vive (`#e2601c`) sert de couleur d'écriture sur le noir ; la sourde
+(`#c44f13`) sert de fond sous du texte blanc. L'orange exact du camion tombe à
+3,6:1 avec du blanc dessus — juste, mais illisible pour qui a la vue basse.
 
 ### Une serif, pour un chauffagiste
 

@@ -25,7 +25,7 @@ Quatre textes, dans l'ordre où ils servent :
 
 Bonjour,
 
-Je m'appelle Dimitri Vedea. Je crée et j'entretiens des sites web pour les
+Je m'appelle Dimitri Van den Ackerveken. Je crée et j'entretiens des sites web pour les
 indépendants et les petites entreprises de la région.
 
 Je vous écris sans que vous m'ayez rien demandé, et je préfère le dire
@@ -62,7 +62,7 @@ dites-le moi aussi : je n'insisterai pas.
 
 Bien à vous,
 
-**Dimitri Vedea**
+**Dimitri Van den Ackerveken**
 IneWeb — info@ineart.be
 
 ---
@@ -145,7 +145,7 @@ communes desservies.
 
 Bien à vous,
 
-**Dimitri Vedea**
+**Dimitri Van den Ackerveken**
 IneWeb — info@ineart.be
 
 ---
@@ -169,7 +169,7 @@ et le suivi.
 
 Bien à vous,
 
-**Dimitri Vedea** — IneWeb — info@ineart.be
+**Dimitri Van den Ackerveken** — IneWeb — info@ineart.be
 
 ---
 

@@ -1,21 +1,74 @@
 # Démarchage — Atelier Genot
 
-Trois textes prêts à envoyer : le mail principal, une relance à J+5, et une
-réponse type aux deux objections les plus probables.
+Quatre textes prêts à envoyer, dans l'ordre où ils servent :
+
+1. **Le premier mail** — court. C'est celui qu'on envoie.
+2. **Le second** — long. À envoyer *seulement* s'il répond « expliquez-moi ».
+3. **La relance** — à J+5, s'il ne répond pas.
+4. **Les réponses aux objections** — à garder sous la main.
 
 **Avant d'envoyer**, deux vérifications d'une minute — voir la fin du document.
 
 ---
 
-## Mail principal
+## 1. Premier mail — la version courte
+
+C'est celle à utiliser. Elle tient sur un écran de téléphone sans faire défiler,
+et elle n'a qu'un seul but : le faire cliquer sur le lien. Le site fait le
+reste du travail — c'est pour ça qu'on l'a construit.
 
 **Destinataire :** ateliergenot@hotmail.com
 
-**Objet :** `Atelier Genot — j'ai réalisé votre site, il est en ligne`
+**Objet :** `Votre portail rue du Frêne — et un site pour l'Atelier Genot`
 
-> *Variantes d'objet, si celle-ci ne vous convient pas :*
-> - `Votre portail Wathelet mérite mieux qu'un fil Facebook`
-> - `Un site pour l'Atelier Genot — à voir avant le 8 août`
+> *Variantes d'objet :*
+> - `J'ai fait un site pour l'Atelier Genot`
+> - `Introuvable sur Google — j'ai fait quelque chose`
+
+---
+
+Bonjour,
+
+Votre portail à découpes florales rue du Frêne est un beau travail. Peu
+d'ateliers savent faire ça.
+
+Dommage que personne ne le trouve sur Google. J'ai cherché « ferronnier
+Marchin » : vous n'y êtes pas, vos concurrents oui.
+
+Alors plutôt que de vous proposer un site, je l'ai fait. Avec vos photos, vos
+coordonnées, vos prestations :
+
+**https://dev.ineart.be/atelier-genot/**
+
+Deux minutes suffisent pour le regarder, de préférence sur votre téléphone. Il
+reste en ligne jusqu'au 8 août.
+
+250 € une seule fois pour la mise en service, puis 50 € par an pour le nom de
+domaine `atelier-genot.be`, l'hébergement et le suivi. Sans engagement.
+
+Un mot en réponse suffit — même pour dire non.
+
+Bien à vous,
+
+**Dimitri Vedea**
+IneWeb — info@ineart.be
+
+---
+
+*Environ 130 mots. Si vous joignez des captures : deux au maximum — l'accueil et
+les réalisations. Au-delà, le mail passe en « pièces jointes lourdes » chez
+certains fournisseurs et perd la moitié de ses lecteurs.*
+
+---
+
+## 2. Second mail — la version longue
+
+**À n'envoyer qu'après une réponse de sa part**, du type « ça m'intéresse,
+expliquez-moi ». À froid, ce texte est trop long : il sera refermé avant le
+lien. En réponse à une question, il est parfait — il montre que le travail est
+déjà abouti et que rien n'est laissé au hasard.
+
+**Objet :** `Atelier Genot — le détail de ce que je propose`
 
 ---
 
@@ -26,7 +79,7 @@ plutôt que de vous proposer un site, je l'ai réalisé.
 
 Il est en ligne, avec vos photos, vos coordonnées et vos prestations :
 
-**https://atelier-genot.ineart.be**
+**https://dev.ineart.be/atelier-genot/**
 
 Prenez deux minutes pour le parcourir, sur ordinateur ou sur téléphone. Rien à
 installer, rien à signer — regardez, simplement.
@@ -127,7 +180,7 @@ info@ineart.be
 
 ---
 
-## Relance — à envoyer 5 jours après, si pas de réponse
+## 3. Relance — à envoyer 5 jours après, si pas de réponse
 
 **Objet :** `Atelier Genot — le site ferme dans 2 jours`
 
@@ -136,7 +189,7 @@ Bonjour,
 Je reviens brièvement vers vous : le site que j'ai réalisé pour l'Atelier Genot
 ferme après-demain.
 
-**https://atelier-genot.ineart.be**
+**https://dev.ineart.be/atelier-genot/**
 
 Si vous ne l'avez pas encore ouvert, deux minutes suffisent. Si vous l'avez vu
 et que ça ne vous intéresse pas, dites-le moi simplement — je n'insisterai pas.
@@ -150,7 +203,7 @@ Bien à vous,
 
 ---
 
-## Réponses aux deux objections probables
+## 4. Réponses aux deux objections probables
 
 ### « J'ai déjà Facebook, ça me suffit »
 
@@ -172,17 +225,14 @@ Bien à vous,
 
 ## À vérifier avant d'envoyer
 
-**1. L'adresse du site.** Le mail annonce `atelier-genot.ineart.be`. Le site est
-actuellement sur `dev.ineart.be/atelier-genot/`. Déposez les fichiers dans le
-dossier du sous-domaine `atelier-genot` et activez son certificat SSL avant
-d'envoyer : un lien en `dev.` ou marqué « Non sécurisé » affaiblit tout le
-reste du message. Si vous préférez envoyer tout de suite, remplacez l'adresse
-dans le mail — mais l'effet ne sera pas le même.
+**1. Le site est à jour.** Redéployez le dossier après chaque modification —
+le bandeau de démonstration a été compacté pour les téléphones, et c'est sur
+téléphone qu'il ouvrira le lien.
 
-**2. La date de fermeture.** Le mail dit « jusqu'au 8 août », ce qui correspond
-à la date inscrite dans `assets/js/main.js` (`DEMO.expire`). Si vous envoyez
-plus tard, reculez les deux ensemble — un compte à rebours qui contredit le
-mail se remarque immédiatement.
+**2. La date de fermeture.** Les mails disent « jusqu'au 8 août », ce qui
+correspond à la date inscrite dans `assets/js/main.js` (`DEMO.expire`). Si vous
+envoyez plus tard, reculez les deux ensemble — un compte à rebours qui
+contredit le mail se remarque immédiatement.
 
 **3. La signature.** J'ai mis Dimitri Vedea / IneWeb / info@ineart.be. Ajoutez
 un numéro si vous en avez un pour l'activité web ; sinon laissez tel quel, tout
@@ -190,12 +240,28 @@ passe par mail.
 
 ---
 
+## Pourquoi deux longueurs plutôt qu'une
+
+Un mail de démarchage à froid n'a pas pour but de convaincre : il a pour but
+d'être lu jusqu'au lien. Tout ce qui allonge le texte avant ce lien joue contre
+lui, aussi juste soit l'argument.
+
+Le mail court ne demande donc qu'une chose — un clic. Le site, lui, a tout le
+temps de convaincre : c'est pour ça qu'on y a mis les prestations, les
+réalisations, le formulaire de devis et le numéro à portée de pouce.
+
+La version longue ne devient utile qu'au moment où il a répondu. Là, il *veut*
+lire, et le détail devient une preuve de sérieux au lieu d'un obstacle. Envoyée
+dans le mauvais ordre, la même matière produit l'effet inverse.
+
+---
+
 ## Une remarque sur les promesses
 
-Ce mail n'affirme nulle part que le site rapportera un nombre précis de clients,
-et c'est délibéré. Un artisan qui a déjà entendu des promesses de ce genre s'en
-méfie, et une promesse chiffrée invérifiable est ce qui fait fermer un mail
-commercial.
+Ces mails n'affirment nulle part que le site rapportera un nombre précis de
+clients, et c'est délibéré. Un artisan qui a déjà entendu des promesses de ce
+genre s'en méfie, et une promesse chiffrée invérifiable est ce qui fait fermer
+un mail commercial.
 
 Les arguments retenus sont tous vérifiables par lui en trente secondes : il peut
 chercher « ferronnier Marchin » sur Google et constater qu'il n'y est pas. C'est

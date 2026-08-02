@@ -309,8 +309,7 @@ def enrichir_google(prospects, dossier_captures, limite=None):
                 _accepter_cookies(page)
                 page.wait_for_timeout(3500)
 
-                fiche["note"] = _extraire_note(page)
-                fiche["avis"] = _extraire_avis(page)
+                fiche["note"], fiche["avis"] = _note_et_avis(page)
                 fiche["categorie_google"] = _extraire_texte(page, "button[jsaction*='category']")
                 site_google = _extraire_site(page)
                 if site_google:
@@ -358,21 +357,27 @@ def _extraire_texte(page, selecteur):
     return ""
 
 
-def _extraire_note(page):
-    brut = _extraire_texte(page, "span[aria-hidden='true']")
-    correspondance = re.match(r"^([0-9][,.][0-9])$", brut.strip())
-    return float(correspondance.group(1).replace(",", ".")) if correspondance else None
+def _note_et_avis(page):
+    """Lit la note et le nombre d'avis dans le texte visible de la fiche.
 
+    Les classes CSS de Google changent sans preavis : on cherche donc le
+    motif '4,5 (128 avis)' dans le texte plutot qu'un selecteur precis.
+    """
+    try:
+        texte = page.locator("body").inner_text(timeout=4000)
+    except Exception:  # noqa: BLE001
+        return None, None
 
-def _extraire_avis(page):
-    for selecteur in ("button[aria-label*='avis']", "span:has-text('avis')"):
-        brut = _extraire_texte(page, selecteur)
-        correspondance = re.search(r"([\d\s \.]+)\s*avis", brut)
-        if correspondance:
-            chiffres = re.sub(r"\D", "", correspondance.group(1))
-            if chiffres:
-                return int(chiffres)
-    return None
+    motif = re.search(r"([1-5][,.]\d)[^\d]{0,12}([\d\s.]{1,9})\s*avis", texte)
+    if motif:
+        chiffres = re.sub(r"\D", "", motif.group(2))
+        return (float(motif.group(1).replace(",", ".")),
+                int(chiffres) if chiffres else None)
+
+    seule = re.search(r"\b([1-5][,.]\d)\s*(?:etoile|\u00e9toile|star)", texte, re.I)
+    if seule:
+        return float(seule.group(1).replace(",", ".")), None
+    return None, None
 
 
 def _extraire_site(page):
@@ -441,18 +446,30 @@ def main():
     ordre = {"B": 0, "C": 1, "A": 2}
     retenus.sort(key=lambda p: (ordre[p["segment"]], not p["telephone"], p["nom"]))
 
-    if arguments.limite:
-        retenus = retenus[:arguments.limite]
-
     if arguments.enrich:
-        print("Enrichissement Google Maps...")
+        # Google revele des sites qu'OSM ignore : on enrichit large, puis on
+        # elimine ceux qui se revelent avoir un vrai site avant de couper.
+        marge = int(arguments.limite * 2) if arguments.limite else 0
+        candidats = retenus[:marge] if marge else retenus
+        print("Enrichissement Google Maps sur %d candidats..." % len(candidats))
         try:
-            retenus = enrichir_google(retenus,
-                                      os.path.join(config.DOSSIER_DATA, "captures"))
+            candidats = enrichir_google(candidats,
+                                        os.path.join(config.DOSSIER_DATA, "captures"))
         except Exception as erreur:  # noqa: BLE001
             # Google peut bloquer les IP de datacenter : on garde les donnees OSM.
             print("! enrichissement abandonne (%s) : donnees OSM conservees."
                   % type(erreur).__name__)
+
+        ecartes = [p for p in candidats if p["segment"] == "D"]
+        if ecartes:
+            print("%d prospect(s) ecarte(s) : un site a ete trouve sur Google"
+                  % len(ecartes))
+            for fiche in ecartes:
+                print("   - %s (%s)" % (fiche["nom"], fiche["site_declare"]))
+        retenus = [p for p in candidats if p["segment"] in ("A", "B", "C")]
+
+    if arguments.limite:
+        retenus = retenus[:arguments.limite]
 
     os.makedirs(config.DOSSIER_DATA, exist_ok=True)
     with open(config.FICHIER_PROSPECTS, "w", encoding="utf-8") as fichier:

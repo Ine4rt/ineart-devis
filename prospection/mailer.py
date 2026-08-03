@@ -47,7 +47,8 @@ def accroche(entree):
 def preuve_sociale(entree):
     """Reprend la note Google du prospect quand elle existe."""
     note, avis = entree.get("note"), entree.get("avis")
-    if not note:
+    # Une note mediocre se retourne contre l'argumentaire : on ne la cite pas.
+    if not note or note < 4.0:
         return ""
     note_fr = str(note).replace(".", ",")
     if avis:

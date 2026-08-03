@@ -412,9 +412,15 @@ def main():
     # Les societes ecartees depuis la collecte precedente ne doivent pas
     # rester en ligne ni repartir dans le paquet FTP.
     slugs = {entree["slug"] for entree in entrees}
+    chemin_traites = os.path.join(config.DOSSIER_DATA, "deja_traites.json")
+    livrees = set()
+    if os.path.exists(chemin_traites):
+        with open(chemin_traites, encoding="utf-8") as fichier:
+            livrees = set(json.load(fichier).get("slugs", []))
     for nom in sorted(os.listdir(config.DOSSIER_SITES)):
         chemin = os.path.join(config.DOSSIER_SITES, nom)
-        if os.path.isdir(chemin) and nom not in slugs:
+        # Les campagnes deja livrees restent en ligne pendant leurs 8 jours.
+        if os.path.isdir(chemin) and nom not in slugs and nom not in livrees:
             shutil.rmtree(chemin)
             print("  - maquette obsolete supprimee : %s" % nom)
 

@@ -1,0 +1,70 @@
+name: IneArt — Generation seule (sites + mails)
+
+# Regenere les maquettes et les mails a partir de data/prospects.json, sans
+# refaire de collecte. Utile pour recuperer des photos manquantes ou appliquer
+# un changement de design a une liste de prospects deja constituee.
+
+on:
+  push:
+    paths:
+      - 'prospection/LANCER_GENERATION'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    env:
+      DEMO_BASE_URL: https://dev.ineart.be
+      FTP_DIR: /dev.ineart.be
+
+    steps:
+      - name: Telecharger le code
+        uses: actions/checkout@v4
+
+      - name: Installer Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Installer les dependances
+        run: pip install -r prospection/requirements.txt
+
+      - name: Generer les sites
+        working-directory: prospection
+        run: python generateur.py
+
+      - name: Preparer les mails
+        working-directory: prospection
+        run: python mailer.py
+
+      - name: Publier l'artefact
+        uses: actions/upload-artifact@v4
+        with:
+          name: prospection-generation
+          path: |
+            prospection/sites/
+            prospection/mails/
+            prospection/data/manifest.json
+            prospection/tableau_de_bord.html
+          retention-days: 30
+
+      - name: Renvoyer les resultats dans la branche
+        run: |
+          git config user.name "IneArt AI Bot"
+          git config user.email "actions@github.com"
+          git add prospection/data prospection/mails prospection/sites prospection/tableau_de_bord.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Generation des maquettes $(date '+%d/%m/%Y %H:%M')"
+          for tentative in 1 2 3 4; do
+            git pull --rebase origin "${GITHUB_REF_NAME}" && git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0
+            echo "Push refuse, nouvelle tentative dans $((tentative * 5))s"
+            sleep $((tentative * 5))
+          done
+          echo "Impossible de pousser (l'artefact reste disponible)."
+          exit 1

@@ -67,10 +67,12 @@ def bloc_tarifs():
 
 
 def signature():
+    """Signature de fin de mail. Le telephone n'apparait que s'il est defini."""
     agence = config.AGENCE
-    return ("Bien à vous,\n%s\n%s — %s\n%s\n"
-            % (agence["signature"], agence["telephone"],
-               agence["email"], agence["site"]))
+    coordonnees = [c for c in (agence.get("telephone"), agence["email"],
+                               agence["site"]) if c]
+    return "Bien à vous,\n%s\n%s\n" % (agence["signature"],
+                                          "\n".join(coordonnees))
 
 
 def texte_mail(entree, relance=False):

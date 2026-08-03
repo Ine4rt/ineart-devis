@@ -11,7 +11,9 @@ import os
 AGENCE = {
     "nom": "IneArt",
     "email": os.environ.get("INEART_EMAIL", "info@ineart.be"),
-    "telephone": os.environ.get("INEART_TEL", "+32 471 00 00 00"),
+    # Laisse vide volontairement : aucun numero dans les mails ni sur
+    # les maquettes tant qu'il n'est pas defini explicitement.
+    "telephone": os.environ.get("INEART_TEL", ""),
     "site": os.environ.get("INEART_SITE", "https://www.ineart.be"),
     "signature": "Dimitri - IneArt",
     "ville": "Huy",

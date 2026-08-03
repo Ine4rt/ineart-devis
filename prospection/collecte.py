@@ -278,13 +278,34 @@ def normaliser(element):
     }
 
 
+def deja_traites():
+    """Slugs des societes livrees lors des campagnes precedentes."""
+    chemin = os.path.join(config.DOSSIER_DATA, "deja_traites.json")
+    if not os.path.exists(chemin):
+        return set()
+    with open(chemin, encoding="utf-8") as fichier:
+        return set(json.load(fichier).get("slugs", []))
+
+
+def enregistrer_traites(prospects):
+    """Ajoute les nouveaux slugs pour qu'ils ne ressortent pas au prochain run."""
+    chemin = os.path.join(config.DOSSIER_DATA, "deja_traites.json")
+    slugs = deja_traites() | {p["slug"] for p in prospects}
+    with open(chemin, "w", encoding="utf-8") as fichier:
+        json.dump({"commentaire": "Societes deja traitees : exclues des "
+                                  "collectes suivantes.",
+                   "slugs": sorted(slugs)},
+                  fichier, ensure_ascii=False, indent=2)
+
+
 def collecter_osm(communes):
     print("Collecte OpenStreetMap : %s" % ", ".join(communes))
     elements = interroger_overpass(communes)
     print("  %d objets recus" % len(elements))
 
     sud, ouest, nord, est = BBOX_BELGIQUE
-    prospects, vus, hors_zone, exclus = [], set(), 0, []
+    traites = deja_traites()
+    prospects, vus, hors_zone, exclus, revus = [], set(), 0, [], 0
     for element in elements:
         fiche = normaliser(element)
         if not fiche:
@@ -296,6 +317,9 @@ def collecter_osm(communes):
         if lat is None or not (sud <= lat <= nord and ouest <= lon <= est):
             hors_zone += 1
             continue
+        if fiche["slug"] in traites:
+            revus += 1
+            continue
         cle = (fiche["nom"].lower(), fiche["adresse"]["ligne1"].lower())
         if cle in vus:
             continue
@@ -304,6 +328,9 @@ def collecter_osm(communes):
 
     if hors_zone:
         print("  %d objets ecartes : hors Belgique (commune homonyme)" % hors_zone)
+    if revus:
+        print("  %d objets ecartes : deja traites lors d'une campagne precedente"
+              % revus)
     if exclus:
         print("  %d objets ecartes : chaines et services publics" % len(exclus))
         for libelle in exclus[:12]:
@@ -484,7 +511,10 @@ def main():
     # On ne garde que les prospects sans vrai site.
     retenus = [p for p in prospects if p["segment"] in ("A", "B", "C")]
     ordre = {"B": 0, "C": 1, "A": 2}
-    retenus.sort(key=lambda p: (ordre[p["segment"]], not p["telephone"], p["nom"]))
+    # Priorite absolue aux societes joignables par mail : ce sont les seules
+    # que l'on peut contacter directement.
+    retenus.sort(key=lambda p: (not p["email"], ordre[p["segment"]],
+                                not p["telephone"], p["nom"]))
 
     if arguments.enrich:
         # Google revele des sites qu'OSM ignore : on enrichit large, puis on
@@ -514,6 +544,7 @@ def main():
     os.makedirs(config.DOSSIER_DATA, exist_ok=True)
     with open(config.FICHIER_PROSPECTS, "w", encoding="utf-8") as fichier:
         json.dump(retenus, fichier, ensure_ascii=False, indent=2)
+    enregistrer_traites(retenus)
 
     compteur = {}
     for fiche in retenus:

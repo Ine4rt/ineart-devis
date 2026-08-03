@@ -204,7 +204,7 @@ def telecharger_photos(fiche, dossier):
 
 # --- generation --------------------------------------------------------------
 
-def generer_site(fiche, duree_jours, modele):
+def generer_site(fiche, duree_jours, modele, variante="v1"):
     secteur = secteurs.detecter_secteur(fiche)
     theme = secteurs.theme(secteur)
     slug = fiche.get("slug") or "societe"
@@ -220,9 +220,21 @@ def generer_site(fiche, duree_jours, modele):
 
     if photos:
         hero_fond = "background:url('%s') center/cover no-repeat;" % photos[0]
+        hero_media = ('<div class="hero-media"><img src="%s" alt=""></div>'
+                      % e(photos[0]))
     else:
         hero_fond = ("background:linear-gradient(135deg,%s,%s);"
                      % (theme["sombre"], theme["primaire"]))
+        hero_media = ""
+
+    # Le telephone de l'agence n'apparait que s'il est renseigne.
+    if config.AGENCE.get("telephone"):
+        bouton_agence = ('<a class="btn btn-vide" href="tel:%s">Appeler %s</a>'
+                         % (e(tel_brut(config.AGENCE["telephone"])),
+                            e(config.AGENCE["nom"])))
+    else:
+        bouton_agence = ('<a class="btn btn-vide" href="mailto:%s">Écrire à %s</a>'
+                         % (e(config.AGENCE["email"]), e(config.AGENCE["nom"])))
 
     adresse = fiche.get("adresse") or {}
     ville = adresse.get("ville") or config.AGENCE["ville"]
@@ -280,6 +292,9 @@ def generer_site(fiche, duree_jours, modele):
                            "temps de vous répondre." % ville),
         "LIGNE_FACEBOOK": ('<br><a href="%s" target="_blank" rel="noopener">Notre page Facebook</a>'
                            % e(fiche["facebook"])) if fiche.get("facebook") else "",
+        "VARIANTE": variante,
+        "HERO_MEDIA": hero_media,
+        "BOUTON_AGENCE": bouton_agence,
         "LOGO_SVG": logo_svg(nom, theme),
         "FAVICON": favicon(nom, theme),
         "C_PRIMAIRE": theme["primaire"],
@@ -314,6 +329,7 @@ def generer_site(fiche, duree_jours, modele):
         "slug": slug,
         "nom": nom,
         "secteur": secteur,
+        "variante": variante,
         "segment": fiche.get("segment", "A"),
         "categorie": fiche.get("categorie_google") or theme["libelle"],
         "note": fiche.get("note"),
@@ -386,9 +402,12 @@ def main():
 
     os.makedirs(config.DOSSIER_SITES, exist_ok=True)
     entrees = []
+    variantes = ["v1", "v2", "v3"]
     for index, fiche in enumerate(prospects, 1):
-        print("  [%d/%d] %s" % (index, len(prospects), fiche.get("nom")))
-        entrees.append(generer_site(fiche, arguments.duree, modele))
+        variante = variantes[(index - 1) % len(variantes)]
+        print("  [%d/%d] %s (%s)" % (index, len(prospects), fiche.get("nom"),
+                                     variante))
+        entrees.append(generer_site(fiche, arguments.duree, modele, variante))
 
     # Les societes ecartees depuis la collecte precedente ne doivent pas
     # rester en ligne ni repartir dans le paquet FTP.

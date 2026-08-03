@@ -52,7 +52,7 @@ nav.liens a:hover{color:var(--primaire)}
 @media(max-width:820px){nav.liens{display:none}}
 
 /* ---------- hero ---------- */
-.hero{position:relative;min-height:clamp(440px,64vh,620px);display:flex;align-items:center;color:#fff;overflow:hidden;background:linear-gradient(135deg,#2A1512,#B2402F);}
+.hero{position:relative;min-height:clamp(440px,64vh,620px);display:flex;align-items:center;color:#fff;overflow:hidden;background:url('img/photo1.jpg') center/cover no-repeat;}
 .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,#2A1512f2 0%,#2A1512bb 46%,#B2402F66 100%)}
 .hero .wrap{position:relative;z-index:2;padding:72px 0}
 .hero .etiquette{display:inline-block;border:1px solid rgba(255,255,255,.4);border-radius:99px;padding:5px 15px;font-size:12px;text-transform:uppercase;letter-spacing:.15em;margin-bottom:22px}
@@ -211,7 +211,7 @@ footer a{color:#c9d1dc}
     <nav class="liens">
       <a href="#services">Nos services</a>
       <a href="#infos">Infos pratiques</a>
-      
+      <a href="#galerie">Photos</a>
       <a href="#contact">Contact</a>
     </nav>
     <a class="tel-btn" href="tel:+3285231348">+3285231348</a>
@@ -229,7 +229,7 @@ footer a{color:#c9d1dc}
       <a class="btn btn-vide" href="https://www.google.com/maps/search/Le%20Village%20Chinois%204500%20Huy" target="_blank" rel="noopener">Voir l'itinéraire</a>
     </div>
    </div>
-   
+   <div class="hero-media"><img src="img/photo1.jpg" alt=""></div>
   </div>
 </div>
 
@@ -264,7 +264,10 @@ footer a{color:#c9d1dc}
   </div>
 </section>
 
-
+<section id="galerie"><div class="wrap"><div class="titre-bloc"><div class="surtitre">En images</div><h2>Un aperçu de la maison</h2></div><div class="galerie"><figure><img src="img/photo1.jpg" alt="" loading="lazy"></figure>
+<figure><img src="img/photo2.jpg" alt="" loading="lazy"></figure>
+<figure><img src="img/photo3.jpg" alt="" loading="lazy"></figure>
+<figure><img src="img/photo4.jpg" alt="" loading="lazy"></figure></div></div></section>
 
 <section class="avis">
   <div class="wrap">
@@ -349,8 +352,8 @@ footer a{color:#c9d1dc}
 </div>
 
 <script>
-var FIN = new Date("2026-08-11T16:05:02Z").getTime();
-var DEBUT = new Date("2026-08-03T16:05:02Z").getTime();
+var FIN = new Date("2026-08-11T16:07:34Z").getTime();
+var DEBUT = new Date("2026-08-03T16:07:34Z").getTime();
 document.getElementById("an").textContent = new Date().getFullYear();
 
 function tic(){

@@ -20,7 +20,6 @@ jobs:
     timeout-minutes: 45
 
     env:
-      COMMUNES: Huy
       LIMITE_PROSPECTS: '20'
       DEMO_BASE_URL: https://dev.ineart.be
       FTP_DIR: /dev.ineart.be
@@ -41,9 +40,13 @@ jobs:
       - name: Installer Chromium
         run: python -m playwright install --with-deps chromium
 
-      - name: Collecter les entreprises de Huy
+      - name: Collecter les entreprises
         working-directory: prospection
-        run: python collecte.py --enrich --limite 20 --communes "Huy"
+        # Le perimetre se regle dans data/communes.txt, sans toucher au workflow.
+        run: |
+          COMMUNES="$(tr -d '\n' < data/communes.txt)"
+          echo "Perimetre : $COMMUNES"
+          python collecte.py --enrich --limite 20 --communes "$COMMUNES"
 
       - name: Generer les sites
         working-directory: prospection

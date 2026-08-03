@@ -1,625 +1,832 @@
 [
   {
-    "id": "n7120318180",
-    "nom": "Cospaïa",
-    "slug": "cospaia",
-    "segment": "A",
-    "categorie_osm": "jewelry",
-    "categorie_google": "Bijouterie",
+    "id": "w914189288",
+    "nom": "L’Orangerie",
+    "slug": "lorangerie",
+    "segment": "B",
+    "categorie_osm": "clothes",
+    "categorie_google": "",
     "adresse": {
-      "ligne1": "",
+      "ligne1": "Rue du Centre 22",
       "ligne2": "",
-      "complete": "",
+      "complete": "Rue du Centre 22",
       "code_postal": "",
       "ville": ""
     },
-    "lat": 50.5184322,
-    "lon": 5.2411444,
+    "lat": 50.5999887,
+    "lon": 5.3578385,
+    "telephone": "+32 4 259 76 56",
+    "email": "orangeriececile@gmail.com",
+    "facebook": "https://fr-fr.facebook.com/Lorangerie1995",
+    "site_declare": "",
+    "horaires": [],
+    "description": "",
+    "note": null,
+    "avis": null,
+    "photos": [
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnsvKq-SD3pC6WUua9u-7vAJecPEcOJ9sS4oL627h6a5d-MEMqqwdIxf3YXhpyvcqrvNNtWzQmkTD-8aaidqweiZXbgitFHyCSKoA5WTcrGuU69yOA5mQKRS81MY0TWcjbf3ALL=w1200-h800-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWmPP2Hu5zlbA7s0h8UiB4241lD8RuaHP-W1GU1bloiiLcxB3mRFCTHp8W6prbiyHOGjQgSX1Nhy-Lsgc5Rz4IZUGm7I4AqzMdRi2mlWTby8RbZ2SwidZ5Q6TWCVh9ATPZiqBrC4=w1200-h800-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWklv0LpXXRMOXPX0ZtfpCA_lxFcicGXTXj0n6SQn8wBdak2VniRLzTM5IC6g_uathWJmQYL_otVb8esSan5uYq3Ct-UzvYTQ6kvK6aJrbnGWlsUI8cvL8CBdTXlbgKNDkFyMolb=w1200-h800-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWmiZSXCDtonJV5_PpxqZ1hTFbMKvOLb2SLgYY3KOenGoYxazQLfFJG1j2GBjEGqSIB3OAd-vSz9MeOgcJDJzghIJA4ul4P24Qr6Joj1dJIHKoPzwfvCby__jIEmXCG8tf1sh-6Yy4WOs8A=w1200-h800-k-no"
+    ],
+    "capture_google": "data/captures/lorangerie-google.png",
+    "capture_facebook": "",
+    "source": "openstreetmap+google",
+    "osm_url": "https://www.openstreetmap.org/way/914189288",
+    "maps_url": "https://www.google.com/maps/search/L%E2%80%99Orangerie%20Huy%20Belgique"
+  },
+  {
+    "id": "w219999832",
+    "nom": "La Halle Locale",
+    "slug": "la-halle-locale",
+    "segment": "B",
+    "categorie_osm": "convenience",
+    "categorie_google": "Magasin de produits de la ferme",
+    "adresse": {
+      "ligne1": "Tige des Saules 48",
+      "ligne2": "4550 Nandrin",
+      "complete": "Tige des Saules 48, 4550 Nandrin",
+      "code_postal": "4550",
+      "ville": "Nandrin"
+    },
+    "lat": 50.5081229,
+    "lon": 5.3969802,
     "telephone": "",
-    "email": "cospaiahuy@hotmail.com",
-    "facebook": "",
+    "email": "nandrin@jardindantan.be",
+    "facebook": "https://www.facebook.com/LaHalleLocale/",
     "site_declare": "",
     "horaires": [
       [
         "Mardi à Samedi",
-        "10:00-13:00, 13:30-18:00"
+        "12:00-18:00"
       ]
     ],
-    "description": "",
-    "note": null,
-    "avis": null,
-    "photos": [
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlY9MfQOVzz8-kpE--0uP2lVYup1CEe0kSYuGWdQ9IRVoi_FlP5x_a5e6FzhH-9g0BYecBRYnRk71DW2t6cEpqca2vUVcvJ6SC6AphcXANxEnkpRX1CA5gKs0Zl3tpc5pIgZ9ZoIg=w1200-h800-p-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnifMxT5cRupOxBZq3y1RtQDr57AIGBrB_VYhzT3DVr5P-0jMVtku0gF5yTKm8hHBIuElkdFbqB7CrBkTkIbbcz304aSzRCj4jawvk32k9-ZgvuI3jJqvDRT-IiJdVn_TZ9l3IBQD1AOhLe=w1200-h800-p-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWkEY6LgMEx74NEg0j4zZZssLMXHUes7vbcSI7FXtYIxllwbGt7Mfo_IfnhefQFgvCpLP8Mr24YH8UzMhUp-lnWR_QBQnmCsof0pNaFl_N0Hi3Miqg6xQo4icrA084Ab4bq1lY64=w1200-h800-p-k-no"
-    ],
-    "capture_google": "data/captures/cospaia-google.png",
-    "capture_facebook": "",
-    "source": "openstreetmap+google",
-    "osm_url": "https://www.openstreetmap.org/node/7120318180",
-    "maps_url": "https://www.google.com/maps/search/Cospa%C3%AFa%20Huy%20Belgique"
-  },
-  {
-    "id": "n2840107825",
-    "nom": "Basilio Cycles",
-    "slug": "basilio-cycles",
-    "segment": "A",
-    "categorie_osm": "bicycle",
-    "categorie_google": "Magasins de vente au détail",
-    "adresse": {
-      "ligne1": "Rue entre deux Portes 23",
-      "ligne2": "4520 Huy",
-      "complete": "Rue entre deux Portes 23, 4520 Huy",
-      "code_postal": "4520",
-      "ville": "Huy"
-    },
-    "lat": 50.5218611,
-    "lon": 5.2338567,
-    "telephone": "+32 85 21 52 08",
-    "email": "",
-    "facebook": "",
-    "site_declare": "",
-    "horaires": [],
-    "description": "",
+    "description": "Vente de fruits et légumes venant des producteurs de la région, ainsi que d'autres produits (sauces, pâtes, chocolats, boissons,...)",
     "note": 4.6,
-    "avis": 56,
+    "avis": 18,
     "photos": [
-      "https://lh3.googleusercontent.com/a-/ALV-UjXOCO4wO2DG62-grF14lnQ2VHVLTyiBTK9MT_wh4AAapPCWQ0Q=w1200-h800-p-rp-mo-ba12-br100",
-      "https://lh3.googleusercontent.com/a-/ALV-UjWqL_MvtQxn9wfWwi6H6boFudXJGyxnq1xT1QWHWpQqUnycbSNC=w1200-h800-p-rp-mo-br100",
-      "https://lh3.googleusercontent.com/a-/ALV-UjUdMqbl5dXzsK_J5RF7UDUH230lM5oZkWaq2RQqASriV0wb9mjd=w1200-h800-p-rp-mo-br100",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWndy70IWlInVDZoXBKVgzK4bxbhHOFYyZeWuK-GhMMVbL2AkwlM3Y0ng97KM-WcXrWtSEb4XJY_3g5pGHv2C5cmys64ezfIznJhdR5FMS_DTRkpOJYXmzaipMQDUpRzMJ18DNwN=w1200-h800-p-k-no"
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnvhRvh-3R9rg5JBPGdqopuct-M6qrMjQQynLtvOLMGZOr-hcVO4vyGZxYgddk5NmxSv6wtwFxxBE58A05HB8BogbglJ3M7lGvXD0K9DRaTKGGqv7oEUND8FFDAifXJXFL3e7p_=w1200-h800-p-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnvhRvh-3R9rg5JBPGdqopuct-M6qrMjQQynLtvOLMGZOr-hcVO4vyGZxYgddk5NmxSv6wtwFxxBE58A05HB8BogbglJ3M7lGvXD0K9DRaTKGGqv7oEUND8FFDAifXJXFL3e7p_=w1200-h800-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnvhRvh-3R9rg5JBPGdqopuct-M6qrMjQQynLtvOLMGZOr-hcVO4vyGZxYgddk5NmxSv6wtwFxxBE58A05HB8BogbglJ3M7lGvXD0K9DRaTKGGqv7oEUND8FFDAifXJXFL3e7p_=w1200-h800-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWm7nfWlX0DADNPPuTpJtR0xmn6i5ASqwQNexZVHp72lHP3zgGdLyM_bQtma0DqnYq7Vtwi72EyqiyxIOHMs6b53JoxWQKZxSRnvD_TavhhJd6W2wXcnP6Brrv--Dh5h22Qbqb9O=w1200-h800-k-no"
     ],
-    "capture_google": "data/captures/basilio-cycles-google.png",
+    "capture_google": "data/captures/la-halle-locale-google.png",
     "capture_facebook": "",
     "source": "openstreetmap+google",
-    "osm_url": "https://www.openstreetmap.org/node/2840107825",
-    "maps_url": "https://www.google.com/maps/search/Basilio%20Cycles%204520%20Huy"
+    "osm_url": "https://www.openstreetmap.org/way/219999832",
+    "maps_url": "https://www.google.com/maps/search/La%20Halle%20Locale%204550%20Nandrin"
   },
   {
-    "id": "n5232632743",
-    "nom": "Chez Joes",
-    "slug": "chez-joes",
-    "segment": "A",
-    "categorie_osm": "fast_food",
-    "categorie_google": "Sandwicherie",
-    "adresse": {
-      "ligne1": "Rue Neuve 6",
-      "ligne2": "4500 Huy",
-      "complete": "Rue Neuve 6, 4500 Huy",
-      "code_postal": "4500",
-      "ville": "Huy"
-    },
-    "lat": 50.5206515,
-    "lon": 5.2363112,
-    "telephone": "+3285875183",
-    "email": "",
-    "facebook": "",
-    "site_declare": "",
-    "horaires": [
-      [
-        "Lundi à Samedi",
-        "07:00-17:00"
-      ]
-    ],
-    "description": "",
-    "note": 4.9,
-    "avis": 42,
-    "photos": [
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWko04TNormg2CuZjZA_Ai1ino0svcuEO4S8zjHw1mNKaT1_DNusJUxTLFWo6wSYRxSRr98iDTexlImubFWkIgC5rTKSBlYgj4jRB_DB0b1naONzDVWvLED5haSI6axGfq-50tnGUqJyM_9c=w1200-h800-p-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWko04TNormg2CuZjZA_Ai1ino0svcuEO4S8zjHw1mNKaT1_DNusJUxTLFWo6wSYRxSRr98iDTexlImubFWkIgC5rTKSBlYgj4jRB_DB0b1naONzDVWvLED5haSI6axGfq-50tnGUqJyM_9c=w1200-h800-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnef93GO2FGchNO6kvxyxhzlio30KtrLlzPjUQH8CodSBRCQ4I7PeD2Drtme2VUJHqK6AASu0-XzpWxgDowVi3aoTuUg-LKck2h2qHoPgXcViPPwehdQQKmX1nIB6iBvdAkU4t4kShbIJxP=w1200-h800-p-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnUSUimyWFzUdWzkRLxtiDrNeh_Qc83wTVqcUgM3rjJmI9O2ji9yXH-hLmpgRUvhwmqaGRG0rxrwQlLMWIlIJQjCTKSoZmKQgJGhmV5edX0ACjILkUZFs4cnqjBaEJt6WybZ3KX165TgI11=w1200-h800-p-k-no"
-    ],
-    "capture_google": "data/captures/chez-joes-google.png",
-    "capture_facebook": "",
-    "source": "openstreetmap+google",
-    "osm_url": "https://www.openstreetmap.org/node/5232632743",
-    "maps_url": "https://www.google.com/maps/search/Chez%20Joes%204500%20Huy"
-  },
-  {
-    "id": "n3022274056",
-    "nom": "La Place",
-    "slug": "la-place",
-    "segment": "A",
-    "categorie_osm": "restaurant",
+    "id": "w977496579",
+    "nom": "Agence Locale pour l'Emploi (ALE)",
+    "slug": "agence-locale-pour-l-emploi-ale",
+    "segment": "C",
+    "categorie_osm": "ngo",
     "categorie_google": "",
     "adresse": {
-      "ligne1": "Grand'Place 20",
-      "ligne2": "",
-      "complete": "Grand'Place 20",
-      "code_postal": "",
-      "ville": ""
+      "ligne1": "Rue Albert Ier 16",
+      "ligne2": "4470 Saint-Georges-sur-Meuse",
+      "complete": "Rue Albert Ier 16, 4470 Saint-Georges-sur-Meuse",
+      "code_postal": "4470",
+      "ville": "Saint-Georges-sur-Meuse"
     },
-    "lat": 50.5180199,
-    "lon": 5.2405287,
-    "telephone": "+32 479 10 44 32",
-    "email": "",
+    "lat": 50.6009172,
+    "lon": 5.3564904,
+    "telephone": "+32 4 286 50 39;+32 465 24 49 45",
+    "email": "alemsaintgeorges@outlook.be",
     "facebook": "",
-    "site_declare": "",
-    "horaires": [],
-    "description": "",
-    "note": null,
-    "avis": null,
-    "photos": [
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnEZfM3-t1bglaV7mgw0SP-zGmKOQopcbNP0fi3I3O6j_HtKml8zR82aOuDlQwFWJ6NRargHL67F2Wo915niPUm9NG3kqF3yOVH_Kk42xP4KWvmQGXdzb7-JaKNniQko6LhlcYBiMc-qXC9=w1200-h800-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlgbft4vURdmCOX0UqBnq1JSHGjzm12bkUrvpj8ual2jobP4iVj2b_l1YuwRwfq2BFIuWPexa8E1o2hDMwJUGf-NWBCa5EtMyrK2tAS069ju5vQn45-_43-ducGaNbke8La_PJukQ=w1200-h800-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWmzA2xC8DGMJZC6Krhs5wvmhUw2mSQ1I9vfic4ZFQK8zkUhjzRFbpyBawDl6iHdBJPRi4e_3ioe2p7UrF1xm0KSNbgkNT4XnwMz7GbTW-E-xZU9NUS3ZcHBGkskyX-wPkNYU_I=w1200-h800-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnTyWY-fdyGXgw60EVTedT0JwsN7771xNvSJO4UM1Qnrn205EQHISsnLp9yQJw3xCnt4Z-pWsb0lJUyxPyygBCKBsMWvt5G4BSqoYQt4AvPSVATLF9xlHB81yoL5K3eFtsF7q0Y=w1200-h800-k-no"
-    ],
-    "capture_google": "data/captures/la-place-google.png",
-    "capture_facebook": "",
-    "source": "openstreetmap+google",
-    "osm_url": "https://www.openstreetmap.org/node/3022274056",
-    "maps_url": "https://www.google.com/maps/search/La%20Place%20Huy%20Belgique"
-  },
-  {
-    "id": "w1382991029",
-    "nom": "La Péniche by Geoff",
-    "slug": "la-peniche-by-geoff",
-    "segment": "A",
-    "categorie_osm": "bar",
-    "categorie_google": "Bar",
-    "adresse": {
-      "ligne1": "Quai Dautrebande",
-      "ligne2": "4500 Huy",
-      "complete": "Quai Dautrebande, 4500 Huy",
-      "code_postal": "4500",
-      "ville": "Huy"
-    },
-    "lat": 50.5206113,
-    "lon": 5.238917,
-    "telephone": "+32 471 94 56 06",
-    "email": "",
-    "facebook": "",
-    "site_declare": "",
+    "site_declare": "https://www.saint-georges-sur-meuse.be/economie/emploi/alem-agence-locale-pour-lemploi",
     "horaires": [
       [
         "Mercredi",
-        "09:00-23:00"
+        "09:30-11:30"
+      ],
+      [
+        "",
+        "\"Wednesday afternoon by appointment\""
       ],
       [
         "Jeudi",
-        "16:00-23:00"
-      ],
-      [
-        "Vendredi à Samedi",
-        "16:00-01:00"
-      ],
-      [
-        "Dimanche",
-        "12:00-23:00"
+        "09:00-11:30, 14:00-15:30"
       ]
     ],
     "description": "",
-    "note": 4.0,
-    "avis": 10,
-    "photos": [
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlsgdugQnKo8YSKf8sbJLPql5ttRvXw7pmfKkp6sU1mfuHvAvxc0XRLgOGECqsaKUPCPRf-lnQP4c0SNsl9mtcScJbV8xGI9Kncf8LnvE9jChAuvcWV5N8A0_WTRH0GHUNgah0ziT1Wukzd=w1200-h800-p-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlsgdugQnKo8YSKf8sbJLPql5ttRvXw7pmfKkp6sU1mfuHvAvxc0XRLgOGECqsaKUPCPRf-lnQP4c0SNsl9mtcScJbV8xGI9Kncf8LnvE9jChAuvcWV5N8A0_WTRH0GHUNgah0ziT1Wukzd=w1200-h800-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWk6BXYTecWAznPYnzxj_Oq8_emof5EzWuKNNuuG3qT0ZRFuNetNNl_haYMAzfSe58LFH4S3eesRDtbifhro8VF9jkdrOIsRxf0h2Z7SBO3C9VMeymqNr9HwCGwui0qOXehjiVBEAGySTnQ=w1200-h800-p-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlsgdugQnKo8YSKf8sbJLPql5ttRvXw7pmfKkp6sU1mfuHvAvxc0XRLgOGECqsaKUPCPRf-lnQP4c0SNsl9mtcScJbV8xGI9Kncf8LnvE9jChAuvcWV5N8A0_WTRH0GHUNgah0ziT1Wukzd=w1200-h800-k-no"
-    ],
-    "capture_google": "data/captures/la-peniche-by-geoff-google.png",
+    "note": null,
+    "avis": null,
+    "photos": [],
+    "capture_google": "data/captures/agence-locale-pour-l-emploi-ale-google.png",
     "capture_facebook": "",
     "source": "openstreetmap+google",
-    "osm_url": "https://www.openstreetmap.org/way/1382991029",
-    "maps_url": "https://www.google.com/maps/search/La%20P%C3%A9niche%20by%20Geoff%204500%20Huy"
+    "osm_url": "https://www.openstreetmap.org/way/977496579",
+    "maps_url": "https://www.google.com/maps/search/Agence%20Locale%20pour%20l%27Emploi%20%28ALE%29%204470%20Saint-Georges-sur-Meuse",
+    "motif_segment": "site en erreur (404)"
   },
   {
-    "id": "n13388544114",
-    "nom": "La couronne",
-    "slug": "la-couronne",
-    "segment": "A",
-    "categorie_osm": "bar",
-    "categorie_google": "Bar",
+    "id": "w437878566",
+    "nom": "La Vache à Glace",
+    "slug": "la-vache-a-glace",
+    "segment": "C",
+    "categorie_osm": "ice_cream",
+    "categorie_google": "Marchand de glaces",
     "adresse": {
-      "ligne1": "Rue du Pont 9",
-      "ligne2": "4500 Huy",
-      "complete": "Rue du Pont 9, 4500 Huy",
-      "code_postal": "4500",
-      "ville": "Huy"
-    },
-    "lat": 50.5193265,
-    "lon": 5.2384037,
-    "telephone": "+32493140432",
-    "email": "",
-    "facebook": "",
-    "site_declare": "",
-    "horaires": [
-      [
-        "Mardi à Vendredi",
-        "09:00-22:00"
-      ],
-      [
-        "Samedi à Dimanche",
-        "10:00-22:00"
-      ]
-    ],
-    "description": "",
-    "note": 3.8,
-    "avis": 129,
-    "photos": [
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlP8UW_PqqBNBQgPqnEqnWj-1_CiaecQSsafBM9SRzo2Pa-y99eRj5iTppoghVFbVtr_rbG_7PqUy0Ig9YCrchRX_-8hXdASDMPMG-j6Dd_PjhxaJL--is5Pn-zuVH57zs60G-x=w1200-h800-p-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlP8UW_PqqBNBQgPqnEqnWj-1_CiaecQSsafBM9SRzo2Pa-y99eRj5iTppoghVFbVtr_rbG_7PqUy0Ig9YCrchRX_-8hXdASDMPMG-j6Dd_PjhxaJL--is5Pn-zuVH57zs60G-x=w1200-h800-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnRZoAouRSNt7LNWiraFB9iWUik6gzxXPsUndsyuzy6fDaM33OLNf-rfAMyKQ9rIvOr8GbSHB25DjYcTTPKaQ0vL5jZGLIN64NEUaJcgVBteZkRlybx5ZS2_Qq2LFCrUKqG5tsq=w1200-h800-p-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWn9PL1yCIWflvra0Rd1dt0BiKt3x_lHLFtRsKhQ0fR0lM2thrsi2PMDJkV5f0tBpqNfQXEty37koFhEXgspsd1x9lEnoheM34bYOq-pKjiGXauRi_ERbhJLT2KnP1v-oteJ2Ds=w1200-h800-p-k-no"
-    ],
-    "capture_google": "data/captures/la-couronne-google.png",
-    "capture_facebook": "",
-    "source": "openstreetmap+google",
-    "osm_url": "https://www.openstreetmap.org/node/13388544114",
-    "maps_url": "https://www.google.com/maps/search/La%20couronne%204500%20Huy"
-  },
-  {
-    "id": "n11190992697",
-    "nom": "Le Bonheur Est Dans Le Pré",
-    "slug": "le-bonheur-est-dans-le-pre",
-    "segment": "A",
-    "categorie_osm": "cheese",
-    "categorie_google": "Crèmerie",
-    "adresse": {
-      "ligne1": "",
+      "ligne1": "Rue de la Ferme de l'Abbaye 10",
       "ligne2": "",
-      "complete": "",
+      "complete": "Rue de la Ferme de l'Abbaye 10",
       "code_postal": "",
       "ville": ""
     },
-    "lat": 50.5190576,
-    "lon": 5.2406714,
-    "telephone": "+32 85 25 05 40",
-    "email": "",
+    "lat": 50.5151362,
+    "lon": 5.3645827,
+    "telephone": "",
+    "email": "lavacheaglace@gmail.com",
+    "facebook": "https://www.facebook.com/lavacheaglace/",
+    "site_declare": "https://www.lavacheaglace.be/",
+    "horaires": [
+      [
+        "",
+        "Apr-Sep: Tu-Su 14:00-21:00"
+      ]
+    ],
+    "description": "",
+    "note": 4.7,
+    "avis": 413,
+    "photos": [
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWkXNRhwPrwaPG8cQJ9nDLbGosM6u9VAFsfPST1BosFt6Z_7HrYZHBU_sQdZXfGkJoe-1R0Ag8_EXHK9Uvq3bMQBwuVUDEEu7dKzNX0MVWY-Q0W8smLnL0gwRrErUs6AxRuzIPdq=w1200-h800-p-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWkXNRhwPrwaPG8cQJ9nDLbGosM6u9VAFsfPST1BosFt6Z_7HrYZHBU_sQdZXfGkJoe-1R0Ag8_EXHK9Uvq3bMQBwuVUDEEu7dKzNX0MVWY-Q0W8smLnL0gwRrErUs6AxRuzIPdq=w1200-h800-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnPNQfTlbHnrBq8Bm82bF3mHrSKqNKwYxiM-KXz1gITnmtPi2_mNREZ2cGBIxzum9xhgK35YFwTcmi5bkZEmqPHdzzXeU7sLhtOFV2xio4kb_HehKlMRsWEX9MWRwfwKjXMF0OQvA=w1200-h800-p-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWn4cNMZtAWDX2G3EU7QWphAtQyZi5nNHZA_Ut8NAOQjIy0NK_SAtBy2kFe19swlAM0bybN6d4crYXzSeLPzTVSJlLe6HYFA73qv3v1c93sYrr0ON6uhMWe-cgZAAazkEpZbqvY8=w1200-h800-p-k-no"
+    ],
+    "capture_google": "data/captures/la-vache-a-glace-google.png",
+    "capture_facebook": "",
+    "source": "openstreetmap+google",
+    "osm_url": "https://www.openstreetmap.org/way/437878566",
+    "maps_url": "https://www.google.com/maps/search/La%20Vache%20%C3%A0%20Glace%20Huy%20Belgique",
+    "motif_segment": "site injoignable (SSLError)"
+  },
+  {
+    "id": "n12822773452",
+    "nom": "Blanchisserie Lydie",
+    "slug": "blanchisserie-lydie",
+    "segment": "A",
+    "categorie_osm": "dry_cleaning",
+    "categorie_google": "Blanchisserie",
+    "adresse": {
+      "ligne1": "Chaussée Roosevelt 61",
+      "ligne2": "4540 Amay",
+      "complete": "Chaussée Roosevelt 61, 4540 Amay",
+      "code_postal": "4540",
+      "ville": "Amay"
+    },
+    "lat": 50.5466494,
+    "lon": 5.3155079,
+    "telephone": "+32485 78 72 07",
+    "email": "lydie-quod@hotmail.com",
     "facebook": "",
     "site_declare": "",
     "horaires": [
       [
-        "Lundi à Vendredi",
-        "09:30-18:00"
+        "Lundi à Jeudi",
+        "08:00-17:00"
       ],
       [
-        "Samedi",
-        "09:30-17:00"
+        "Vendredi",
+        "08:00-16:00"
       ]
     ],
     "description": "",
     "note": 4.5,
-    "avis": 28,
+    "avis": 11,
     "photos": [
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlb08yQbG_ydf1wHPG7yrcCXwkOVh8hUcb1Ci-Xkfi6BmD-pKA8WMSgFM0ePiauFanqyDWRIjfOJlVJs4d7IxVkmhpZ_iz86BMbhv4HfXRVoKblkB84kgwYc5omdkB1Uh3o3MFKMrdtB-c=w1200-h800-p-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlb08yQbG_ydf1wHPG7yrcCXwkOVh8hUcb1Ci-Xkfi6BmD-pKA8WMSgFM0ePiauFanqyDWRIjfOJlVJs4d7IxVkmhpZ_iz86BMbhv4HfXRVoKblkB84kgwYc5omdkB1Uh3o3MFKMrdtB-c=w1200-h800-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlb08yQbG_ydf1wHPG7yrcCXwkOVh8hUcb1Ci-Xkfi6BmD-pKA8WMSgFM0ePiauFanqyDWRIjfOJlVJs4d7IxVkmhpZ_iz86BMbhv4HfXRVoKblkB84kgwYc5omdkB1Uh3o3MFKMrdtB-c=w1200-h800-k-no",
-      "https://lh3.googleusercontent.com/a/ACg8ocLmjG93QvVK1t0PsZZ47LxQHgp_VTrfBa8XQTucgIioWO2S8A=w1200-h800-p-rp-mo-ba12-br100"
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlWGC1qmLJMMlkuUVv821JZULThZ1EcRDAZ-H7JkwZrTiEtX0U0TK2dJE9Cyyu0zuFKv4YEnURsZKTA060rIll1oELQ_1GA0X5CEDPOdMfNfgvAdaIowPH20LPr-TKGNqniLsYSZ7HskNpx=w1200-h800-p-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlWGC1qmLJMMlkuUVv821JZULThZ1EcRDAZ-H7JkwZrTiEtX0U0TK2dJE9Cyyu0zuFKv4YEnURsZKTA060rIll1oELQ_1GA0X5CEDPOdMfNfgvAdaIowPH20LPr-TKGNqniLsYSZ7HskNpx=w1200-h800-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlWGC1qmLJMMlkuUVv821JZULThZ1EcRDAZ-H7JkwZrTiEtX0U0TK2dJE9Cyyu0zuFKv4YEnURsZKTA060rIll1oELQ_1GA0X5CEDPOdMfNfgvAdaIowPH20LPr-TKGNqniLsYSZ7HskNpx=w1200-h800-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlbQNUq_Z7EvOBEP26eh3BcP19o2vUe9pmE84mucjUZhMFzO9H_Z5E91PMqm0ROCudsmGFpE9ZvZstRIxcwWBFgx7OZ6p0KqTdw_sroXNh2g4-IPI3rS2Q4BkhbqkJNrH868yi2=w1200-h800-k-no"
     ],
-    "capture_google": "data/captures/le-bonheur-est-dans-le-pre-google.png",
+    "capture_google": "data/captures/blanchisserie-lydie-google.png",
     "capture_facebook": "",
     "source": "openstreetmap+google",
-    "osm_url": "https://www.openstreetmap.org/node/11190992697",
-    "maps_url": "https://www.google.com/maps/search/Le%20Bonheur%20Est%20Dans%20Le%20Pr%C3%A9%20Huy%20Belgique"
+    "osm_url": "https://www.openstreetmap.org/node/12822773452",
+    "maps_url": "https://www.google.com/maps/search/Blanchisserie%20Lydie%204540%20Amay"
   },
   {
-    "id": "n13390679873",
-    "nom": "Le Grenier mosan",
-    "slug": "le-grenier-mosan",
+    "id": "n3146981296",
+    "nom": "Le Provencal",
+    "slug": "le-provencal",
     "segment": "A",
-    "categorie_osm": "antiques",
-    "categorie_google": "Magasin d'ameublement et de décoration",
+    "categorie_osm": "restaurant",
+    "categorie_google": "Restaurant",
     "adresse": {
-      "ligne1": "Quai de Compiègne 68",
-      "ligne2": "4500 Huy",
-      "complete": "Quai de Compiègne 68, 4500 Huy",
-      "code_postal": "4500",
-      "ville": "Huy"
+      "ligne1": "Rue Paul Janson 7",
+      "ligne2": "4540 Amay",
+      "complete": "Rue Paul Janson 7, 4540 Amay",
+      "code_postal": "4540",
+      "ville": "Amay"
     },
-    "lat": 50.5365499,
-    "lon": 5.255017,
-    "telephone": "+3285514848",
-    "email": "",
+    "lat": 50.5478188,
+    "lon": 5.3173678,
+    "telephone": "+3285 31 21 50",
+    "email": "sebastienfeyenklahsen@hotmail.com",
     "facebook": "",
     "site_declare": "",
     "horaires": [
       [
-        "Mardi, Jeudi, Samedi",
-        "10:00-17:00"
+        "Vendredi à Samedi",
+        "18:30-21:30"
+      ],
+      [
+        "Dimanche",
+        "12:00-14:00,18:30-21:30"
       ]
     ],
     "description": "",
     "note": 4.3,
-    "avis": 18,
+    "avis": 131,
     "photos": [
-      "https://lh3.googleusercontent.com/a/ACg8ocJLLK8d0ZW0FhVKga-pn0PL8UAghZRC47QQAQEWeDmAXQvD1g=w1200-h800-p-rp-mo-ba12-br100",
-      "https://lh3.googleusercontent.com/a/ACg8ocI8koJ_dRNOAaj0rrInl2Y8EfJF1N1K1EgrZXaCRt_ZK9JyyQ=w1200-h800-p-rp-mo-ba12-br100",
-      "https://lh3.googleusercontent.com/a-/ALV-UjVOFKTzHgr-CwaD-M0Xeulwq-6Bu_C25-9lSDZA_5iphRtwETEA=w1200-h800-p-rp-mo-ba12-br100",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWkfoMoZSWjlTrY2RGeeWhdNaiWa6hOrFnWo8z92cQtJkK7EzJn9Bc2aeqvT8lPUCgRNDJ0o9VqcouX7U9zV67Fgr8UimECJkHM4J47Q2jOF_Aq_zatnt61l1uWq-m3KmNE5MxU=w1200-h800-p-k-no"
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWkzt0eI3DMgTdCzvH9NZe97HZVPN678zajHwQyGZ1OfajN-rCm2ZaNo8jFoE8Ot-xmbJ36ZSJiZTzxk-O4Ei9kyA7E1UfKY3Q1Lmb6yrJ-7u3Q8SzOYgBVerUNe2iPvDpSk_eHiyQ=w1200-h800-p-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWkzt0eI3DMgTdCzvH9NZe97HZVPN678zajHwQyGZ1OfajN-rCm2ZaNo8jFoE8Ot-xmbJ36ZSJiZTzxk-O4Ei9kyA7E1UfKY3Q1Lmb6yrJ-7u3Q8SzOYgBVerUNe2iPvDpSk_eHiyQ=w1200-h800-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWkerxoqYoVkhMUABwYkg-iXRObS8JqModV3wFYWw2MwIPLfrk7ZcNetmDdTlM9ghwraA57SjOl95lGTDyFXXtpxfzYSurvqHfAveZY7PyoAFUUi8YxnpIKTWdyJJq2x374AncBBJA=w1200-h800-p-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWknL2tjl263QHcGAv3AXc74M4n8mB8w1WqsCq_b8Seigh389sL6PNA1-XErxSpaUrIGLa67w88Wi-2rvigkjc_6p8Cq9RWziCkOdjgc2u3CKlVHvBttpcI8fllBk0iGFCp-obqQ=w1200-h800-p-k-no"
     ],
-    "capture_google": "data/captures/le-grenier-mosan-google.png",
+    "capture_google": "data/captures/le-provencal-google.png",
     "capture_facebook": "",
     "source": "openstreetmap+google",
-    "osm_url": "https://www.openstreetmap.org/node/13390679873",
-    "maps_url": "https://www.google.com/maps/search/Le%20Grenier%20mosan%204500%20Huy"
+    "osm_url": "https://www.openstreetmap.org/node/3146981296",
+    "maps_url": "https://www.google.com/maps/search/Le%20Provencal%204540%20Amay"
   },
   {
-    "id": "n11190992698",
-    "nom": "Le Sorgho Rouge",
-    "slug": "le-sorgho-rouge",
-    "segment": "B",
-    "categorie_osm": "restaurant",
-    "categorie_google": "Restaurant chinois",
+    "id": "n12348643133",
+    "nom": "Les P'tites Fripouilles (MCAE)",
+    "slug": "les-p-tites-fripouilles-mcae",
+    "segment": "A",
+    "categorie_osm": "kindergarten",
+    "categorie_google": "Crèche",
     "adresse": {
-      "ligne1": "",
-      "ligne2": "",
-      "complete": "",
-      "code_postal": "",
-      "ville": ""
+      "ligne1": "Rue de la Station 30",
+      "ligne2": "4480 Engis",
+      "complete": "Rue de la Station 30, 4480 Engis",
+      "code_postal": "4480",
+      "ville": "Engis"
     },
-    "lat": 50.5193834,
-    "lon": 5.2408455,
-    "telephone": "+32 85 21 41 88",
-    "email": "",
-    "facebook": "https://www.facebook.com/lesorghorouge",
+    "lat": 50.5826065,
+    "lon": 5.4033602,
+    "telephone": "+32 85 24 15 10",
+    "email": "mcae@engis.be",
+    "facebook": "",
+    "site_declare": "",
+    "horaires": [],
+    "description": "",
+    "note": null,
+    "avis": null,
+    "photos": [
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlvylW96Z9MJPPHK26ALxhAPJyZowr9LWRlomfJKuOVVhZTBcn8Ro7FGsKwcMUoqwYPKXgr9r26rUNb1F2BZ73TunjTelkwTUcfFuW7QjuYgUuAQb0UojAT5iTfAvTdSZS7g30=w1200-h800-p-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnbsVM4h7x7PyvOKIozLHyeMTiy_OFNE9MTsfdGMiMwIpk9hgPVPxulr9f6fGRh02zLYK-EOKx05iWpJ1d17z3wIWMdbCd2tRp2abLYwKKwyro8vVYtyBzSxXI6EbOXl4QNWdKQrw=w1200-h800-p-k-no"
+    ],
+    "capture_google": "data/captures/les-p-tites-fripouilles-mcae-google.png",
+    "capture_facebook": "",
+    "source": "openstreetmap+google",
+    "osm_url": "https://www.openstreetmap.org/node/12348643133",
+    "maps_url": "https://www.google.com/maps/search/Les%20P%27tites%20Fripouilles%20%28MCAE%29%204480%20Engis"
+  },
+  {
+    "id": "n12873455734",
+    "nom": "Librairie Du Pirka",
+    "slug": "librairie-du-pirka",
+    "segment": "A",
+    "categorie_osm": "books",
+    "categorie_google": "Librairie",
+    "adresse": {
+      "ligne1": "Rue Pirka 47",
+      "ligne2": "4540 Amay",
+      "complete": "Rue Pirka 47, 4540 Amay",
+      "code_postal": "4540",
+      "ville": "Amay"
+    },
+    "lat": 50.5531589,
+    "lon": 5.3062543,
+    "telephone": "",
+    "email": "librairiedupirka@gmail.com",
+    "facebook": "",
     "site_declare": "",
     "horaires": [
       [
-        "Mercredi à Vendredi, ",
-        "Su 12:00-14:00"
+        "Lundi, Mercredi, Jeudi, Vendredi",
+        "06:30-12:30, 13:30-18:30"
       ],
       [
-        "Dimanche, ",
-        "Mo, We-Fr 18:30-21:30"
+        "Mardi",
+        "06:30-12:30"
+      ],
+      [
+        "Samedi",
+        "07:00-13:00"
       ]
     ],
     "description": "",
     "note": 4.5,
-    "avis": 229,
+    "avis": 194,
     "photos": [
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWm2gHRHRVrOXgbCSSGADYJAXYhYu3VB9_Bj43xDDVG4WFPAZO99alBnkbB_RcExIYz6IlHe_IHPzDEV9vW327BwmbjEGjka5N3li4j22xbsVgCtD_H6asA00QEK3vA2egnzrzIQ=w1200-h800-p-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWm2gHRHRVrOXgbCSSGADYJAXYhYu3VB9_Bj43xDDVG4WFPAZO99alBnkbB_RcExIYz6IlHe_IHPzDEV9vW327BwmbjEGjka5N3li4j22xbsVgCtD_H6asA00QEK3vA2egnzrzIQ=w1200-h800-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWloEQpfJJ4Yxk54vkj141QTzEtgbdvRpVCiibz9Q0SSHD7k2kA1CirDX__pyU2p78yaJI-a-HkD6alQ59mWuQOtKYJJJFyOI21MkitykTnbxKxypUBwntmcg8OD_gUhwnXrYK3M=w1200-h800-p-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnS5zGvDtqR1fq3KEOs4t2o71wQMuUSFr7bcFcKgDMjgG1kj-VG4acutHH_ulYlCVx0G3b2NT3tjLsZlUg_racQp-DSBrHsHYQHoP5RygtcQWm7BAugQrbBsaAT_ZMT3gecWFfWcw=w1200-h800-p-k-no"
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWkDxZ5daLZFvykYvx1BlpLScy9kt1CvPmt2fyvwhjrThNvfgcT0Van7RowjPu0IgLjerJb8cbMIuPkBryx8KWdPQQa36Qs_OBJEfT21D8nEHN_vLFdLCmsTla2TmuSDqib4dTOw=w1200-h800-p-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWkDxZ5daLZFvykYvx1BlpLScy9kt1CvPmt2fyvwhjrThNvfgcT0Van7RowjPu0IgLjerJb8cbMIuPkBryx8KWdPQQa36Qs_OBJEfT21D8nEHN_vLFdLCmsTla2TmuSDqib4dTOw=w1200-h800-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWkDxZ5daLZFvykYvx1BlpLScy9kt1CvPmt2fyvwhjrThNvfgcT0Van7RowjPu0IgLjerJb8cbMIuPkBryx8KWdPQQa36Qs_OBJEfT21D8nEHN_vLFdLCmsTla2TmuSDqib4dTOw=w1200-h800-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWmtAWWniCGtaeQ0hcFZyJWBArmSVbykyskeB7Kv_aZrVYXpNZdc-EcZ-d54QZ9WsJUuhfZRUn8H6u6aqUYFULndKjiVk9WBzO0axsxLJvfv4Hf158_aviTmoGqiJIdehVdY2yCb0Q=w1200-h800-k-no"
     ],
-    "capture_google": "data/captures/le-sorgho-rouge-google.png",
+    "capture_google": "data/captures/librairie-du-pirka-google.png",
     "capture_facebook": "",
     "source": "openstreetmap+google",
-    "osm_url": "https://www.openstreetmap.org/node/11190992698",
-    "maps_url": "https://www.google.com/maps/search/Le%20Sorgho%20Rouge%20Huy%20Belgique"
+    "osm_url": "https://www.openstreetmap.org/node/12873455734",
+    "maps_url": "https://www.google.com/maps/search/Librairie%20Du%20Pirka%204540%20Amay"
   },
   {
-    "id": "n13152117266",
-    "nom": "Le Village Chinois",
-    "slug": "le-village-chinois",
+    "id": "n13390651822",
+    "nom": "Nuala Tattoo",
+    "slug": "nuala-tattoo",
     "segment": "A",
-    "categorie_osm": "restaurant",
-    "categorie_google": "Restaurant chinois",
+    "categorie_osm": "tattoo",
+    "categorie_google": "",
     "adresse": {
-      "ligne1": "Rue du Pont 20",
-      "ligne2": "4500 Huy",
-      "complete": "Rue du Pont 20, 4500 Huy",
-      "code_postal": "4500",
-      "ville": "Huy"
+      "ligne1": "Rue de la Paix 42",
+      "ligne2": "4540 Amay",
+      "complete": "Rue de la Paix 42, 4540 Amay",
+      "code_postal": "4540",
+      "ville": "Amay"
     },
-    "lat": 50.5190752,
-    "lon": 5.2388421,
-    "telephone": "+3285231348",
-    "email": "",
+    "lat": 50.5460146,
+    "lon": 5.3195799,
+    "telephone": "",
+    "email": "nualatattoo@gmail.com",
     "facebook": "",
     "site_declare": "",
     "horaires": [
       [
-        "Lundi, Mercredi",
-        "18:00-22:00"
-      ],
-      [
-        "Mardi, Jeudi",
-        "12:00-14:30, 18:00-22:00"
-      ],
-      [
-        "Vendredi à Dimanche",
-        "12:00-14:30, 18:00-23:00"
+        "Lundi, Vendredi, Samedi",
+        "11:00-17:00"
       ]
     ],
     "description": "",
-    "note": 4.1,
-    "avis": 233,
+    "note": null,
+    "avis": null,
     "photos": [
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWl9AwngNRvRRAWr8DTmcDzygKKhiFFWvo8_h3iwiVMHDRG3UC2Z862aKRsVcqFuqDCC20mQmgrfF1lnrMoRhCrau8YYHCYFRRFH8kYIT2rfjjkftMp5rIQ3gotoygcvcwLqJu5eFQ=w1200-h800-p-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWl9AwngNRvRRAWr8DTmcDzygKKhiFFWvo8_h3iwiVMHDRG3UC2Z862aKRsVcqFuqDCC20mQmgrfF1lnrMoRhCrau8YYHCYFRRFH8kYIT2rfjjkftMp5rIQ3gotoygcvcwLqJu5eFQ=w1200-h800-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWkMlHF-oaHgZ2UVU3OCf66bwbPxjI6EFCpHecwhEppasP6CdpOcEY61auV3nlZW_3f83b1U8lpLW0_R0-tMeuz6UaUI9Uj_UUpV2yMYCOoP3dKp5WbKM6g002KX5FkkfGxWWa7N=w1200-h800-p-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnHdbkCGK_wp4JjATzEFEjCJUqqq_zPTYfcVFhoiD4he3hly5jfbV-F3dqhewuoYrtF91gikcWgLzjkjxvukF1r5Eo7WEjrpvelkp6Ux9sf0DuMzky6CSGTQwZX0R_C3foMBG0a=w1200-h800-p-k-no"
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWkrezXyDJkgldtthoxMOVvd8_cNVmJQOEcDp6mfIjw3CJg7qJ8is7XXuntSxJznkm3UDeRyjk3qBg-ZKGYIvdEtkIMYl-M-9PlKcz3og_X6G8bfetLm8btsCsmlqlhGOsq4obDx=w1200-h800-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWkQTotG4ETjg24H_y7l6XtApHQRDMuKE2w2lTFBLeBc0jvH9YmcEIlEAEJ3rOCwT8NcU7gHv58xj9ktAqXDux097_3dWiA2-q_yzhU2Xl9CCIcg48PUtraLSyy_yJXUyUWrNiQ_62eCbfWE=w1200-h800-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlfGg_4CW6qhBdNBl1YQc3LxXt-RzLkZG8vGcKxJz-pG_V5K4hSeoAVLF0fpjoIPLfaryTHI9prJCMppslxYRjQzP3A_8Wl0X_MvSArztoRR3xOR-OB6e-vbxlRXOuWAdhTJttj=w1200-h800-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWmfG6OruDVpQBCaau4HKkhqwPCU0O1tmFb8bu1jIhJw1nkjLgtJgVTCNwomZ6fVJSzo30BndzImDdMmhMeF4qZp7LbM3Qvtj_jcGF1uw33C6mgUIW4ou5rIEVX1OPA2C6ZIWgWy=w1200-h800-k-no"
     ],
-    "capture_google": "data/captures/le-village-chinois-google.png",
+    "capture_google": "data/captures/nuala-tattoo-google.png",
     "capture_facebook": "",
     "source": "openstreetmap+google",
-    "osm_url": "https://www.openstreetmap.org/node/13152117266",
-    "maps_url": "https://www.google.com/maps/search/Le%20Village%20Chinois%204500%20Huy"
+    "osm_url": "https://www.openstreetmap.org/node/13390651822",
+    "maps_url": "https://www.google.com/maps/search/Nuala%20Tattoo%204540%20Amay"
   },
   {
-    "id": "n1222392874",
-    "nom": "Mamma Mia",
-    "slug": "mamma-mia",
-    "segment": "A",
-    "categorie_osm": "restaurant",
-    "categorie_google": "",
-    "adresse": {
-      "ligne1": "",
-      "ligne2": "",
-      "complete": "",
-      "code_postal": "",
-      "ville": ""
-    },
-    "lat": 50.5218254,
-    "lon": 5.234312,
-    "telephone": "+32 85 23 24 53",
-    "email": "",
-    "facebook": "",
-    "site_declare": "",
-    "horaires": [],
-    "description": "",
-    "note": null,
-    "avis": null,
-    "photos": [],
-    "capture_google": "data/captures/mamma-mia-google.png",
-    "capture_facebook": "",
-    "source": "openstreetmap+google",
-    "osm_url": "https://www.openstreetmap.org/node/1222392874",
-    "maps_url": "https://www.google.com/maps/search/Mamma%20Mia%20Huy%20Belgique"
-  },
-  {
-    "id": "n3139217874",
-    "nom": "Point forme",
-    "slug": "point-forme",
-    "segment": "A",
-    "categorie_osm": "sports_centre",
-    "categorie_google": "",
-    "adresse": {
-      "ligne1": "Rue Cherave 3A",
-      "ligne2": "4500 Huy",
-      "complete": "Rue Cherave 3A, 4500 Huy",
-      "code_postal": "4500",
-      "ville": "Huy"
-    },
-    "lat": 50.5140658,
-    "lon": 5.2352398,
-    "telephone": "+32 85 23 53 05",
-    "email": "",
-    "facebook": "",
-    "site_declare": "",
-    "horaires": [],
-    "description": "",
-    "note": null,
-    "avis": null,
-    "photos": [],
-    "capture_google": "data/captures/point-forme-google.png",
-    "capture_facebook": "",
-    "source": "openstreetmap+google",
-    "osm_url": "https://www.openstreetmap.org/node/3139217874",
-    "maps_url": "https://www.google.com/maps/search/Point%20forme%204500%20Huy"
-  },
-  {
-    "id": "w957048562",
-    "nom": "Zahra Centre d'Esthétique et de Bien-Etre",
-    "slug": "zahra-centre-d-esthetique-et-de-bien-etre",
+    "id": "n12823178607",
+    "nom": "Brasserie de la Gare Amay",
+    "slug": "brasserie-de-la-gare-amay",
     "segment": "B",
-    "categorie_osm": "beauty",
-    "categorie_google": "Esthéticien",
+    "categorie_osm": "pub",
+    "categorie_google": "Café",
     "adresse": {
-      "ligne1": "Rue Joseph Wauters 61",
-      "ligne2": "4500 Huy",
-      "complete": "Rue Joseph Wauters 61, 4500 Huy",
-      "code_postal": "4500",
-      "ville": "Huy"
+      "ligne1": "Place Gustave Rome 7",
+      "ligne2": "4540 Amay",
+      "complete": "Place Gustave Rome 7, 4540 Amay",
+      "code_postal": "4540",
+      "ville": "Amay"
     },
-    "lat": 50.5189352,
-    "lon": 5.2216417,
-    "telephone": "+32 484 98 76 01",
+    "lat": 50.5463863,
+    "lon": 5.320311,
+    "telephone": "+3285 31 25 81",
     "email": "",
-    "facebook": "https://www.facebook.com/zahracentredesthetiqueetdebienetre",
+    "facebook": "https://www.facebook.com/profile.php?id=61575508257225",
     "site_declare": "",
     "horaires": [
       [
-        "Mardi, Jeudi, Vendredi",
-        "09:00-18:00"
-      ],
-      [
-        "Mercredi",
-        "09:00-12:00"
-      ],
-      [
-        "Samedi",
-        "09:00-17:00"
+        "Lundi à Dimanche",
+        "10:00-22:00"
       ]
     ],
     "description": "",
-    "note": 5.0,
-    "avis": 2,
+    "note": 4.3,
+    "avis": 104,
     "photos": [
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWl_pPb1PiPErJEr8M_9wzMq5yw9Y-5GZ41KvUPjUESTT0fBWFK9gkmQdvjQYdbrxbQ7sj5otsBAEZWSujSNlHKjJ4PO9hui0LylrJqITCUgA1R413HrIhuxC8y3B9kaMO_WdHWhyQ=w1200-h800-p-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWl_pPb1PiPErJEr8M_9wzMq5yw9Y-5GZ41KvUPjUESTT0fBWFK9gkmQdvjQYdbrxbQ7sj5otsBAEZWSujSNlHKjJ4PO9hui0LylrJqITCUgA1R413HrIhuxC8y3B9kaMO_WdHWhyQ=w1200-h800-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWl_pPb1PiPErJEr8M_9wzMq5yw9Y-5GZ41KvUPjUESTT0fBWFK9gkmQdvjQYdbrxbQ7sj5otsBAEZWSujSNlHKjJ4PO9hui0LylrJqITCUgA1R413HrIhuxC8y3B9kaMO_WdHWhyQ=w1200-h800-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWmXTzga9N1Naw37GqOGRuNY_rS6ZUxlMxxlLIpajHUi6HuJZvbhMHXfJXZjhD6Zg6f854KA6KxVTMHpdMJ4BDaIIyS7KANpQqdTyQCY3LpfgHBUwomZ_Cuzi74KJBlR283B1CfY=w1200-h800-k-no"
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWkgRGtumBJWVDS_KNL7j_AC-VzTgO1AGPxgCyBS2BA6X_63k7R5oiUOguyHmsmgYoo98OyDjkEabuus7zLIwFffFFsaRMI1_yN8_5uKZqyVfwJX382tlnfCvyZMQcglcUh4enQwoQ=w1200-h800-p-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWkgRGtumBJWVDS_KNL7j_AC-VzTgO1AGPxgCyBS2BA6X_63k7R5oiUOguyHmsmgYoo98OyDjkEabuus7zLIwFffFFsaRMI1_yN8_5uKZqyVfwJX382tlnfCvyZMQcglcUh4enQwoQ=w1200-h800-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWkgRGtumBJWVDS_KNL7j_AC-VzTgO1AGPxgCyBS2BA6X_63k7R5oiUOguyHmsmgYoo98OyDjkEabuus7zLIwFffFFsaRMI1_yN8_5uKZqyVfwJX382tlnfCvyZMQcglcUh4enQwoQ=w1200-h800-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWldu_hpyaLqcauzO834gOD8bgttcgGnPaJ0uJ-_zgJsQS4Wl8G-XXBDX-xrANvgWFg6IMZ_sPcD-gz9_Nge-k2aIyhRwIuPg7gmOMdVrZ2b9l9wAy52HFXu7CVuLSA08EJ9FUvY=w1200-h800-k-no"
     ],
-    "capture_google": "data/captures/zahra-centre-d-esthetique-et-de-bien-etre-google.png",
+    "capture_google": "data/captures/brasserie-de-la-gare-amay-google.png",
     "capture_facebook": "",
     "source": "openstreetmap+google",
-    "osm_url": "https://www.openstreetmap.org/way/957048562",
-    "maps_url": "https://www.google.com/maps/search/Zahra%20Centre%20d%27Esth%C3%A9tique%20et%20de%20Bien-Etre%204500%20Huy"
+    "osm_url": "https://www.openstreetmap.org/node/12823178607",
+    "maps_url": "https://www.google.com/maps/search/Brasserie%20de%20la%20Gare%20Amay%204540%20Amay"
   },
   {
-    "id": "n4608697211",
-    "nom": "Alimentation Gezim",
-    "slug": "alimentation-gezim",
-    "segment": "A",
-    "categorie_osm": "greengrocer",
-    "categorie_google": "Épicerie",
+    "id": "n12853898333",
+    "nom": "Coiffure Nathalie",
+    "slug": "coiffure-nathalie",
+    "segment": "B",
+    "categorie_osm": "hairdresser",
+    "categorie_google": "Salon de coiffure",
     "adresse": {
-      "ligne1": "",
-      "ligne2": "",
-      "complete": "",
-      "code_postal": "",
-      "ville": ""
+      "ligne1": "Rue Albert Ier 6",
+      "ligne2": "4540 Amay",
+      "complete": "Rue Albert Ier 6, 4540 Amay",
+      "code_postal": "4540",
+      "ville": "Amay"
     },
-    "lat": 50.5132238,
-    "lon": 5.2401146,
-    "telephone": "",
+    "lat": 50.5485033,
+    "lon": 5.3210145,
+    "telephone": "+3285 31 12 06",
     "email": "",
-    "facebook": "",
-    "site_declare": "",
-    "horaires": [],
-    "description": "",
-    "note": 1.0,
-    "avis": 1,
-    "photos": [
-      "https://lh3.googleusercontent.com/a/ACg8ocIg5A3PpB9taDv1NtbN3FlBEPrpqTGJdcRffAMvH8g5fFdqXLE=w1200-h800-p-rp-mo-br100",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWmiJTBOeeQDyw1NUFm0I7-QLi6Kkim1sgVosedIMbuxsPTFRkPS32uOPliv3HA8HXPc_ImjAQnYatKLy7GV5wIxvy2Ao_EB2KejyEuxQeQ2iLjLzLwC4T4SL8A_AtX3KmcKmFQy=w1200-h800-p-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWml7ZdyAOa1b9fETyJUahqDoxfHWHi1j00HwWwEPzK_HfOJ_rTFr4KVbFx6n76cWMPFHpi_pPB0Ojc23HxocMvNuFhVlHvjfYd5tDcFI9xs13ZidPAJjTneHzd9NK-lt1WWWKgv7w=w1200-h800-p-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlizgLDu4TlllMLNcq1j0m29KdU1Zv8KOy0U2fwUTe4cndvjSyGtr89WyjevGIMwBiDJbZvAbfJ7XVpbyOej42u3kAOPZNF8PEwZynxRGNiMe-H6wIGM3AzsBAyseoBbAlUGPpN=w1200-h800-p-k-no"
-    ],
-    "capture_google": "data/captures/alimentation-gezim-google.png",
-    "capture_facebook": "",
-    "source": "openstreetmap+google",
-    "osm_url": "https://www.openstreetmap.org/node/4608697211",
-    "maps_url": "https://www.google.com/maps/search/Alimentation%20Gezim%20Huy%20Belgique"
-  },
-  {
-    "id": "n10655085022",
-    "nom": "Bijoux & accessoires",
-    "slug": "bijoux-accessoires",
-    "segment": "A",
-    "categorie_osm": "jewelry",
-    "categorie_google": "",
-    "adresse": {
-      "ligne1": "",
-      "ligne2": "",
-      "complete": "",
-      "code_postal": "",
-      "ville": ""
-    },
-    "lat": 50.5195826,
-    "lon": 5.2413108,
-    "telephone": "",
-    "email": "",
-    "facebook": "",
+    "facebook": "https://www.facebook.com/coiffurenathalieamay/",
     "site_declare": "",
     "horaires": [
       [
         "Mardi",
-        "13:00-18:00"
+        "08:00-19:30"
       ],
       [
-        "Mercredi à Samedi",
-        "10:00-13:00,14:00-18:00"
+        "Mercredi, Vendredi",
+        "08:00-12:30"
+      ]
+    ],
+    "description": "",
+    "note": 4.6,
+    "avis": 21,
+    "photos": [
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWmGywMimkL5kPm95mQw7xiOJ7Xf6wgnsnBpOq7JYUfHTIsJpUonekLw_V_J0nbZ5EWDh34-W6Pt1qShmUc7dt6CpDvuktm27jmmj1Wupfc9H0M89YYCqSH6Vrm7oTJF44b7dQ0=w1200-h800-p-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWmGywMimkL5kPm95mQw7xiOJ7Xf6wgnsnBpOq7JYUfHTIsJpUonekLw_V_J0nbZ5EWDh34-W6Pt1qShmUc7dt6CpDvuktm27jmmj1Wupfc9H0M89YYCqSH6Vrm7oTJF44b7dQ0=w1200-h800-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWmGywMimkL5kPm95mQw7xiOJ7Xf6wgnsnBpOq7JYUfHTIsJpUonekLw_V_J0nbZ5EWDh34-W6Pt1qShmUc7dt6CpDvuktm27jmmj1Wupfc9H0M89YYCqSH6Vrm7oTJF44b7dQ0=w1200-h800-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWksQ3QUodz7HShoZlkuW2Oi3QEltHpbR93EjITy9TRamAP_GAJVIF18UWKJFSN2AzglAtkX2VFfRUbZ5e7Nmb7kXCnyYEW12Xt-tDzZbn-pbRSk1nstaBsKqYWvVubPyHB5RwnyAw=w1200-h800-k-no"
+    ],
+    "capture_google": "data/captures/coiffure-nathalie-google.png",
+    "capture_facebook": "",
+    "source": "openstreetmap+google",
+    "osm_url": "https://www.openstreetmap.org/node/12853898333",
+    "maps_url": "https://www.google.com/maps/search/Coiffure%20Nathalie%204540%20Amay"
+  },
+  {
+    "id": "n12823469544",
+    "nom": "Glam House",
+    "slug": "glam-house",
+    "segment": "B",
+    "categorie_osm": "hairdresser",
+    "categorie_google": "Salon de coiffure",
+    "adresse": {
+      "ligne1": "Place Jean Jaurès 4",
+      "ligne2": "4540 Amay",
+      "complete": "Place Jean Jaurès 4, 4540 Amay",
+      "code_postal": "4540",
+      "ville": "Amay"
+    },
+    "lat": 50.5476128,
+    "lon": 5.3168125,
+    "telephone": "+32484 49 49 31",
+    "email": "",
+    "facebook": "https://www.facebook.com/profile.php/?id=61562868912449",
+    "site_declare": "",
+    "horaires": [],
+    "description": "",
+    "note": 5.0,
+    "avis": 4,
+    "photos": [
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnolIAOAQ654OPg69TH8Jq-516FYyayaRAc4NPXIe7UeKP91RYZ3NHOeHCRl4FvZBtwsBq50xdnx0A47Qjy_iFuqypo9fOU9JQ56C_typ88-dJHSc2Hq7WYFXf8y8bDxzEgLGqJPA=w1200-h800-p-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnolIAOAQ654OPg69TH8Jq-516FYyayaRAc4NPXIe7UeKP91RYZ3NHOeHCRl4FvZBtwsBq50xdnx0A47Qjy_iFuqypo9fOU9JQ56C_typ88-dJHSc2Hq7WYFXf8y8bDxzEgLGqJPA=w1200-h800-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnolIAOAQ654OPg69TH8Jq-516FYyayaRAc4NPXIe7UeKP91RYZ3NHOeHCRl4FvZBtwsBq50xdnx0A47Qjy_iFuqypo9fOU9JQ56C_typ88-dJHSc2Hq7WYFXf8y8bDxzEgLGqJPA=w1200-h800-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlHheChvBQ-f8LWZgZAbbb2hY7f2uGUGhrV-eXMWICKDSEuua5ihlgDqHWu5mhZmN6QicXuh5zPz4e3nBiJvdD2Ke0MOLGXz8yfZf0etyPRfqNBGLjKRMt8b9mLqy8ydYhIFAvZ=w1200-h800-k-no"
+    ],
+    "capture_google": "data/captures/glam-house-google.png",
+    "capture_facebook": "",
+    "source": "openstreetmap+google",
+    "osm_url": "https://www.openstreetmap.org/node/12823469544",
+    "maps_url": "https://www.google.com/maps/search/Glam%20House%204540%20Amay"
+  },
+  {
+    "id": "n12091843574",
+    "nom": "Hair Concept",
+    "slug": "hair-concept",
+    "segment": "B",
+    "categorie_osm": "hairdresser",
+    "categorie_google": "Salon de coiffure",
+    "adresse": {
+      "ligne1": "Place Ovide Musin 15",
+      "ligne2": "4550 Nandrin",
+      "complete": "Place Ovide Musin 15, 4550 Nandrin",
+      "code_postal": "4550",
+      "ville": "Nandrin"
+    },
+    "lat": 50.506028,
+    "lon": 5.4204269,
+    "telephone": "+32 484 20 01 90",
+    "email": "",
+    "facebook": "https://www.facebook.com/profile.php?id=61558125324164",
+    "site_declare": "",
+    "horaires": [],
+    "description": "",
+    "note": 5.0,
+    "avis": 14,
+    "photos": [
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnuGCXZUFLFLrO20E-wyzsXQ3QR_q0w9C2MZnYpWnTrDAIugxN1-4modmhixienvnA5TheDZszFPMR45AG_eDRjhLtjsdge3C0nJ50J8xG-lbOpf2xPTYz4PkqZ3tsCYkW0SFAP=w1200-h800-p-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnuGCXZUFLFLrO20E-wyzsXQ3QR_q0w9C2MZnYpWnTrDAIugxN1-4modmhixienvnA5TheDZszFPMR45AG_eDRjhLtjsdge3C0nJ50J8xG-lbOpf2xPTYz4PkqZ3tsCYkW0SFAP=w1200-h800-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWkG7yc7pCYIqOlLFKhlgYyl_ghZZRdhYBCQ-l6fCCyqcdRzRViKnhwkT4R_6A_nX5E8X95BlnBL4QHdy-w9Di26rTzbTf4q845yJ-TCwgJyfaI_7vVfdFm-SBjMq_tg07ZCwh_QcA=w1200-h800-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnuaDMl9n6Wu_w8W97eHENJyQYR-asWWlJ81MWq0HwiLO5AB63JfLHsICCzl_U4XYShugzR0v_bLZi0DaI33TKapCS8CUYQTxbVb0rZwiYpQNCPloj5ulC9UbUvawhjQqm-6od0=w1200-h800-k-no"
+    ],
+    "capture_google": "data/captures/hair-concept-google.png",
+    "capture_facebook": "",
+    "source": "openstreetmap+google",
+    "osm_url": "https://www.openstreetmap.org/node/12091843574",
+    "maps_url": "https://www.google.com/maps/search/Hair%20Concept%204550%20Nandrin"
+  },
+  {
+    "id": "n12823469567",
+    "nom": "J'ad'Or",
+    "slug": "j-ad-or",
+    "segment": "B",
+    "categorie_osm": "jewelry",
+    "categorie_google": "Bijouterie",
+    "adresse": {
+      "ligne1": "Rue de Biber 1",
+      "ligne2": "4540 Amay",
+      "complete": "Rue de Biber 1, 4540 Amay",
+      "code_postal": "4540",
+      "ville": "Amay"
+    },
+    "lat": 50.5472876,
+    "lon": 5.3173218,
+    "telephone": "+3285212123",
+    "email": "",
+    "facebook": "https://www.facebook.com/Dubois.J666/",
+    "site_declare": "",
+    "horaires": [
+      [
+        "Lundi",
+        "14:00-17:00"
+      ],
+      [
+        "Mardi à Samedi",
+        "09:30-18:00"
+      ]
+    ],
+    "description": "",
+    "note": 4.8,
+    "avis": 32,
+    "photos": [
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWmvgseHVGaZb7WwELy5zo3SH4ts3PTtLHC8SwriBCEywbN-vzOmHM-V1WjNYSFK2hy2TtYSWPjYTaUBttrnxCdDEYFytSsAya4lD38Anrkqdxfwe9MSvYpXz6N355ZNMUjDzq9h=w1200-h800-p-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWmvgseHVGaZb7WwELy5zo3SH4ts3PTtLHC8SwriBCEywbN-vzOmHM-V1WjNYSFK2hy2TtYSWPjYTaUBttrnxCdDEYFytSsAya4lD38Anrkqdxfwe9MSvYpXz6N355ZNMUjDzq9h=w1200-h800-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWmvgseHVGaZb7WwELy5zo3SH4ts3PTtLHC8SwriBCEywbN-vzOmHM-V1WjNYSFK2hy2TtYSWPjYTaUBttrnxCdDEYFytSsAya4lD38Anrkqdxfwe9MSvYpXz6N355ZNMUjDzq9h=w1200-h800-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnG46gAUwPVneB2j2yyXYyETXgXtc_y9NwGHjMSv-jWMZBesPCQA77NepX6FIbRqGLDOjTOq3XZMEjAuK68JR5r0__JrnTdBd-QCFzc2_ydfrCgHByHiD8trIlO7_bM11WrQAOOr08O4XU=w1200-h800-k-no"
+    ],
+    "capture_google": "data/captures/j-ad-or-google.png",
+    "capture_facebook": "",
+    "source": "openstreetmap+google",
+    "osm_url": "https://www.openstreetmap.org/node/12823469567",
+    "maps_url": "https://www.google.com/maps/search/J%27ad%27Or%204540%20Amay"
+  },
+  {
+    "id": "w914156598",
+    "nom": "Jardin de Lara",
+    "slug": "jardin-de-lara",
+    "segment": "B",
+    "categorie_osm": "gardener",
+    "categorie_google": "",
+    "adresse": {
+      "ligne1": "Rue Albert Ier 17/1;17/2",
+      "ligne2": "",
+      "complete": "Rue Albert Ier 17/1;17/2",
+      "code_postal": "",
+      "ville": ""
+    },
+    "lat": 50.6002405,
+    "lon": 5.3565562,
+    "telephone": "+32 472 66 47 11",
+    "email": "",
+    "facebook": "https://www.facebook.com/people/Les-jardins-de-Lara/100057659490655/?paipv=0&eav=AfbUKA2SdYiizhim62OcemBsme83ECJI85A59jzaWmBgcS6fAeqHKnXYUc3BT9bUDwo&_rdr",
+    "site_declare": "",
+    "horaires": [
+      [
+        "Lundi à Samedi",
+        "08:00-17:00"
       ]
     ],
     "description": "",
     "note": null,
     "avis": null,
     "photos": [
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnifMxT5cRupOxBZq3y1RtQDr57AIGBrB_VYhzT3DVr5P-0jMVtku0gF5yTKm8hHBIuElkdFbqB7CrBkTkIbbcz304aSzRCj4jawvk32k9-ZgvuI3jJqvDRT-IiJdVn_TZ9l3IBQD1AOhLe=w1200-h800-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnm-QVD0GexS3sPtJvNhuyiWWMqaOCGNndlkJKr-bJbud4lOK1Iuq6M5_EZO2X-IcKTsqkN_fRw4xQsXbS-IyvzcMyHguaj-uo0VTzyczhLXPMuY5zHKFKsjJ3qAGVOYBIXw-qcYYgMU2vK=w1200-h800-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWn81m8oNcCLW21Pk0qYERcHuIFjoJqzDn3jdhJYQyCNFYhupMKgKzVkX9AX4VluCrRXdZx7h6ho6S0M0sKRkXtVmFmmD0s_qe2h7Y82BALUXxVi8BreNSufgmG6ypto67vgA7mrew=w1200-h800-k-no",
-      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWkEY6LgMEx74NEg0j4zZZssLMXHUes7vbcSI7FXtYIxllwbGt7Mfo_IfnhefQFgvCpLP8Mr24YH8UzMhUp-lnWR_QBQnmCsof0pNaFl_N0Hi3Miqg6xQo4icrA084Ab4bq1lY64=w1200-h800-k-no"
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlV2BENK6tyzqwyjuByjqDMG9T0zghjlsQpeaLD2_s1U-WowdW11kppMeAGl_Ao3Qsck2XaW5Lu_E3sq0jjLla_gSuIy7Z8HGkQ6mxoNP6HVHElZX1HKXslCuEYcjN0vD7q_bk=w1200-h800-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWm0YVVF1STbj4cb0RuclONiXgmHc2EXWHw1SHOf7fCS7Dw7B-kNGUWzQhZksoBuaOGgj0e-E1V9C1T4T0UZNW77Ic8mdErLc-Q-Cc3_f5WoQ13u2_rWb50YgwBvTD0vgARozphL=w1200-h800-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWmrJQc4Gl3Qicoq9myqmPyQJP6RrR7kurjkyjd7fybCeSWx70iEhxZ2cZ67Vp3K9cnM2cCM-LDTeEDyAlg8A6DOdjQ3_kcR3gVFqT2mz71jD1g2fGn_2ONfAUAjdo666wzjhA6n=w1200-h800-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWk1jLmMMjttQe0IaChqbSYnVMb0Z4D_mv27MP9BmrwernjFvGk6FVYqveJL19uDJv4Uf4QW5yvM0ZY6bu5MclNaGxmPld5gZeWMVO3h2PE1RXclryvyT-hvh_1B29Vlo8oqYkX3=w1200-h800-k-no"
     ],
-    "capture_google": "data/captures/bijoux-accessoires-google.png",
+    "capture_google": "data/captures/jardin-de-lara-google.png",
     "capture_facebook": "",
     "source": "openstreetmap+google",
-    "osm_url": "https://www.openstreetmap.org/node/10655085022",
-    "maps_url": "https://www.google.com/maps/search/Bijoux%20%26%20accessoires%20Huy%20Belgique"
+    "osm_url": "https://www.openstreetmap.org/way/914156598",
+    "maps_url": "https://www.google.com/maps/search/Jardin%20de%20Lara%20Huy%20Belgique"
+  },
+  {
+    "id": "n1776503292",
+    "nom": "L'Instant Croquant",
+    "slug": "l-instant-croquant",
+    "segment": "B",
+    "categorie_osm": "fast_food",
+    "categorie_google": "Restauration rapide",
+    "adresse": {
+      "ligne1": "Chaussée Roosevelt 165",
+      "ligne2": "4540 Amay",
+      "complete": "Chaussée Roosevelt 165, 4540 Amay",
+      "code_postal": "4540",
+      "ville": "Amay"
+    },
+    "lat": 50.5414277,
+    "lon": 5.302797,
+    "telephone": "+32 85 25 13 69",
+    "email": "",
+    "facebook": "https://www.facebook.com/profile.php?id=61567523300010",
+    "site_declare": "",
+    "horaires": [
+      [
+        "Lundi à Jeudi, ",
+        "Su 11:00-21:00"
+      ],
+      [
+        "Vendredi à Samedi",
+        "11:00-22:00"
+      ]
+    ],
+    "description": "",
+    "note": 4.3,
+    "avis": 65,
+    "photos": [
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWkclw9WdMqsZgBU0f07KTfuLt9ZAgX1E_mM9B__3XKdGVazureS9Wmi22bfGMqua0IVW4vOWkkkh8Jn73b_FzVLcAikV8Y7XwyJco9cjudnzZ3xElOQjvBYcGvLPmFzPHUCaL7EVTTzmUGF=w1200-h800-p-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWkclw9WdMqsZgBU0f07KTfuLt9ZAgX1E_mM9B__3XKdGVazureS9Wmi22bfGMqua0IVW4vOWkkkh8Jn73b_FzVLcAikV8Y7XwyJco9cjudnzZ3xElOQjvBYcGvLPmFzPHUCaL7EVTTzmUGF=w1200-h800-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlXooZYkRg8IzgFKvl5ChgsAMHm9kj8RSd8bR6TPe-8oLLixTNbehYbzbvF02w3smyykoS95Vse34j-4m_8yxq_KTrAd2ltR5uaQKVgZ7y6jP3D5QTKRgektFpS8NWCII7qUZdK1ONRHIct=w1200-h800-p-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWkclw9WdMqsZgBU0f07KTfuLt9ZAgX1E_mM9B__3XKdGVazureS9Wmi22bfGMqua0IVW4vOWkkkh8Jn73b_FzVLcAikV8Y7XwyJco9cjudnzZ3xElOQjvBYcGvLPmFzPHUCaL7EVTTzmUGF=w1200-h800-k-no"
+    ],
+    "capture_google": "data/captures/l-instant-croquant-google.png",
+    "capture_facebook": "",
+    "source": "openstreetmap+google",
+    "osm_url": "https://www.openstreetmap.org/node/1776503292",
+    "maps_url": "https://www.google.com/maps/search/L%27Instant%20Croquant%204540%20Amay"
+  },
+  {
+    "id": "n12738459127",
+    "nom": "Le Jardin Du Sud",
+    "slug": "le-jardin-du-sud",
+    "segment": "B",
+    "categorie_osm": "restaurant",
+    "categorie_google": "Restaurant",
+    "adresse": {
+      "ligne1": "Chaussée Roosevelt 103",
+      "ligne2": "4540 Amay",
+      "complete": "Chaussée Roosevelt 103, 4540 Amay",
+      "code_postal": "4540",
+      "ville": "Amay"
+    },
+    "lat": 50.5446054,
+    "lon": 5.3109767,
+    "telephone": "+32 85 25 42 52",
+    "email": "",
+    "facebook": "https://m.facebook.com/pages/category/Restaurant/Le-jardin-du-sud-307526649680407/",
+    "site_declare": "",
+    "horaires": [
+      [
+        "Lundi, Jeudi à Samedi",
+        "18:00-22:30"
+      ],
+      [
+        "Dimanche",
+        "12:00-14:30,18:00-22:30"
+      ]
+    ],
+    "description": "",
+    "note": 4.5,
+    "avis": 314,
+    "photos": [
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnD_7rsYLyqMWohCJFGT410bPbT1UTwjRuelrtnlCf33V1XPllwg8_qFvhhHUXe_qMj6tuT4ruBih_cOBb_7I1ggXtxGmHlXxtmPN3139gbldHSwhvJM-waLJEFYu8l_TfCtC8p=w1200-h800-p-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnD_7rsYLyqMWohCJFGT410bPbT1UTwjRuelrtnlCf33V1XPllwg8_qFvhhHUXe_qMj6tuT4ruBih_cOBb_7I1ggXtxGmHlXxtmPN3139gbldHSwhvJM-waLJEFYu8l_TfCtC8p=w1200-h800-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnO7ZgjF8JkxnrfhlP9pzuN9dxOMwLCAzPmv6IgKQ6UX6Zv9vvohNmQFWBtNOmhrRPLlhsOFYmwY4mSZD8vDWjOAT4PvUD47m7DH3cHNJTFCkGCrSkPZWB7wKKVTVFgCc7y-SN-6g=w1200-h800-p-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWmH1H0KBZkqrjIjCJ5YXeRbLU4-ZlLXGMo4GcvEHzOa6o0p9s6TUmPKuC4LHXj6byeidH0AVSExT8QjpAQPSB61euwIXsGy9Emg7TmTjQmbONzQq5e8DGeZRKRy-8BZntLrIjM=w1200-h800-p-k-no"
+    ],
+    "capture_google": "data/captures/le-jardin-du-sud-google.png",
+    "capture_facebook": "",
+    "source": "openstreetmap+google",
+    "osm_url": "https://www.openstreetmap.org/node/12738459127",
+    "maps_url": "https://www.google.com/maps/search/Le%20Jardin%20Du%20Sud%204540%20Amay"
+  },
+  {
+    "id": "n3992902027",
+    "nom": "Les variétés",
+    "slug": "les-varietes",
+    "segment": "B",
+    "categorie_osm": "pub",
+    "categorie_google": "Café",
+    "adresse": {
+      "ligne1": "Rue entre deux Tours",
+      "ligne2": "4540 Amay",
+      "complete": "Rue entre deux Tours, 4540 Amay",
+      "code_postal": "4540",
+      "ville": "Amay"
+    },
+    "lat": 50.5486526,
+    "lon": 5.317191,
+    "telephone": "+32 85 31 11 50",
+    "email": "",
+    "facebook": "https://www.facebook.com/Brasserielesvarietesamay/",
+    "site_declare": "",
+    "horaires": [
+      [
+        "",
+        "09:00-01:00"
+      ]
+    ],
+    "description": "",
+    "note": 4.0,
+    "avis": 155,
+    "photos": [
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlrVgww3E94znuZusbsHEhfBzFOc9QuAbsN4ba042pbBNCe1W5J31KecH1QAgLHtULtAZLoDw_3JXIqWjZNICFkfVPEb-pwIpq7whjMOjuFTuWg9C42oZOFObYHz7B1zu6TnP8=w1200-h800-p-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlrVgww3E94znuZusbsHEhfBzFOc9QuAbsN4ba042pbBNCe1W5J31KecH1QAgLHtULtAZLoDw_3JXIqWjZNICFkfVPEb-pwIpq7whjMOjuFTuWg9C42oZOFObYHz7B1zu6TnP8=w1200-h800-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWncOdlU5ZXvyHBJRx6nyFUeHnjiKbZweRgmE4e1a096shfUSfHDaLa-7xkxhVe9TETR3Z04TETCilM0AZmmdIQVNc3zBXDh9f_HT9GhMT-saEO1SB7YpIeufKPPWFxrSXOjI10=w1200-h800-p-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWmd5JNENC6TM2LqzVZKeg25QCYhQsa9tRdwK7Aka_cODShj4ijxkFi2CiUq-KA957GdhCq13pej3N1ZOaPtUxsTNATZ_F-pInnYJeGQtdohmFZkWFqTaEZVNkB2jmtBRrz73CvpuA=w1200-h800-p-k-no"
+    ],
+    "capture_google": "data/captures/les-varietes-google.png",
+    "capture_facebook": "",
+    "source": "openstreetmap+google",
+    "osm_url": "https://www.openstreetmap.org/node/3992902027",
+    "maps_url": "https://www.google.com/maps/search/Les%20vari%C3%A9t%C3%A9s%204540%20Amay"
+  },
+  {
+    "id": "w926273282",
+    "nom": "Lodge Bar Restaurant",
+    "slug": "lodge-bar-restaurant",
+    "segment": "B",
+    "categorie_osm": "restaurant",
+    "categorie_google": "",
+    "adresse": {
+      "ligne1": "Route du Condroz 203",
+      "ligne2": "4550 Nandrin",
+      "complete": "Route du Condroz 203, 4550 Nandrin",
+      "code_postal": "4550",
+      "ville": "Nandrin"
+    },
+    "lat": 50.5131935,
+    "lon": 5.4023017,
+    "telephone": "+32 478 91 24 68",
+    "email": "",
+    "facebook": "https://www.facebook.com/people/LODGE-Bar/100089209172026/",
+    "site_declare": "",
+    "horaires": [],
+    "description": "",
+    "note": 4.4,
+    "avis": 85,
+    "photos": [
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWk355vvzceSLEw1rkw8ijxJmOuBg06KdBnzdDCNZj3NFPVl2Xy8rLHQ0PtKLomxYyD8-COsQ5vlIOd_VG6GVHQzOdIvLzdn6MJ9rscjUb61lhtWWXIbASdrI4sGd9ZksWJqDe2U=w1200-h800-p-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWk355vvzceSLEw1rkw8ijxJmOuBg06KdBnzdDCNZj3NFPVl2Xy8rLHQ0PtKLomxYyD8-COsQ5vlIOd_VG6GVHQzOdIvLzdn6MJ9rscjUb61lhtWWXIbASdrI4sGd9ZksWJqDe2U=w1200-h800-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlhb7lTrW4uzkC-hIVNfBfZHdFzfAKDEi_2OrrkxHnPFUZgCE72HHb_YS4dwwoTv7ySfpyi-97a0P1gOBnec408o0y_GsWAZeUKVhHrqJpXZy2jNcLtcSsYjC2oXccrqtmOpzQ3=w1200-h800-p-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWk355vvzceSLEw1rkw8ijxJmOuBg06KdBnzdDCNZj3NFPVl2Xy8rLHQ0PtKLomxYyD8-COsQ5vlIOd_VG6GVHQzOdIvLzdn6MJ9rscjUb61lhtWWXIbASdrI4sGd9ZksWJqDe2U=w1200-h800-k-no"
+    ],
+    "capture_google": "data/captures/lodge-bar-restaurant-google.png",
+    "capture_facebook": "",
+    "source": "openstreetmap+google",
+    "osm_url": "https://www.openstreetmap.org/way/926273282",
+    "maps_url": "https://www.google.com/maps/search/Lodge%20Bar%20Restaurant%204550%20Nandrin"
+  },
+  {
+    "id": "n12791208498",
+    "nom": "Maison Leroy",
+    "slug": "maison-leroy",
+    "segment": "B",
+    "categorie_osm": "doityourself",
+    "categorie_google": "Magasin de bougies",
+    "adresse": {
+      "ligne1": "Chaussée de Liège 91",
+      "ligne2": "4540 Ampsin",
+      "complete": "Chaussée de Liège 91, 4540 Ampsin",
+      "code_postal": "4540",
+      "ville": "Ampsin"
+    },
+    "lat": 50.5398137,
+    "lon": 5.2897581,
+    "telephone": "+32 85 31 36 86",
+    "email": "",
+    "facebook": "http://www.facebook.com/maisonleroyampsin",
+    "site_declare": "",
+    "horaires": [
+      [
+        "Lundi, Mercredi à Samedi",
+        "09:00-12:00, 12:30-18:00"
+      ]
+    ],
+    "description": "",
+    "note": 4.6,
+    "avis": 259,
+    "photos": [
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWmOlEiiqg7bEBi3EhWcX9ewQoa9ADlgMoCVRrOoTLYoRbsbqMFDk6hvtcjWfzXuxZHF9aCYIQ913mZN6W3AHq0sxwdT94Iudp27r99JL2CMcVdgtogWn2bW2Iw9yxRNNZT54zXD=w1200-h800-p-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWmOlEiiqg7bEBi3EhWcX9ewQoa9ADlgMoCVRrOoTLYoRbsbqMFDk6hvtcjWfzXuxZHF9aCYIQ913mZN6W3AHq0sxwdT94Iudp27r99JL2CMcVdgtogWn2bW2Iw9yxRNNZT54zXD=w1200-h800-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWmOlEiiqg7bEBi3EhWcX9ewQoa9ADlgMoCVRrOoTLYoRbsbqMFDk6hvtcjWfzXuxZHF9aCYIQ913mZN6W3AHq0sxwdT94Iudp27r99JL2CMcVdgtogWn2bW2Iw9yxRNNZT54zXD=w1200-h800-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWmd6d8f1DfagEgGEuMUzkFv56jewZRcSer7nP1mcKrecYE1k_z4x5eUhxfFxY0oSKlw7rfzAkwYZ15Ztz2qcnZ9skZzfyL8M9y4lB5dVUruoj3v8aO6hunm-82V_NhN-oF6InJa=w1200-h800-k-no"
+    ],
+    "capture_google": "data/captures/maison-leroy-google.png",
+    "capture_facebook": "",
+    "source": "openstreetmap+google",
+    "osm_url": "https://www.openstreetmap.org/node/12791208498",
+    "maps_url": "https://www.google.com/maps/search/Maison%20Leroy%204540%20Ampsin"
   }
 ]

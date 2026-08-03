@@ -3,7 +3,7 @@ FICHE D'APPEL — Le petit marché d'Adeline
 Téléphone   : à trouver
 Adresse     : Rue des Brasseurs 2
 Maquette    : https://dev.ineart.be/le-petit-marche-d-adeline/
-Expire le   : 10/08/2026
+Expire le   : 11/08/2026
 
 ACCROCHE
   "Bonjour, Dimitri d'IneArt. Je fais des sites internet pour les
@@ -17,7 +17,7 @@ SI INTÉRESSÉ
   - Proposer un passage en boutique pour ajouter les vraies photos
 
 SI "PAS INTÉRESSÉ"
-  - "Aucun souci, la page se supprime toute seule le 10/08/2026."
+  - "Aucun souci, la page se supprime toute seule le 11/08/2026."
   - Noter dans envois.csv : statut = refus
 
 OBJECTIONS COURANTES

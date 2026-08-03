@@ -29,73 +29,132 @@ OBJET = "Votre site internet est déjà en ligne, {nom}"
 OBJET_RELANCE = "{nom} — votre aperçu disparaît le {date}"
 
 
-def texte_mail(entree, relance=False):
-    tarif_site = config.TARIFS["site"]
-    tarif_domaine = config.TARIFS["domaine"]
-    agence = config.AGENCE
+def accroche(entree):
+    """Ouverture adaptee a ce que l'on sait reellement du prospect."""
+    nom = entree["nom"]
+    if entree.get("segment") == "B" and entree.get("facebook"):
+        return ("En cherchant %s sur internet, j'ai trouvé votre page Facebook, "
+                "mais pas de site. Or une page Facebook ne sort pas dans Google, "
+                "et tout le monde n'y est pas." % nom)
+    if entree.get("segment") == "C":
+        return ("En cherchant %s sur internet, je suis tombé sur une adresse de "
+                "site qui ne répond plus. Vos clients tombent dessus aussi." % nom)
+    return ("En cherchant %s sur internet, je n'ai trouvé ni site, ni page : "
+            "quelqu'un qui ne vous connaît pas encore n'a aucun moyen de vous "
+            "trouver." % nom)
 
+
+def preuve_sociale(entree):
+    """Reprend la note Google du prospect quand elle existe."""
+    note, avis = entree.get("note"), entree.get("avis")
+    if not note:
+        return ""
+    note_fr = str(note).replace(".", ",")
+    if avis:
+        return ("Vos %s avis Google à %s/5 parlent déjà pour vous. Il ne vous "
+                "manque qu'une adresse à donner.\n\n" % (avis, note_fr))
+    return ("Votre note de %s/5 sur Google parle déjà pour vous. Il ne vous "
+            "manque qu'une adresse à donner.\n\n" % note_fr)
+
+
+def bloc_tarifs():
+    site = config.TARIFS["site"]
+    domaine = config.TARIFS["domaine"]
+    return ("  - %s, exactement comme vous le voyez : %d € %s\n"
+            "  - %s (ex. votre-nom.be) : %d € %s\n"
+            % (site["libelle"], site["prix"], site["unite"],
+               domaine["libelle"], domaine["prix"], domaine["unite"]))
+
+
+def signature():
+    agence = config.AGENCE
+    return ("Bien à vous,\n%s\n%s — %s\n%s\n"
+            % (agence["signature"], agence["telephone"],
+               agence["email"], agence["site"]))
+
+
+def texte_mail(entree, relance=False):
     if relance:
         return (
             "Bonjour,\n\n"
-            "Petit rappel : l'aperçu du site que j'ai réalisé pour {nom} est "
-            "encore visible ici jusqu'au {date} :\n\n"
-            "    {url}\n\n"
+            "Petit rappel : l'aperçu du site que j'ai réalisé pour %s est "
+            "encore visible ici jusqu'au %s :\n\n"
+            "    %s\n\n"
             "Passé cette date, la page est supprimée automatiquement de mon "
             "serveur. Si vous souhaitez la garder, un simple mot suffit.\n\n"
-            "Pour rappel : {prix_site} € une seule fois pour le site, "
-            "{prix_domaine} € par an pour le nom de domaine et l'hébergement.\n\n"
-            "Bien à vous,\n{signature}\n{tel} — {email}\n{site}\n"
-        ).format(
-            nom=entree["nom"], date=entree["expire_le_fr"], url=entree["url"],
-            prix_site=tarif_site["prix"], prix_domaine=tarif_domaine["prix"],
-            signature=agence["signature"], tel=agence["telephone"],
-            email=agence["email"], site=agence["site"],
+            "Pour rappel, tout compris :\n%s\n"
+            "%s"
+            % (entree["nom"], entree["expire_le_fr"], entree["url"],
+               bloc_tarifs(), signature())
         )
 
     return (
         "Bonjour,\n\n"
-        "Je m'appelle {prenom_signature}. Je crée des sites internet pour les "
-        "commerces et les indépendants de la région de Huy.\n\n"
-        "En cherchant {nom} sur internet, je me suis rendu compte que vous "
-        "n'aviez pas encore de site. J'en ai donc réalisé un, gratuitement et "
-        "sans engagement, à partir de vos informations publiques (adresse, "
-        "horaires, téléphone). Vous pouvez le voir ici :\n\n"
-        "    {url}\n\n"
-        "Il est en ligne jusqu'au {date}, après quoi il est supprimé "
-        "automatiquement. Rien à faire, rien à payer pour le regarder.\n\n"
-        "S'il vous convient, voici mes tarifs :\n"
-        "  - {lib_site} : {prix_site} € ({unite_site})\n"
-        "  - {lib_domaine} : {prix_domaine} € ({unite_domaine})\n\n"
-        "Tout est compris : le design, la version mobile, la mise en ligne et "
-        "le formulaire de contact qui arrive directement dans votre boîte mail.\n\n"
-        "Si le site ne vous intéresse pas, ignorez simplement ce message : la "
-        "page sera retirée d'elle-même. Et si vous préférez qu'elle disparaisse "
-        "tout de suite, répondez-moi, je la supprime dans la journée.\n\n"
-        "Bien à vous,\n{signature}\n{tel} — {email}\n{site}\n"
-    ).format(
-        prenom_signature=config.AGENCE["signature"].split(" ")[0],
-        nom=entree["nom"], url=entree["url"], date=entree["expire_le_fr"],
-        lib_site=tarif_site["libelle"], prix_site=tarif_site["prix"],
-        unite_site=tarif_site["unite"], lib_domaine=tarif_domaine["libelle"],
-        prix_domaine=tarif_domaine["prix"], unite_domaine=tarif_domaine["unite"],
-        signature=config.AGENCE["signature"], tel=config.AGENCE["telephone"],
-        email=config.AGENCE["email"], site=config.AGENCE["site"],
+        "Je m'appelle %s, je crée des sites internet pour les commerces et les "
+        "indépendants de Huy.\n\n"
+        "%s\n\n"
+        "%s"
+        "Alors j'ai pris les devants : j'ai réalisé votre site, gratuitement et "
+        "sans engagement, avec vos photos, vos horaires et vos coordonnées. "
+        "Le voici :\n\n"
+        "    %s\n\n"
+        "Il reste en ligne jusqu'au %s, puis il est supprimé automatiquement. "
+        "Rien à faire, rien à payer pour le regarder.\n\n"
+        "Si vous voulez le garder, c'est simple et c'est tout compris :\n\n"
+        "%s\n"
+        "Pas d'abonnement caché, pas de frais de mise en ligne. Le formulaire "
+        "de contact arrive directement dans votre boîte mail.\n\n"
+        "Si cela ne vous intéresse pas, ignorez ce message : la page "
+        "disparaîtra d'elle-même. Et si vous préférez qu'elle disparaisse tout "
+        "de suite, un mot suffit, je la retire dans la journée.\n\n"
+        "%s"
+        % (config.AGENCE["signature"].split(" ")[0],
+           accroche(entree), preuve_sociale(entree), entree["url"],
+           entree["expire_le_fr"], bloc_tarifs(), signature())
     )
 
 
 def html_mail(entree, corps_texte):
-    lignes = "".join(
-        "<p>%s</p>" % ligne.replace("\n", "<br>")
-        for ligne in corps_texte.split("\n\n") if ligne.strip()
+    """Version HTML : meme texte, avec le lien et les prix mis en evidence."""
+    site = config.TARIFS["site"]
+    domaine = config.TARIFS["domaine"]
+
+    paragraphes = []
+    for bloc in corps_texte.split("\n\n"):
+        bloc = bloc.strip()
+        if not bloc:
+            continue
+        # Le lien et le bloc tarifs sont rendus a part, en encadre.
+        if bloc.startswith(entree["url"]) or bloc.startswith("- %s" % site["libelle"]):
+            continue
+        paragraphes.append("<p>%s</p>" % bloc.replace("\n", "<br>"))
+
+    encadre_prix = (
+        '<table role="presentation" style="width:100%%;border-collapse:collapse;'
+        'margin:22px 0;border:1px solid #e3e6ea;border-radius:10px">'
+        '<tr><td style="padding:18px 20px">'
+        '<div style="font-size:13px;text-transform:uppercase;letter-spacing:.12em;'
+        'color:#6b7280;margin-bottom:12px">Tout compris</div>'
+        '<div style="font-size:16px;margin-bottom:8px">'
+        '<b>%s €</b> une seule fois — %s, exactement comme vous le voyez</div>'
+        '<div style="font-size:16px">'
+        '<b>%s €</b> par an — %s (ex. votre-nom.be)</div>'
+        '</td></tr></table>'
+        % (site["prix"], site["libelle"], domaine["prix"], domaine["libelle"])
     )
+
     return (
         '<div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;'
-        'font-size:15px;line-height:1.65;color:#1a1a1a;max-width:600px">%s'
-        '<p style="margin-top:26px">'
+        'font-size:15px;line-height:1.65;color:#1a1a1a;max-width:600px">'
+        '%s'
+        '<p style="margin:26px 0">'
         '<a href="%s" style="background:#1a1a1a;color:#fff;text-decoration:none;'
-        'padding:13px 24px;border-radius:99px;display:inline-block;font-weight:600">'
-        'Voir le site</a></p></div>'
-        % (lignes, entree["url"])
+        'padding:13px 26px;border-radius:99px;display:inline-block;font-weight:600">'
+        'Voir votre site</a><br>'
+        '<a href="%s" style="font-size:13px;color:#6b7280">%s</a></p>'
+        '%s</div>'
+        % ("".join(paragraphes), entree["url"], entree["url"], entree["url"],
+           encadre_prix)
     )
 
 
@@ -144,7 +203,7 @@ def ecrire_eml(entree, relance):
     message["Subject"] = modele_objet.format(nom=entree["nom"],
                                              date=entree["expire_le_fr"])
     message["From"] = "%s <%s>" % (config.AGENCE["nom"], config.AGENCE["email"])
-    message["To"] = entree["email"]
+    message["To"] = entree.get("email", "")
     message["Date"] = formatdate(localtime=True)
     message["Message-ID"] = make_msgid(domain=config.AGENCE["email"].split("@")[-1])
     message.set_content(corps)
@@ -171,6 +230,7 @@ def nettoyer_anciens(manifest):
             "%s-appel.txt" % entree["slug"],
         ))
     attendus.add(os.path.basename(config.FICHIER_ENVOIS))
+    attendus.add("TOUS_LES_MAILS.txt")
 
     retires = 0
     for nom in os.listdir(config.DOSSIER_MAILS):
@@ -195,23 +255,35 @@ def main():
 
     os.makedirs(config.DOSSIER_MAILS, exist_ok=True)
     nettoyer_anciens(manifest)
-    lignes_csv, avec_mail, sans_mail = [], 0, 0
+    lignes_csv, corps_complet, avec_mail, sans_mail = [], [], 0, 0
 
     for entree in manifest:
         if entree.get("supprime"):
             continue
-        canal, fichier_genere = "telephone", ""
-
+        # Un mail est prepare pour chaque societe. Sans adresse connue, le
+        # champ destinataire reste vide : il suffit de le completer une fois
+        # l'adresse trouvee (page Facebook, vitrine, appel).
+        fichier_genere = os.path.basename(ecrire_eml(entree, arguments.relance))
         if entree.get("email"):
-            fichier_genere = os.path.basename(ecrire_eml(entree, arguments.relance))
             canal = "mail"
             avec_mail += 1
         else:
+            canal = "telephone"
+            sans_mail += 1
             chemin = os.path.join(config.DOSSIER_MAILS, "%s-appel.txt" % entree["slug"])
             with open(chemin, "w", encoding="utf-8") as fichier:
                 fichier.write(script_appel(entree))
-            fichier_genere = os.path.basename(chemin)
-            sans_mail += 1
+
+        corps_complet.append(
+            "%s\n%s\nÀ       : %s\nObjet   : %s\nLien    : %s\n%s\n\n%s"
+            % ("=" * 74, entree["nom"],
+               entree.get("email") or "(adresse à trouver — %s)"
+               % (entree.get("telephone") or "pas de téléphone connu"),
+               (OBJET_RELANCE if arguments.relance else OBJET).format(
+                   nom=entree["nom"], date=entree["expire_le_fr"]),
+               entree["url"], "=" * 74,
+               texte_mail(entree, arguments.relance))
+        )
 
         lignes_csv.append({
             "societe": entree["nom"],
@@ -232,14 +304,23 @@ def main():
             "reponse": "",
         })
 
+    chemin_recap = os.path.join(config.DOSSIER_MAILS, "TOUS_LES_MAILS.txt")
+    with open(chemin_recap, "w", encoding="utf-8") as fichier:
+        fichier.write("MAILS DE PROSPECTION — %d societes\n"
+                      "Genere le %s\n\n%s\n"
+                      % (len(corps_complet),
+                         dt.datetime.now().strftime("%d/%m/%Y a %H:%M"),
+                         "\n\n".join(corps_complet)))
+
     with open(config.FICHIER_ENVOIS, "w", encoding="utf-8", newline="") as fichier:
         writer = csv.DictWriter(fichier, fieldnames=list(lignes_csv[0].keys()),
                                 delimiter=";")
         writer.writeheader()
         writer.writerows(lignes_csv)
 
-    print("%d mails prets (.eml)" % avec_mail)
-    print("%d fiches d'appel (pas d'adresse mail connue)" % sans_mail)
+    print("%d mails prets a envoyer (adresse connue)" % avec_mail)
+    print("%d mails prets, destinataire a completer (+ fiche d'appel)" % sans_mail)
+    print("Recapitulatif lisible : %s" % chemin_recap)
     print("Suivi : %s" % config.FICHIER_ENVOIS)
     print("\nRappel : envoyez par paquets de 20 a 30 par jour, jamais tout d'un coup.")
     print("Genere le %s" % dt.datetime.now().strftime("%d/%m/%Y %H:%M"))

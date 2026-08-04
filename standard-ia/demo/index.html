@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>IneArt — Standard téléphonique IA</title>
+<meta name="theme-color" content="#0f1115">
+<style>
+:root{
+  --fond:#0f1115; --carte:#171a21; --bord:#262b36;
+  --texte:#e8ebf0; --gris:#8b93a0;
+  --vert:#2fbf71; --rouge:#e5484d; --accent:#f0a202;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  background:var(--fond);color:var(--texte);line-height:1.6;
+  min-height:100dvh;display:flex;flex-direction:column}
+.wrap{width:min(560px,94vw);margin:0 auto;padding:18px 0 32px;flex:1;
+  display:flex;flex-direction:column}
+
+header{display:flex;align-items:center;gap:12px;padding:6px 0 20px}
+.logo{width:40px;height:40px;border-radius:11px;background:var(--accent);
+  display:grid;place-items:center;font-weight:700;color:#111;font-size:15px}
+header h1{font-size:17px;font-weight:600;letter-spacing:-.01em}
+header p{font-size:12px;color:var(--gris);text-transform:uppercase;letter-spacing:.12em}
+
+/* --- écran d'appel --- */
+.scene{background:var(--carte);border:1px solid var(--bord);border-radius:20px;
+  padding:26px 22px;text-align:center}
+.pastille{width:104px;height:104px;border-radius:50%;margin:6px auto 18px;
+  display:grid;place-items:center;font-size:40px;background:#20242e;
+  border:2px solid var(--bord);transition:.3s}
+.pastille.ecoute{border-color:var(--vert);box-shadow:0 0 0 0 rgba(47,191,113,.5);
+  animation:pulse 1.6s infinite}
+.pastille.parle{border-color:var(--accent);background:#2a2416}
+@keyframes pulse{70%{box-shadow:0 0 0 22px rgba(47,191,113,0)}
+  100%{box-shadow:0 0 0 0 rgba(47,191,113,0)}}
+.etat{font-size:14px;color:var(--gris);min-height:22px;margin-bottom:20px}
+.bouton{display:block;width:100%;border:0;border-radius:99px;padding:16px;
+  font-size:16px;font-weight:600;font-family:inherit;cursor:pointer;transition:.15s}
+.bouton:active{transform:scale(.98)}
+.appeler{background:var(--vert);color:#06210f}
+.raccrocher{background:var(--rouge);color:#fff}
+.secondaire{background:transparent;color:var(--gris);border:1px solid var(--bord);
+  margin-top:10px;font-size:14px;padding:12px}
+
+/* --- transcription --- */
+.echanges{margin-top:20px;display:flex;flex-direction:column;gap:10px}
+.bulle{padding:11px 15px;border-radius:15px;font-size:14.5px;max-width:88%;
+  animation:apparait .25s ease-out}
+@keyframes apparait{from{opacity:0;transform:translateY(6px)}}
+.ia{background:#1e2330;border:1px solid var(--bord);align-self:flex-start;
+  border-bottom-left-radius:5px}
+.client{background:#243a2c;align-self:flex-end;border-bottom-right-radius:5px}
+
+/* --- fiche --- */
+.fiche{margin-top:20px;background:var(--carte);border:1px solid var(--bord);
+  border-radius:18px;overflow:hidden;display:none}
+.fiche.on{display:block}
+.fiche header{background:#1e2330;padding:16px 20px;display:block}
+.fiche header .t{font-size:12px;text-transform:uppercase;letter-spacing:.13em;
+  color:var(--accent);font-weight:700}
+.fiche header .s{font-size:17px;font-weight:600;margin-top:3px}
+.champs{padding:6px 20px 18px}
+.champ{display:flex;gap:14px;padding:12px 0;border-bottom:1px solid var(--bord);
+  font-size:14.5px}
+.champ:last-child{border-bottom:0}
+.champ .k{color:var(--gris);min-width:96px;flex-shrink:0}
+.champ .v{font-weight:500}
+.actions{padding:0 20px 20px;display:flex;gap:10px;flex-wrap:wrap}
+.actions a{flex:1;text-align:center;text-decoration:none;background:var(--accent);
+  color:#111;padding:13px;border-radius:99px;font-weight:600;font-size:14.5px}
+
+/* --- réglages --- */
+.reglages{margin-top:auto;padding-top:22px}
+.reglages details{background:var(--carte);border:1px solid var(--bord);
+  border-radius:14px;padding:14px 16px}
+.reglages summary{cursor:pointer;font-size:13px;color:var(--gris)}
+.reglages input{width:100%;margin-top:12px;padding:11px 13px;border-radius:9px;
+  border:1px solid var(--bord);background:#10131a;color:var(--texte);
+  font-family:inherit;font-size:14px}
+.reglages p{font-size:12px;color:var(--gris);margin-top:10px;line-height:1.5}
+.alerte{background:#2a1b1c;border:1px solid #5c2b2e;color:#ffb4b4;
+  border-radius:12px;padding:13px 16px;font-size:13.5px;margin-top:14px;display:none}
+.alerte.on{display:block}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="logo">IA</div>
+    <div>
+      <h1>Standard téléphonique</h1>
+      <p>IneArt · démonstration</p>
+    </div>
+  </header>
+
+  <div class="scene">
+    <div class="pastille" id="pastille">📞</div>
+    <div class="etat" id="etat">Appuyez pour simuler un appel entrant</div>
+    <button class="bouton appeler" id="principal">Décrocher</button>
+    <button class="bouton secondaire" id="rejouer" style="display:none">Nouvel appel</button>
+  </div>
+
+  <div class="echanges" id="echanges"></div>
+
+  <div class="fiche" id="fiche">
+    <header>
+      <div class="t">Demande de devis</div>
+      <div class="s" id="fiche-titre">—</div>
+    </header>
+    <div class="champs" id="fiche-champs"></div>
+    <div class="actions"><a id="envoyer" href="#">Envoyer par mail</a></div>
+  </div>
+
+  <div class="alerte" id="alerte"></div>
+
+  <div class="reglages">
+    <details>
+      <summary>Réglages</summary>
+      <input id="cle" type="password" placeholder="Clé API Anthropic (sk-ant-...)"
+             autocomplete="off" spellcheck="false">
+      <input id="destinataire" type="email" placeholder="Mail de réception des fiches"
+             autocomplete="off">
+      <p>La clé reste sur cet appareil, dans le stockage local du navigateur.
+         Elle n'est jamais envoyée ailleurs qu'à l'API Anthropic.</p>
+    </details>
+  </div>
+
+</div>
+
+<script>
+const MODELE = "claude-haiku-4-5-20251001";
+
+const CONSIGNE = `Tu es la standardiste téléphonique d'un artisan belge de la région de Huy.
+Un client appelle pour demander un devis. Tu dois mener la conversation à l'oral.
+
+RÈGLES DE PAROLE
+- Une seule question à la fois, jamais deux.
+- Phrases courtes, ton chaleureux et naturel, comme une vraie personne au téléphone.
+- Jamais de liste, de puces, d'emoji ni de mise en forme : ta réponse est lue à voix haute.
+- Ne demande pas le numéro de téléphone : il est déjà connu par l'appel.
+- Si le client est vague, relance une fois puis passe à la suite.
+- Reformule brièvement à la fin pour confirmer.
+
+INFORMATIONS À RECUEILLIR, dans cet ordre
+1. Le nom du client
+2. La nature des travaux, avec un minimum de détail
+3. L'adresse ou au moins la commune
+4. L'urgence (dépannage immédiat, cette semaine, pas pressé)
+5. Les disponibilités pour une visite
+
+RÉPONSE ATTENDUE
+Réponds toujours en JSON strict, sans texte autour :
+{"dire": "ce que tu dis à voix haute", "termine": false, "fiche": null}
+
+Quand tu as tout recueilli et confirmé, termine ainsi :
+{"dire": "phrase de conclusion et au revoir", "termine": true,
+ "fiche": {"nom": "", "travaux": "", "resume": "", "adresse": "",
+           "urgence": "faible|moyenne|elevee", "disponibilites": ""}}
+
+Au tout premier tour, l'utilisateur t'enverra "[DÉCROCHÉ]" : présente-toi et demande
+en quoi tu peux aider.`;
+
+const $ = (id) => document.getElementById(id);
+const cle = $("cle"), destinataire = $("destinataire");
+cle.value = localStorage.getItem("cle_anthropic") || "";
+destinataire.value = localStorage.getItem("destinataire") || "";
+cle.onchange = () => localStorage.setItem("cle_anthropic", cle.value.trim());
+destinataire.onchange = () => localStorage.setItem("destinataire", destinataire.value.trim());
+
+let historique = [], enCours = false, reco = null, voix = null;
+
+function alerte(message) {
+  const boite = $("alerte");
+  boite.textContent = message;
+  boite.classList.toggle("on", Boolean(message));
+}
+
+function etat(texte, classe) {
+  $("etat").textContent = texte;
+  $("pastille").className = "pastille" + (classe ? " " + classe : "");
+}
+
+function bulle(texte, qui) {
+  const element = document.createElement("div");
+  element.className = "bulle " + qui;
+  element.textContent = texte;
+  $("echanges").appendChild(element);
+  element.scrollIntoView({ behavior: "smooth", block: "end" });
+}
+
+/* ---------- voix de synthèse ---------- */
+function choisirVoix() {
+  const toutes = speechSynthesis.getVoices();
+  voix = toutes.find(v => v.lang.startsWith("fr") && /Google|Amelie|Audrey|Thomas/i.test(v.name))
+      || toutes.find(v => v.lang.startsWith("fr"))
+      || null;
+}
+speechSynthesis.onvoiceschanged = choisirVoix;
+choisirVoix();
+
+function parler(texte) {
+  return new Promise((resolve) => {
+    speechSynthesis.cancel();
+    const message = new SpeechSynthesisUtterance(texte);
+    message.lang = "fr-FR";
+    message.rate = 1.02;
+    message.pitch = 1.0;
+    if (voix) message.voice = voix;
+    message.onend = resolve;
+    message.onerror = resolve;
+    etat("L'assistante parle…", "parle");
+    speechSynthesis.speak(message);
+  });
+}
+
+/* ---------- reconnaissance vocale ---------- */
+function ecouter() {
+  return new Promise((resolve, reject) => {
+    const Reco = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!Reco) return reject(new Error("navigateur"));
+    reco = new Reco();
+    reco.lang = "fr-FR";
+    reco.interimResults = false;
+    reco.maxAlternatives = 1;
+    reco.continuous = false;
+
+    let repondu = false;
+    reco.onresult = (evenement) => {
+      repondu = true;
+      resolve(evenement.results[0][0].transcript.trim());
+    };
+    reco.onerror = (evenement) => {
+      if (evenement.error === "no-speech") { repondu = true; resolve(""); }
+      else reject(new Error(evenement.error));
+    };
+    reco.onend = () => { if (!repondu) resolve(""); };
+
+    etat("À vous de parler…", "ecoute");
+    reco.start();
+  });
+}
+
+/* ---------- cerveau ---------- */
+async function reflechir() {
+  const reponse = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "x-api-key": cle.value.trim(),
+      "anthropic-version": "2023-06-01",
+      "anthropic-dangerous-direct-browser-access": "true"
+    },
+    body: JSON.stringify({
+      model: MODELE,
+      max_tokens: 400,
+      system: CONSIGNE,
+      messages: historique
+    })
+  });
+
+  if (!reponse.ok) {
+    const detail = await reponse.text();
+    throw new Error("API " + reponse.status + " — " + detail.slice(0, 160));
+  }
+
+  const donnees = await reponse.json();
+  const brut = donnees.content.map(bloc => bloc.text || "").join("").trim();
+  const debut = brut.indexOf("{"), fin = brut.lastIndexOf("}");
+  try {
+    return JSON.parse(brut.slice(debut, fin + 1));
+  } catch (erreur) {
+    return { dire: brut, termine: false, fiche: null };
+  }
+}
+
+/* ---------- fiche de devis ---------- */
+const URGENCES = { faible: "Pas pressé", moyenne: "Cette semaine",
+                   elevee: "Urgent — dépannage" };
+
+function afficherFiche(fiche) {
+  $("fiche-titre").textContent = fiche.travaux || "Demande de devis";
+  const lignes = [
+    ["Client", fiche.nom],
+    ["Travaux", fiche.resume || fiche.travaux],
+    ["Adresse", fiche.adresse],
+    ["Urgence", URGENCES[fiche.urgence] || fiche.urgence],
+    ["Disponible", fiche.disponibilites],
+    ["Reçu à", new Date().toLocaleTimeString("fr-BE",
+        { hour: "2-digit", minute: "2-digit" })]
+  ];
+  $("fiche-champs").innerHTML = lignes
+    .filter(([, valeur]) => valeur)
+    .map(([libelle, valeur]) =>
+      `<div class="champ"><span class="k">${libelle}</span><span class="v">${valeur}</span></div>`)
+    .join("");
+
+  const transcription = historique
+    .filter(tour => tour.content !== "[DÉCROCHÉ]")
+    .map(tour => (tour.role === "user" ? "Client : " : "Assistante : ") +
+                 (tour.role === "user" ? tour.content : JSON.parse(tour.content).dire))
+    .join("\n");
+
+  const corps = lignes.filter(([, v]) => v).map(([k, v]) => k + " : " + v).join("\n")
+    + "\n\n--- Transcription ---\n" + transcription;
+
+  $("envoyer").href = "mailto:" + (destinataire.value.trim() || "") +
+    "?subject=" + encodeURIComponent("Demande de devis — " + (fiche.nom || "appel")) +
+    "&body=" + encodeURIComponent(corps);
+  $("fiche").classList.add("on");
+  $("fiche").scrollIntoView({ behavior: "smooth" });
+}
+
+/* ---------- boucle d'appel ---------- */
+async function appel() {
+  historique = [{ role: "user", content: "[DÉCROCHÉ]" }];
+
+  for (let tour = 0; tour < 14 && enCours; tour++) {
+    etat("Réflexion…", "");
+    const reponse = await reflechir();
+    historique.push({ role: "assistant", content: JSON.stringify(reponse) });
+
+    bulle(reponse.dire, "ia");
+    await parler(reponse.dire);
+
+    if (reponse.termine) {
+      if (reponse.fiche) afficherFiche(reponse.fiche);
+      break;
+    }
+    if (!enCours) break;
+
+    const dit = await ecouter();
+    if (!enCours) break;
+    if (!dit) {
+      historique.push({ role: "user", content: "[silence]" });
+      continue;
+    }
+    bulle(dit, "client");
+    historique.push({ role: "user", content: dit });
+  }
+
+  terminer();
+}
+
+function terminer() {
+  enCours = false;
+  if (reco) { try { reco.abort(); } catch (e) {} }
+  speechSynthesis.cancel();
+  etat("Appel terminé", "");
+  $("principal").style.display = "none";
+  $("rejouer").style.display = "block";
+}
+
+$("principal").onclick = async () => {
+  if (!cle.value.trim()) {
+    alerte("Ajoutez votre clé API Anthropic dans les réglages, en bas de page.");
+    return;
+  }
+  if (!(window.SpeechRecognition || window.webkitSpeechRecognition)) {
+    alerte("Ce navigateur ne sait pas écouter. Utilisez Chrome sur Android ou "
+         + "Safari sur iPhone.");
+    return;
+  }
+  alerte("");
+  enCours = true;
+  $("principal").textContent = "Raccrocher";
+  $("principal").className = "bouton raccrocher";
+  $("principal").onclick = terminer;
+  $("echanges").innerHTML = "";
+  $("fiche").classList.remove("on");
+
+  try {
+    await appel();
+  } catch (erreur) {
+    alerte("Problème : " + erreur.message);
+    terminer();
+  }
+};
+
+$("rejouer").onclick = () => location.reload();
+</script>
+</body>
+</html>

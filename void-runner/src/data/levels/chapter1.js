@@ -79,7 +79,11 @@ export const CHAPTER_1 = {
       entities: [
         { t: 'solid', x: 0, y: 12, w: 5, h: 3 },
         { t: 'mover', x: 8, y: 12, w: 3, h: 1, path: [[8, 20]], speed: 105, mode: 'once', trigger: 'stand', style: 'loose' },
-        { t: 'solid', x: 14, y: 12, w: 12, h: 3 },
+        { t: 'solid', x: 14, y: 12, w: 6, h: 3 },
+        // Premier mirage du jeu : un sol parfaitement normal, qui n'existe pas.
+        // Placé sur la ligne d'arrivée, quand le joueur se croit tiré d'affaire.
+        { t: 'mirage', x: 20, y: 12, w: 1, h: 3 },
+        { t: 'solid', x: 21, y: 12, w: 5, h: 3 },
         { t: 'deco', x: 8.2, y: 11.3, w: 0.6, h: 0.6, kind: 'bolt' },
         { t: 'deco', x: 10.2, y: 11.3, w: 0.6, h: 0.6, kind: 'bolt' },
         { t: 'sign', x: 1.5, y: 9.4, w: 3, h: 1, text: 'PLANCHER : 92 %', always: true },
@@ -132,7 +136,14 @@ export const CHAPTER_1 = {
       spawn: { x: 2, y: 10 },
       entities: [
         { t: 'solid', x: 0, y: 12, w: 9, h: 3 },
+        // L'îlot PARAÎT large de cinq tuiles. Il en fait quatre : la dernière
+        // est un mirage. Qui court jusqu'au bord visible tombe ; qui saute
+        // depuis le vrai bord retrouve exactement le gouffre d'origine.
+        // (Mirage placé au milieu dans une première version : il coupait
+        // l'îlot en deux perchoirs d'une tuile — le joueur prudent
+        // automatique n'y arrivait plus du tout.)
         { t: 'solid', x: 12, y: 12, w: 4, h: 3 },
+        { t: 'mirage', x: 16, y: 12, w: 1, h: 3 },
         { t: 'solid', x: 19, y: 12, w: 7, h: 3 },
         // Deux faisceaux déphasés : on ne peut pas franchir les deux d'un trait,
         // il faut s'arrêter sur l'îlot. Le joueur choisit QUAND il s'expose —
@@ -164,8 +175,14 @@ export const CHAPTER_1 = {
       spawn: { x: 1.5, y: 10 },
       entities: [
         { t: 'solid', x: 0, y: 12, w: 5, h: 3 },
+        // Onze dalles fatiguées… dont deux qui n'existent pas. Il faut donc
+        // courir (les dalles cèdent) ET sauter juste (les mirages ne portent
+        // pas). C'est la salle la plus exigeante du chapitre, et c'est voulu :
+        // elle referme le vocabulaire du sol.
         ...Array.from({ length: 11 }, (_, i) => ({
-          t: 'crumble', x: 5 + i, y: 12, w: 1, h: 1, delay: 0.38, respawn: 2.4,
+          t: [9, 13].includes(5 + i) ? 'mirage' : 'crumble',
+          look: 'crumble',
+          x: 5 + i, y: 12, w: 1, h: 1, delay: 0.38, respawn: 2.4,
         })),
         { t: 'solid', x: 16, y: 12, w: 1, h: 3 },
         { t: 'solid', x: 20, y: 12, w: 10, h: 3 },
@@ -195,7 +212,9 @@ export const CHAPTER_1 = {
         { t: 'solid', x: 10, y: 12, w: 3, h: 3 },
 
         { t: 'mover', x: 14, y: 11, w: 3, h: 1, path: [[14, 7], [14, 11]], speed: 62, mode: 'loop', wait: 0.6 },
-        { t: 'solid', x: 19, y: 7, w: 4, h: 1 },
+        { t: 'solid', x: 19, y: 7, w: 2, h: 1 },
+        { t: 'mirage', x: 21, y: 7, w: 1, h: 1 },
+        { t: 'solid', x: 22, y: 7, w: 1, h: 1 },
         { t: 'laser', x: 25.4, y: 6.3, w: 0.5, h: 0.5, dir: 'left', len: 4, cycle: [0.9, 1.4] },
 
         { t: 'crumble', x: 23, y: 7, w: 1, h: 1, delay: 0.4 },

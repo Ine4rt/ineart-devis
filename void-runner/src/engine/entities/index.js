@@ -1,4 +1,4 @@
-import { Solid, Crumble, Vanish, Ghost, Mover, Door, Crusher } from './platforms.js';
+import { Solid, Crumble, Vanish, Ghost, Mirage, Mover, Door, Crusher } from './platforms.js';
 import { Zap, Laser } from './hazards.js';
 import {
   Exit, Button, Zone, Timer, Logic, Checkpoint, Teleport, Gravity, MemGate,
@@ -17,6 +17,7 @@ export const REGISTRY = {
   crumble: Crumble,
   vanish: Vanish,
   ghost: Ghost,
+  mirage: Mirage,
   mover: Mover,
   door: Door,
   crusher: Crusher,

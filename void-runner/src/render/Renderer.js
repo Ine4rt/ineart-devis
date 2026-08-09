@@ -124,6 +124,35 @@ export class Renderer {
     ctx.restore();
   }
 
+  /**
+   * Mirage : STRICTEMENT le même rendu qu'un sol plein — c'est tout l'intérêt.
+   * Une fois traversé, un scintillement horizontal le trahit : le joueur peut
+   * alors le repérer sans jamais pouvoir dire qu'on le lui avait montré avant.
+   */
+  drawMirage(e) {
+    // Un mirage doit copier le sol qui l'entoure, pas « du sol » en général :
+    // posé au milieu de dalles fissurées, un bloc plein se repère au premier
+    // coup d'œil et le piège ne prend jamais.
+    if (e.look === 'crumble') this.drawCrumble({ ...e, active: true, shake: 0 });
+    else this.drawSolid(e);
+    if (!e.seen) return;
+    const ctx = this.ctx;
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(e.x, e.y, e.w, e.h);
+    ctx.clip();
+    ctx.globalAlpha = 0.5;
+    ctx.fillStyle = 'rgba(63,232,255,0.55)';
+    for (let i = 0; i < 3; i++) {
+      const p = ((this.t * 0.55 + i / 3) % 1);
+      ctx.fillRect(e.x, e.y + p * e.h, e.w, 1.2);
+    }
+    ctx.globalAlpha = 0.22;
+    ctx.fillStyle = '#0b1030';
+    ctx.fillRect(e.x, e.y, e.w, e.h);
+    ctx.restore();
+  }
+
   drawGhost(e) {
     const ctx = this.ctx;
     const v = e.vis ?? 0;
@@ -221,6 +250,16 @@ export class Renderer {
     if (!e.deadly) {
       ctx.globalAlpha = 0.28;
     }
+    // Apparition : la grille jaillit en 0,12 s avec un dépassement. Sans cette
+    // saccade, un obstacle qui surgit sous un trou ressemble à un défaut
+    // d'affichage plutôt qu'à un piège.
+    if (e.pop > 0) {
+      const k = 1 + Math.sin(e.pop * Math.PI) * 0.6;
+      ctx.save();
+      ctx.translate(e.x + e.w / 2, e.dir === 'down' ? e.y : e.y + e.h);
+      ctx.scale(1, k);
+      ctx.translate(-(e.x + e.w / 2), -(e.dir === 'down' ? e.y : e.y + e.h));
+    }
     const up = e.dir !== 'down';
     ctx.fillStyle = C.dangerDeep;
     roundRect(ctx, e.x, e.y, e.w, e.h, 1.5);
@@ -237,6 +276,7 @@ export class Renderer {
       i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y + (up ? -Math.abs(wob) : Math.abs(wob)));
     }
     ctx.stroke();
+    if (e.pop > 0) ctx.restore();
     ctx.globalAlpha = 1;
   }
 
@@ -640,6 +680,7 @@ export class Renderer {
       switch (e.type) {
         case 'solid': this.drawSolid(e); break;
         case 'crumble': this.drawCrumble(e); break;
+        case 'mirage': this.drawMirage(e); break;
         case 'vanish': this.drawVanish(e); break;
         case 'ghost': this.drawGhost(e); break;
         case 'mover': this.drawMover(e); break;

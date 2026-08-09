@@ -59,7 +59,7 @@ qui démarre hors ligne.
 | 30 niveaux jouables, 5 chapitres | ✅ (le cahier des charges en demandait 10 au minimum) |
 | Déplacement, saut, impulsion (dash) | ✅ |
 | Système de mort + redémarrage instantané | ✅ 320 ms, écourtable |
-| Types de pièges | ✅ 24 mécaniques (8 demandées) |
+| Types de pièges | ✅ 25 mécaniques (8 demandées), dont 28 mirages et 3 grilles jaillissantes |
 | Compteur de morts, écran de victoire | ✅ morts du jour, morts totales, némésis |
 | Robots déblocables | ✅ 8, purement cosmétiques |
 | Sauvegarde locale | ✅ versionnée et migrable |
@@ -77,7 +77,7 @@ src/
     constants.js       toutes les valeurs de game feel, à un seul endroit
     World.js           instance de niveau, signaux, ordre de mise à jour
     Player.js          course, saut variable, coyote time, dash, gravité
-    entities/          les 24 mécaniques, une classe chacune
+    entities/          les 25 mécaniques, une classe chacune
   data/
     levels/            LES NIVEAUX SONT DES DONNÉES (chapitre1.js … chapitre5.js)
     skins.js  quips.js
@@ -121,6 +121,29 @@ valider s'il n'est pas franchissable.
 Une classe dans `src/engine/entities/`, une ligne dans le registre
 `entities/index.js`, un cas dans `render/Renderer.js`. Aucun niveau n'est à
 recoder.
+
+---
+
+## Les deux pièges signature
+
+**Le mirage** (`{ t: 'mirage', x, y, w, h, look }`) — un sol dessiné
+rigoureusement comme le sol qui l'entoure, et qui n'existe pas. `look` copie
+l'apparence du voisinage (`wall` ou `crumble`) : un mirage au milieu de dalles
+fissurées doit ressembler à une dalle fissurée, sinon il se repère et le piège
+ne prend jamais.
+
+La règle de justice tient en une ligne : dès qu'on l'a traversé une fois, le
+mirage est marqué dans la mémoire de la salle et un scintillement le trahit
+pour toutes les tentatives suivantes. **On ne meurt qu'une fois par mirage.**
+
+**La grille jaillissante** — un `zap` conditionné à un signal, déclenché par
+une `zone` posée au-dessus du vide. Le gouffre paraît vide ; il l'est, jusqu'à
+ce que le robot s'engage. Se laisser tomber cesse d'être un plan de secours.
+
+```js
+{ t: 'zone', x: 9, y: 9, w: 18, h: 4, mode: 'once', emits: 'grille' },
+{ t: 'zap',  x: 8, y: 14.4, w: 20, h: 0.6, dir: 'up', signal: 'grille' },
+```
 
 ---
 

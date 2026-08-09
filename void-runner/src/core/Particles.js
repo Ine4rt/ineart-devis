@@ -114,6 +114,13 @@ export class Particles {
       case 'checkpoint':
         this.burst(ev.x, ev.y, 14, { speed: 90, col: C.cyan, size: 2.2, life: 0.6, grav: -60 });
         break;
+      case 'snap':
+        // Éclats vers le haut : la grille sort du sol, elle ne tombe pas dedans.
+        this.burst(ev.x, ev.y, 14, { speed: 150, col: C.danger, size: 2.4, life: 0.4, grav: 700, lift: 90 });
+        break;
+      case 'mirage':
+        this.burst(ev.x, ev.y, 12, { speed: 70, col: 'rgba(63,232,255,0.9)', size: 2.2, life: 0.6, grav: 0 });
+        break;
       case 'slam':
         this.burst(ev.x, ev.y, 12, { speed: 130, col: '#6a5a90', size: 2.4, life: 0.4, grav: 500 });
         break;

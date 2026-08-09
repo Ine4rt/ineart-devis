@@ -1,4 +1,4 @@
-import { SolidBody } from './base.js';
+import { Entity, SolidBody } from './base.js';
 import { TILE, DEATH } from '../constants.js';
 import { clamp } from '../math.js';
 
@@ -122,6 +122,42 @@ export class Vanish extends SolidBody {
         }
       }
     }
+  }
+}
+
+/**
+ * MIRAGE — l'exact contraire de la plateforme fantôme.
+ *
+ * Dessiné rigoureusement comme un sol plein : même dégradé, même arête
+ * lumineuse, aucune nuance. Sauf qu'il n'existe pas. On court dessus, on passe
+ * au travers.
+ *
+ * La règle de justice du jeu tient dans une seule ligne de ce fichier : dès
+ * que le robot l'a traversé une fois, le mirage est marqué en mémoire de
+ * salle, et le rendu le trahit d'un léger scintillement pour toutes les
+ * tentatives suivantes. On ne meurt donc qu'UNE fois par mirage — après, c'est
+ * de l'observation, plus de la malchance.
+ */
+export class Mirage extends Entity {
+  constructor(spec, world) {
+    super(spec, world);
+    this.solid = false;
+    this.style = 'mirage';
+    // Apparence empruntée au sol voisin : 'wall' (défaut) ou 'crumble'.
+    this.look = spec.look || 'wall';
+    this.key = `mirage:${spec.x},${spec.y}`;
+    this.seen = false;
+  }
+
+  init(world) {
+    this.seen = (world.memory.get(this.key) || 0) > 0;
+  }
+
+  postStep(world) {
+    if (this.seen || !this.touchesPlayer(world)) return;
+    this.seen = true;
+    world.memory.set(this.key, 1);
+    world.fx('mirage', { x: this.x + this.w / 2, y: this.y });
   }
 }
 

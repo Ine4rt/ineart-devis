@@ -990,6 +990,42 @@ class Vanish extends SolidBody {
 }
 
 /**
+ * MIRAGE — l'exact contraire de la plateforme fantôme.
+ *
+ * Dessiné rigoureusement comme un sol plein : même dégradé, même arête
+ * lumineuse, aucune nuance. Sauf qu'il n'existe pas. On court dessus, on passe
+ * au travers.
+ *
+ * La règle de justice du jeu tient dans une seule ligne de ce fichier : dès
+ * que le robot l'a traversé une fois, le mirage est marqué en mémoire de
+ * salle, et le rendu le trahit d'un léger scintillement pour toutes les
+ * tentatives suivantes. On ne meurt donc qu'UNE fois par mirage — après, c'est
+ * de l'observation, plus de la malchance.
+ */
+class Mirage extends Entity {
+  constructor(spec, world) {
+    super(spec, world);
+    this.solid = false;
+    this.style = 'mirage';
+    // Apparence empruntée au sol voisin : 'wall' (défaut) ou 'crumble'.
+    this.look = spec.look || 'wall';
+    this.key = `mirage:${spec.x},${spec.y}`;
+    this.seen = false;
+  }
+
+  init(world) {
+    this.seen = (world.memory.get(this.key) || 0) > 0;
+  }
+
+  postStep(world) {
+    if (this.seen || !this.touchesPlayer(world)) return;
+    this.seen = true;
+    world.memory.set(this.key, 1);
+    world.fx('mirage', { x: this.x + this.w / 2, y: this.y });
+  }
+}
+
+/**
  * Plateforme invisible.
  * Solide en permanence, mais dessinée seulement à proximité (ou jamais).
  * Piège honnête : le joueur voit toujours de fines particules trahir sa
@@ -1241,15 +1277,21 @@ class Zap extends Entity {
     // Cycle optionnel : [durée allumé, durée éteint]. Apprenable, donc juste.
     this.cycle = spec.cycle || null;
     this.phase = spec.phase ?? 0;
+    this.pop = 0; // animation de jaillissement, lue par le rendu
   }
 
-  preStep(world) {
+  preStep(world, dt) {
     let on = this.gateOpen(world);
     if (on && this.cycle) {
       const period = this.cycle[0] + this.cycle[1];
       const t = (world.time + this.phase) % period;
       on = t < this.cycle[0];
     }
+    if (on && !this.deadly) {
+      this.pop = 1;
+      world.fx('snap', { x: this.x + this.w / 2, y: this.y });
+    }
+    if (this.pop > 0) this.pop = Math.max(0, this.pop - dt / 0.12);
     this.deadly = on;
     this.alpha = on ? 1 : 0.25;
   }
@@ -1814,6 +1856,7 @@ const REGISTRY = {
   crumble: Crumble,
   vanish: Vanish,
   ghost: Ghost,
+  mirage: Mirage,
   mover: Mover,
   door: Door,
   crusher: Crusher,
@@ -2162,7 +2205,11 @@ const CHAPTER_1 = {
       entities: [
         { t: 'solid', x: 0, y: 12, w: 5, h: 3 },
         { t: 'mover', x: 8, y: 12, w: 3, h: 1, path: [[8, 20]], speed: 105, mode: 'once', trigger: 'stand', style: 'loose' },
-        { t: 'solid', x: 14, y: 12, w: 12, h: 3 },
+        { t: 'solid', x: 14, y: 12, w: 6, h: 3 },
+        // Premier mirage du jeu : un sol parfaitement normal, qui n'existe pas.
+        // Placé sur la ligne d'arrivée, quand le joueur se croit tiré d'affaire.
+        { t: 'mirage', x: 20, y: 12, w: 1, h: 3 },
+        { t: 'solid', x: 21, y: 12, w: 5, h: 3 },
         { t: 'deco', x: 8.2, y: 11.3, w: 0.6, h: 0.6, kind: 'bolt' },
         { t: 'deco', x: 10.2, y: 11.3, w: 0.6, h: 0.6, kind: 'bolt' },
         { t: 'sign', x: 1.5, y: 9.4, w: 3, h: 1, text: 'PLANCHER : 92 %', always: true },
@@ -2215,7 +2262,14 @@ const CHAPTER_1 = {
       spawn: { x: 2, y: 10 },
       entities: [
         { t: 'solid', x: 0, y: 12, w: 9, h: 3 },
+        // L'îlot PARAÎT large de cinq tuiles. Il en fait quatre : la dernière
+        // est un mirage. Qui court jusqu'au bord visible tombe ; qui saute
+        // depuis le vrai bord retrouve exactement le gouffre d'origine.
+        // (Mirage placé au milieu dans une première version : il coupait
+        // l'îlot en deux perchoirs d'une tuile — le joueur prudent
+        // automatique n'y arrivait plus du tout.)
         { t: 'solid', x: 12, y: 12, w: 4, h: 3 },
+        { t: 'mirage', x: 16, y: 12, w: 1, h: 3 },
         { t: 'solid', x: 19, y: 12, w: 7, h: 3 },
         // Deux faisceaux déphasés : on ne peut pas franchir les deux d'un trait,
         // il faut s'arrêter sur l'îlot. Le joueur choisit QUAND il s'expose —
@@ -2247,8 +2301,14 @@ const CHAPTER_1 = {
       spawn: { x: 1.5, y: 10 },
       entities: [
         { t: 'solid', x: 0, y: 12, w: 5, h: 3 },
+        // Onze dalles fatiguées… dont deux qui n'existent pas. Il faut donc
+        // courir (les dalles cèdent) ET sauter juste (les mirages ne portent
+        // pas). C'est la salle la plus exigeante du chapitre, et c'est voulu :
+        // elle referme le vocabulaire du sol.
         ...Array.from({ length: 11 }, (_, i) => ({
-          t: 'crumble', x: 5 + i, y: 12, w: 1, h: 1, delay: 0.38, respawn: 2.4,
+          t: [9, 13].includes(5 + i) ? 'mirage' : 'crumble',
+          look: 'crumble',
+          x: 5 + i, y: 12, w: 1, h: 1, delay: 0.38, respawn: 2.4,
         })),
         { t: 'solid', x: 16, y: 12, w: 1, h: 3 },
         { t: 'solid', x: 20, y: 12, w: 10, h: 3 },
@@ -2278,7 +2338,9 @@ const CHAPTER_1 = {
         { t: 'solid', x: 10, y: 12, w: 3, h: 3 },
 
         { t: 'mover', x: 14, y: 11, w: 3, h: 1, path: [[14, 7], [14, 11]], speed: 62, mode: 'loop', wait: 0.6 },
-        { t: 'solid', x: 19, y: 7, w: 4, h: 1 },
+        { t: 'solid', x: 19, y: 7, w: 2, h: 1 },
+        { t: 'mirage', x: 21, y: 7, w: 1, h: 1 },
+        { t: 'solid', x: 22, y: 7, w: 1, h: 1 },
         { t: 'laser', x: 25.4, y: 6.3, w: 0.5, h: 0.5, dir: 'left', len: 4, cycle: [0.9, 1.4] },
 
         { t: 'crumble', x: 23, y: 7, w: 1, h: 1, delay: 0.4 },
@@ -2323,7 +2385,9 @@ const CHAPTER_2 = {
       w: 30, h: 15,
       spawn: { x: 1.5, y: 10 },
       entities: [
-        { t: 'solid', x: 0, y: 12, w: 30, h: 3 },
+        { t: 'solid', x: 0, y: 12, w: 9, h: 3 },
+        { t: 'mirage', x: 9, y: 12, w: 1, h: 3 },
+        { t: 'solid', x: 10, y: 12, w: 20, h: 3 },
         { t: 'sign', x: 18, y: 9.4, w: 4, h: 1, text: 'SORTIE  →', always: true },
         { t: 'exit', x: 25, y: 10, fake: 'warp', to: [1.5, 10], emits: 'vu' },
 
@@ -2347,12 +2411,25 @@ const CHAPTER_2 = {
       w: 30, h: 15,
       spawn: { x: 1.5, y: 10 },
       entities: [
-        { t: 'solid', x: 0, y: 12, w: 30, h: 3 },
+        // Sol volontairement FENDU en 16-18 : la trappe s'ouvre sur du vide.
+        // (Première version : la trappe posée sur un sol continu — elle
+        // coulissait joliment et ne changeait strictement rien.)
+        { t: 'solid', x: 0, y: 12, w: 16, h: 3 },
+        { t: 'solid', x: 18, y: 12, w: 12, h: 3 },
         { t: 'button', x: 4, y: 11.6, w: 2, h: 0.4, mode: 'once', emits: 'scan' },
         { t: 'sign', x: 2, y: 9.4, w: 3.5, h: 1, text: 'SCANNER\nDE PORTES', always: true },
 
         { t: 'crusher', x: 11, y: 0, w: 4, h: 2, axis: 'y', to: 10, speed: 95, back: 50, hold: 1.4, trigger: 'signal', signal: 'scan' },
         { t: 'deco', x: 11, y: 2.1, w: 4, h: 0.4, kind: 'stripe' },
+
+        // Le trou qui mord. Le sol se dérobe sous le couloir ; le réflexe est
+        // de se laisser tomber dedans pour éviter la presse — et c'est
+        // exactement à cet instant que la grille jaillit du fond.
+        // Il reste une corniche à droite : la chute doit être DIRIGÉE.
+        { t: 'door', x: 16, y: 12, w: 1, h: 1, slide: 'left', travel: 1, speed: 280, signal: 'scan' },
+        { t: 'door', x: 17, y: 12, w: 1, h: 1, slide: 'right', travel: 1, speed: 280, signal: 'scan' },
+        { t: 'zone', x: 15.4, y: 12.2, w: 3.2, h: 1.6, mode: 'once', emits: 'grille' },
+        { t: 'zap', x: 15.5, y: 14.2, w: 3, h: 0.8, dir: 'up', signal: 'grille' },
 
         { t: 'exit', x: 20, y: 10, fake: 'trap' },
         { t: 'deco', x: 20.2, y: 8.6, w: 0.8, h: 0.8, kind: 'lamp' },
@@ -2388,6 +2465,7 @@ const CHAPTER_2 = {
         { t: 'tele', x: 13.4, y: 9.5, w: 1, h: 2.5, to: [1.5, 10], broken: true },
         { t: 'sign', x: 12, y: 8, w: 3.5, h: 1, text: 'TP-1\nDÉFAUT', always: true },
 
+        { t: 'mirage', x: 21, y: 12, w: 1, h: 3 },
         { t: 'vanish', x: 23, y: 10, w: 2, h: 0.6, mode: 'cycle', period: 2.4, duty: 0.7 },
         { t: 'vanish', x: 26.5, y: 9, w: 2, h: 0.6, mode: 'cycle', period: 2.4, duty: 0.7, phase: 0.6 },
         { t: 'solid', x: 29, y: 8, w: 3, h: 1 },
@@ -2409,6 +2487,8 @@ const CHAPTER_2 = {
         { t: 'crusher', x: 7, y: 0, w: 3, h: 3, axis: 'y', to: 9, speed: 620, back: 110, hold: 0.35, trigger: 'near', range: 3 },
         { t: 'crusher', x: 14, y: 0, w: 3, h: 3, axis: 'y', to: 9, speed: 620, back: 110, hold: 0.35, trigger: 'near', range: 3 },
         { t: 'crusher', x: 21, y: 0, w: 3, h: 3, axis: 'y', to: 9, speed: 620, back: 110, hold: 0.35, trigger: 'near', range: 3 },
+        { t: 'mirage', x: 12, y: 12, w: 1, h: 3 },
+        { t: 'mirage', x: 19, y: 12, w: 1, h: 3 },
         { t: 'deco', x: 7, y: 3.1, w: 3, h: 0.4, kind: 'stripe' },
         { t: 'deco', x: 14, y: 3.1, w: 3, h: 0.4, kind: 'stripe' },
         { t: 'deco', x: 21, y: 3.1, w: 3, h: 0.4, kind: 'stripe' },
@@ -2437,6 +2517,7 @@ const CHAPTER_2 = {
         // 0,26 s : le solveur l'a immédiatement déclaré infranchissable.
         { t: 'vanish', x: 8, y: 11, w: 2, h: 0.6, mode: 'cycle', period: 2.4, duty: 0.7 },
         { t: 'vanish', x: 12, y: 10, w: 2, h: 0.6, mode: 'cycle', period: 2.4, duty: 0.7, phase: 0.6 },
+        { t: 'mirage', x: 14.2, y: 11, w: 1.4, h: 0.6 },
         { t: 'vanish', x: 16, y: 11, w: 2, h: 0.6, mode: 'cycle', period: 2.4, duty: 0.7, phase: 1.2 },
         { t: 'vanish', x: 20, y: 10, w: 2, h: 0.6, mode: 'cycle', period: 2.4, duty: 0.7, phase: 1.8 },
         { t: 'solid', x: 24, y: 12, w: 6, h: 3 },
@@ -2502,7 +2583,9 @@ const CHAPTER_3 = {
       spawn: { x: 1.5, y: 10 },
       entities: [
         { t: 'solid', x: 0, y: 12, w: 9, h: 3 },
-        { t: 'solid', x: 20, y: 12, w: 8, h: 3 },
+        { t: 'solid', x: 20, y: 12, w: 3, h: 3 },
+        { t: 'mirage', x: 23, y: 12, w: 1, h: 3 },
+        { t: 'solid', x: 24, y: 12, w: 4, h: 3 },
         { t: 'solid', x: 0, y: 0, w: 28, h: 1 },
 
         { t: 'grav', x: 8.4, y: 8, w: 1.2, h: 4, dir: 'flip', mode: 'flip' },
@@ -2534,6 +2617,7 @@ const CHAPTER_3 = {
         { t: 'laser', x: 0.4, y: 3.2, w: 0.5, h: 0.5, dir: 'right', len: 11, cycle: [1.0, 1.4] },
         { t: 'zap', x: 12, y: 4.5, w: 10, h: 0.5, dir: 'down' },
         { t: 'grav', x: 23.4, y: 1, w: 1.2, h: 3.5, dir: 'flip', mode: 'flip' },
+        { t: 'mirage', x: 17, y: 5, w: 1, h: 1 },
         { t: 'crumble', x: 26, y: 12, w: 1, h: 1, delay: 0.4 },
         { t: 'crumble', x: 27, y: 12, w: 1, h: 1, delay: 0.4 },
         { t: 'exit', x: 29, y: 10 },
@@ -2555,7 +2639,8 @@ const CHAPTER_3 = {
       entities: [
         { t: 'solid', x: 0, y: 12, w: 9, h: 3 },
         { t: 'crumble', x: 12, y: 12, w: 1, h: 1, delay: 0.45, respawn: 2.6 },
-        { t: 'crumble', x: 13, y: 12, w: 1, h: 1, delay: 0.45, respawn: 2.6 },
+        // Salle 4 : mirage en 14. Ici : en 13. Même salle, autre dalle.
+        { t: 'mirage', x: 13, y: 12, w: 1, h: 1, look: 'crumble' },
         { t: 'crumble', x: 14, y: 12, w: 1, h: 1, delay: 0.45, respawn: 2.6 },
         { t: 'crumble', x: 15, y: 12, w: 1, h: 1, delay: 0.45, respawn: 2.6 },
         { t: 'solid', x: 19, y: 12, w: 7, h: 3 },
@@ -2594,7 +2679,8 @@ const CHAPTER_3 = {
 
         // Le courant d'air du haut pousse vers la gauche : rester en altitude
         // n'est pas gratuit.
-        { t: 'fan', x: 11, y: 1, w: 10, h: 3, dir: 'left', force: 950 },
+        { t: 'fan', x: 11, y: 1, w: 10, h: 3, dir: 'left', force: 1250 },
+        { t: 'mirage', x: 25, y: 12, w: 1, h: 3 },
         { t: 'exit', x: 28, y: 10 },
       ],
     },
@@ -2615,7 +2701,8 @@ const CHAPTER_3 = {
 
         { t: 'field', x: 8, y: 5, w: 7, h: 7, kind: 'magnet', anchor: [16, 11], force: 620 },
         { t: 'field', x: 20, y: 5, w: 6, h: 7, kind: 'magnet', anchor: [23, 13.6], force: 700, hostile: true },
-        { t: 'zap', x: 20, y: 13.4, w: 6, h: 0.6, dir: 'up' },
+        { t: 'zone', x: 20, y: 5, w: 6, h: 7, mode: 'once', emits: 'grille' },
+        { t: 'zap', x: 20, y: 13.4, w: 6, h: 0.6, dir: 'up', signal: 'grille' },
 
         { t: 'mover', x: 20.5, y: 11, w: 2, h: 0.6, path: [[24, 11]], speed: 78, mode: 'pingpong' },
         { t: 'sign', x: 4, y: 9.4, w: 3.5, h: 1, text: 'CHAMPS ACTIFS', always: true },
@@ -2639,7 +2726,9 @@ const CHAPTER_3 = {
 
         { t: 'vanish', x: 13.5, y: 11, w: 2, h: 0.6, mode: 'onLand', delay: 0.45, respawn: 1.4 },
         { t: 'vanish', x: 17, y: 10, w: 2, h: 0.6, mode: 'onLand', delay: 0.45, respawn: 1.4 },
-        { t: 'solid', x: 20, y: 12, w: 8, h: 3 },
+        { t: 'solid', x: 20, y: 12, w: 3, h: 3 },
+        { t: 'mirage', x: 23, y: 12, w: 1, h: 3 },
+        { t: 'solid', x: 24, y: 12, w: 4, h: 3 },
         { t: 'check', x: 24, y: 10.5, w: 1, h: 1.5, fake: true },
 
         { t: 'grav', x: 28.4, y: 8, w: 1.2, h: 4, dir: 'flip', mode: 'flip' },
@@ -2684,7 +2773,9 @@ const CHAPTER_4 = {
       spawn: { x: 1.5, y: 10 },
       entities: [
         { t: 'solid', x: 0, y: 12, w: 8, h: 3 },
-        { t: 'solid', x: 14, y: 12, w: 8, h: 3 },
+        { t: 'solid', x: 14, y: 12, w: 6, h: 3 },
+        { t: 'mirage', x: 20, y: 12, w: 1, h: 3 },
+        { t: 'solid', x: 21, y: 12, w: 1, h: 3 },
         { t: 'solid', x: 28, y: 12, w: 8, h: 3 },
         { t: 'deco', x: 3, y: 10.6, w: 1.5, h: 1.4, kind: 'core' },
         { t: 'sign', x: 4.5, y: 9.4, w: 4, h: 1, text: 'IMPULSION\nDISPONIBLE', always: true },
@@ -2704,6 +2795,8 @@ const CHAPTER_4 = {
         { t: 'mover', x: 7, y: 11, w: 1, h: 1, path: [[12, 11]], speed: 150, mode: 'pingpong', deadly: true, style: 'saw' },
         { t: 'mover', x: 16, y: 5, w: 1, h: 1, path: [[16, 11]], speed: 175, mode: 'pingpong', deadly: true, style: 'saw' },
         { t: 'mover', x: 21, y: 11, w: 1, h: 1, path: [[27, 11]], speed: 205, mode: 'pingpong', deadly: true, style: 'saw' },
+        { t: 'mover', x: 29, y: 5, w: 1, h: 1, path: [[29, 11]], speed: 190, mode: 'pingpong', deadly: true, style: 'saw' },
+        { t: 'mirage', x: 13, y: 12, w: 1, h: 3 },
         { t: 'deco', x: 0, y: 11.7, w: 36, h: 0.3, kind: 'rail' },
         { t: 'exit', x: 32, y: 10 },
       ],
@@ -2721,6 +2814,8 @@ const CHAPTER_4 = {
       entities: [
         { t: 'solid', x: 0, y: 12, w: 13, h: 3 },
         { t: 'field', x: 6, y: 9, w: 7, h: 3, kind: 'ice' },
+        // Un mirage sur la glace : impossible de s'arrêter pile devant.
+        { t: 'mirage', x: 10, y: 12, w: 1, h: 3 },
         { t: 'solid', x: 16, y: 12, w: 9, h: 3 },
         // Le survolteur couvre AUSSI le gouffre : une zone de vitesse qui
         // s'arrête au bord de la falaise ne sert à rien, la décélération
@@ -2761,6 +2856,7 @@ const CHAPTER_4 = {
         { t: 'sign', x: 1.2, y: 9.4, w: 3.5, h: 1, text: 'VERROU 1\n3,8 s', always: true },
         { t: 'button', x: 13, y: 11.6, w: 2, h: 0.4, mode: 'once', emits: 'v2' },
         { t: 'sign', x: 12, y: 9.4, w: 3, h: 1, text: 'VERROU 2', always: true },
+        { t: 'mirage', x: 16, y: 12, w: 1, h: 3 },
         { t: 'button', x: 18, y: 11.6, w: 2, h: 0.4, mode: 'once', emits: 'v3' },
         { t: 'sign', x: 17, y: 9.4, w: 3, h: 1, text: 'VERROU 3', always: true },
 
@@ -2787,6 +2883,8 @@ const CHAPTER_4 = {
         { t: 'laser', x: 12.2, y: 3.5, w: 0.5, h: 0.6, dir: 'down', len: 10, cycle: [0.7, 1.7], phase: 0.6 },
         { t: 'laser', x: 17.2, y: 3.5, w: 0.5, h: 0.6, dir: 'down', len: 10, cycle: [0.7, 1.7], phase: 1.2 },
         { t: 'laser', x: 22.2, y: 3.5, w: 0.5, h: 0.6, dir: 'down', len: 10, cycle: [0.7, 1.7], phase: 1.8 },
+        { t: 'mirage', x: 14, y: 12, w: 1, h: 3 },
+        { t: 'mirage', x: 25, y: 12, w: 1, h: 3 },
         { t: 'deco', x: 6.8, y: 2.4, w: 1.4, h: 1.1, kind: 'panel' },
         { t: 'deco', x: 11.8, y: 2.4, w: 1.4, h: 1.1, kind: 'panel' },
         { t: 'deco', x: 16.8, y: 2.4, w: 1.4, h: 1.1, kind: 'panel' },
@@ -2813,7 +2911,8 @@ const CHAPTER_4 = {
         { t: 'crumble', x: 26, y: 11, w: 1, h: 1, delay: 0.4 },
         { t: 'crumble', x: 27, y: 11, w: 1, h: 1, delay: 0.4 },
         { t: 'crumble', x: 28, y: 11, w: 1, h: 1, delay: 0.4 },
-        { t: 'solid', x: 29, y: 11, w: 3, h: 4 },
+        { t: 'solid', x: 29, y: 11, w: 2, h: 4 },
+        { t: 'mirage', x: 31, y: 11, w: 1, h: 4 },
 
         { t: 'mover', x: 33, y: 10, w: 3, h: 1, path: [[33, 6], [33, 10]], speed: 74, mode: 'loop', wait: 0.5 },
         { t: 'solid', x: 38, y: 6, w: 8, h: 1 },
@@ -2857,7 +2956,11 @@ const CHAPTER_5 = {
       w: 38, h: 15,
       spawn: { x: 1.5, y: 10 },
       entities: [
-        { t: 'solid', x: 0, y: 12, w: 38, h: 3 },
+        { t: 'solid', x: 0, y: 12, w: 13, h: 3 },
+        { t: 'mirage', x: 13, y: 12, w: 1, h: 3 },
+        { t: 'solid', x: 14, y: 12, w: 7, h: 3 },
+        { t: 'mirage', x: 21, y: 12, w: 1, h: 3 },
+        { t: 'solid', x: 22, y: 12, w: 16, h: 3 },
         { t: 'clone', x: 1.5, y: 10, delay: 1.6, deadly: true, source: 'live' },
         { t: 'laser', x: 10.2, y: 4, w: 0.5, h: 0.6, dir: 'down', len: 9, cycle: [0.6, 1.3] },
         { t: 'laser', x: 18.2, y: 4, w: 0.5, h: 0.6, dir: 'down', len: 9, cycle: [0.6, 1.3], phase: 0.9 },
@@ -2890,6 +2993,7 @@ const CHAPTER_5 = {
         { t: 'logic', op: 'or', in: ['codeVu', 'codeMem'], emits: 'porte' },
 
         // Fausse piste assumée : ce bouton n'ouvre rien du tout.
+        { t: 'mirage', x: 10, y: 12, w: 1, h: 3 },
         { t: 'button', x: 13, y: 11.6, w: 2, h: 0.4, mode: 'toggle', emits: 'rien' },
         { t: 'sign', x: 12, y: 9.4, w: 3.5, h: 1, text: 'DIAGNOSTIC', always: true },
 
@@ -2918,7 +3022,11 @@ const CHAPTER_5 = {
         { t: 'ghost', x: 22, y: 10, w: 2, h: 0.6, reveal: 'near' },
         { t: 'ghost', x: 25.5, y: 11, w: 2, h: 0.6, reveal: 'near' },
         { t: 'solid', x: 28, y: 12, w: 8, h: 3 },
-        { t: 'zap', x: 8, y: 14.4, w: 20, h: 0.6, dir: 'up' },
+        // Le fond du gouffre paraît vide. Il l'est — jusqu'à ce que le robot
+        // s'engage au-dessus : la grille jaillit alors sous ses pieds. Se
+        // laisser tomber n'est plus un plan de secours.
+        { t: 'zone', x: 9, y: 9, w: 18, h: 4, mode: 'once', emits: 'grille' },
+        { t: 'zap', x: 8, y: 14.4, w: 20, h: 0.6, dir: 'up', signal: 'grille' },
         { t: 'deco', x: 10, y: 10.2, w: 2, h: 0.8, kind: 'dust' },
         { t: 'deco', x: 14, y: 9.2, w: 2, h: 0.8, kind: 'dust' },
         { t: 'deco', x: 18, y: 10.2, w: 2, h: 0.8, kind: 'dust' },
@@ -2945,6 +3053,7 @@ const CHAPTER_5 = {
         { t: 'fan', x: 22, y: 1, w: 3, h: 6, dir: 'down', force: 1500 },
         { t: 'deco', x: 22, y: 0.9, w: 3, h: 0.4, kind: 'grid' },
         { t: 'zap', x: 27, y: 1, w: 2, h: 0.5, dir: 'down' },
+        { t: 'mirage', x: 33, y: 12, w: 1, h: 3 },
 
         { t: 'grav', x: 31.4, y: 1, w: 1.2, h: 4, dir: 'flip', mode: 'flip' },
         { t: 'exit', x: 34.5, y: 10 },
@@ -2966,7 +3075,9 @@ const CHAPTER_5 = {
       dejaVu: 1,
       deathHints: { burn: 'Cette porte-là ne s\'ouvre pas. Regarde en bas.' },
       entities: [
-        { t: 'solid', x: 0, y: 12, w: 16, h: 1 },
+        { t: 'solid', x: 0, y: 12, w: 9, h: 1 },
+        { t: 'mirage', x: 9, y: 12, w: 1, h: 1 },
+        { t: 'solid', x: 10, y: 12, w: 6, h: 1 },
         { t: 'solid', x: 18, y: 12, w: 8, h: 1 },
         { t: 'door', x: 16, y: 12, w: 1, h: 1, slide: 'left', travel: 1, speed: 260, signal: 'trappe' },
         { t: 'door', x: 17, y: 12, w: 1, h: 1, slide: 'right', travel: 1, speed: 260, signal: 'trappe' },
@@ -3027,7 +3138,9 @@ const CHAPTER_5 = {
         { t: 'mover', x: 46, y: 1, w: 1, h: 1, path: [[46, 4]], speed: 130, mode: 'pingpong', wait: 0.4, deadly: true, style: 'saw' },
         { t: 'grav', x: 50.2, y: 1, w: 1.2, h: 3.5, dir: 'flip', mode: 'flip' },
 
-        { t: 'solid', x: 44, y: 12, w: 10, h: 3 },
+        { t: 'solid', x: 44, y: 12, w: 3, h: 3 },
+        { t: 'mirage', x: 47, y: 12, w: 1, h: 3 },
+        { t: 'solid', x: 48, y: 12, w: 6, h: 3 },
         { t: 'exit', x: 49, y: 10, fake: 'flee', to: [50.5, 10], range: 2.5 },
       ],
     },
@@ -3709,6 +3822,35 @@ class Renderer {
     ctx.restore();
   }
 
+  /**
+   * Mirage : STRICTEMENT le même rendu qu'un sol plein — c'est tout l'intérêt.
+   * Une fois traversé, un scintillement horizontal le trahit : le joueur peut
+   * alors le repérer sans jamais pouvoir dire qu'on le lui avait montré avant.
+   */
+  drawMirage(e) {
+    // Un mirage doit copier le sol qui l'entoure, pas « du sol » en général :
+    // posé au milieu de dalles fissurées, un bloc plein se repère au premier
+    // coup d'œil et le piège ne prend jamais.
+    if (e.look === 'crumble') this.drawCrumble({ ...e, active: true, shake: 0 });
+    else this.drawSolid(e);
+    if (!e.seen) return;
+    const ctx = this.ctx;
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(e.x, e.y, e.w, e.h);
+    ctx.clip();
+    ctx.globalAlpha = 0.5;
+    ctx.fillStyle = 'rgba(63,232,255,0.55)';
+    for (let i = 0; i < 3; i++) {
+      const p = ((this.t * 0.55 + i / 3) % 1);
+      ctx.fillRect(e.x, e.y + p * e.h, e.w, 1.2);
+    }
+    ctx.globalAlpha = 0.22;
+    ctx.fillStyle = '#0b1030';
+    ctx.fillRect(e.x, e.y, e.w, e.h);
+    ctx.restore();
+  }
+
   drawGhost(e) {
     const ctx = this.ctx;
     const v = e.vis ?? 0;
@@ -3806,6 +3948,16 @@ class Renderer {
     if (!e.deadly) {
       ctx.globalAlpha = 0.28;
     }
+    // Apparition : la grille jaillit en 0,12 s avec un dépassement. Sans cette
+    // saccade, un obstacle qui surgit sous un trou ressemble à un défaut
+    // d'affichage plutôt qu'à un piège.
+    if (e.pop > 0) {
+      const k = 1 + Math.sin(e.pop * Math.PI) * 0.6;
+      ctx.save();
+      ctx.translate(e.x + e.w / 2, e.dir === 'down' ? e.y : e.y + e.h);
+      ctx.scale(1, k);
+      ctx.translate(-(e.x + e.w / 2), -(e.dir === 'down' ? e.y : e.y + e.h));
+    }
     const up = e.dir !== 'down';
     ctx.fillStyle = C.dangerDeep;
     roundRect(ctx, e.x, e.y, e.w, e.h, 1.5);
@@ -3822,6 +3974,7 @@ class Renderer {
       i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y + (up ? -Math.abs(wob) : Math.abs(wob)));
     }
     ctx.stroke();
+    if (e.pop > 0) ctx.restore();
     ctx.globalAlpha = 1;
   }
 
@@ -4225,6 +4378,7 @@ class Renderer {
       switch (e.type) {
         case 'solid': this.drawSolid(e); break;
         case 'crumble': this.drawCrumble(e); break;
+        case 'mirage': this.drawMirage(e); break;
         case 'vanish': this.drawVanish(e); break;
         case 'ghost': this.drawGhost(e); break;
         case 'mover': this.drawMover(e); break;
@@ -4485,6 +4639,13 @@ class Particles {
         break;
       case 'checkpoint':
         this.burst(ev.x, ev.y, 14, { speed: 90, col: C.cyan, size: 2.2, life: 0.6, grav: -60 });
+        break;
+      case 'snap':
+        // Éclats vers le haut : la grille sort du sol, elle ne tombe pas dedans.
+        this.burst(ev.x, ev.y, 14, { speed: 150, col: C.danger, size: 2.4, life: 0.4, grav: 700, lift: 90 });
+        break;
+      case 'mirage':
+        this.burst(ev.x, ev.y, 12, { speed: 70, col: 'rgba(63,232,255,0.9)', size: 2.2, life: 0.6, grav: 0 });
         break;
       case 'slam':
         this.burst(ev.x, ev.y, 12, { speed: 130, col: '#6a5a90', size: 2.4, life: 0.4, grav: 500 });
@@ -4788,6 +4949,8 @@ class Game {
         case 'creak': this.audio.play('creak'); break;
         case 'crumble': this.audio.play('crumble'); this.camera.addShake(0.2); break;
         case 'slam': this.audio.play('slam'); this.haptics.fire('impact'); this.camera.addShake(0.5); break;
+        case 'snap': this.audio.play('snap'); this.haptics.fire('impact'); this.camera.addShake(0.35); break;
+        case 'mirage': this.audio.play('mirage'); this.haptics.fire('mech'); break;
         case 'alarm': this.audio.play('alarm'); break;
         case 'laser': this.audio.play('laser'); break;
         case 'warp': case 'fakeExit': this.audio.play('warp'); break;
@@ -5574,6 +5737,10 @@ class AudioManager {
       case 'creak': this.noise(0.3, 0.12, 500, 2, 'bandpass'); break;
       case 'crumble': this.noise(0.45, 0.22, 380); this.tone(70, 0.3, 'square', 0.1, null, 40); break;
       case 'slam': this.noise(0.2, 0.3, 220); this.tone(60, 0.25, 'square', 0.22, null, 35); break;
+      // Jaillissement d'une grille : claquement métallique bref et sec.
+      case 'snap': this.noise(0.09, 0.3, 2600, 4, 'bandpass'); this.tone(140, 0.12, 'square', 0.2, null, 420); break;
+      // Mirage traversé : le sol « décroche », son de circuit qui lâche.
+      case 'mirage': this.tone(320, 0.2, 'triangle', 0.16, null, 70); this.noise(0.16, 0.1, 1400); break;
       case 'alarm': this.tone(880, 0.08, 'square', 0.09); setTimeout(() => this.tone(660, 0.08, 'square', 0.09), 90); break;
       case 'warp': this.tone(200, 0.28, 'sine', 0.16, null, 1600); break;
       case 'gravity': this.tone(300, 0.35, 'triangle', 0.18, null, 120); break;

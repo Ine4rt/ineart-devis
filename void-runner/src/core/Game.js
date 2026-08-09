@@ -274,6 +274,8 @@ export class Game {
         case 'creak': this.audio.play('creak'); break;
         case 'crumble': this.audio.play('crumble'); this.camera.addShake(0.2); break;
         case 'slam': this.audio.play('slam'); this.haptics.fire('impact'); this.camera.addShake(0.5); break;
+        case 'snap': this.audio.play('snap'); this.haptics.fire('impact'); this.camera.addShake(0.35); break;
+        case 'mirage': this.audio.play('mirage'); this.haptics.fire('mech'); break;
         case 'alarm': this.audio.play('alarm'); break;
         case 'laser': this.audio.play('laser'); break;
         case 'warp': case 'fakeExit': this.audio.play('warp'); break;

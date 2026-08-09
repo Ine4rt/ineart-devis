@@ -24,7 +24,11 @@ export const CHAPTER_5 = {
       w: 38, h: 15,
       spawn: { x: 1.5, y: 10 },
       entities: [
-        { t: 'solid', x: 0, y: 12, w: 38, h: 3 },
+        { t: 'solid', x: 0, y: 12, w: 13, h: 3 },
+        { t: 'mirage', x: 13, y: 12, w: 1, h: 3 },
+        { t: 'solid', x: 14, y: 12, w: 7, h: 3 },
+        { t: 'mirage', x: 21, y: 12, w: 1, h: 3 },
+        { t: 'solid', x: 22, y: 12, w: 16, h: 3 },
         { t: 'clone', x: 1.5, y: 10, delay: 1.6, deadly: true, source: 'live' },
         { t: 'laser', x: 10.2, y: 4, w: 0.5, h: 0.6, dir: 'down', len: 9, cycle: [0.6, 1.3] },
         { t: 'laser', x: 18.2, y: 4, w: 0.5, h: 0.6, dir: 'down', len: 9, cycle: [0.6, 1.3], phase: 0.9 },
@@ -57,6 +61,7 @@ export const CHAPTER_5 = {
         { t: 'logic', op: 'or', in: ['codeVu', 'codeMem'], emits: 'porte' },
 
         // Fausse piste assumée : ce bouton n'ouvre rien du tout.
+        { t: 'mirage', x: 10, y: 12, w: 1, h: 3 },
         { t: 'button', x: 13, y: 11.6, w: 2, h: 0.4, mode: 'toggle', emits: 'rien' },
         { t: 'sign', x: 12, y: 9.4, w: 3.5, h: 1, text: 'DIAGNOSTIC', always: true },
 
@@ -85,7 +90,11 @@ export const CHAPTER_5 = {
         { t: 'ghost', x: 22, y: 10, w: 2, h: 0.6, reveal: 'near' },
         { t: 'ghost', x: 25.5, y: 11, w: 2, h: 0.6, reveal: 'near' },
         { t: 'solid', x: 28, y: 12, w: 8, h: 3 },
-        { t: 'zap', x: 8, y: 14.4, w: 20, h: 0.6, dir: 'up' },
+        // Le fond du gouffre paraît vide. Il l'est — jusqu'à ce que le robot
+        // s'engage au-dessus : la grille jaillit alors sous ses pieds. Se
+        // laisser tomber n'est plus un plan de secours.
+        { t: 'zone', x: 9, y: 9, w: 18, h: 4, mode: 'once', emits: 'grille' },
+        { t: 'zap', x: 8, y: 14.4, w: 20, h: 0.6, dir: 'up', signal: 'grille' },
         { t: 'deco', x: 10, y: 10.2, w: 2, h: 0.8, kind: 'dust' },
         { t: 'deco', x: 14, y: 9.2, w: 2, h: 0.8, kind: 'dust' },
         { t: 'deco', x: 18, y: 10.2, w: 2, h: 0.8, kind: 'dust' },
@@ -112,6 +121,7 @@ export const CHAPTER_5 = {
         { t: 'fan', x: 22, y: 1, w: 3, h: 6, dir: 'down', force: 1500 },
         { t: 'deco', x: 22, y: 0.9, w: 3, h: 0.4, kind: 'grid' },
         { t: 'zap', x: 27, y: 1, w: 2, h: 0.5, dir: 'down' },
+        { t: 'mirage', x: 33, y: 12, w: 1, h: 3 },
 
         { t: 'grav', x: 31.4, y: 1, w: 1.2, h: 4, dir: 'flip', mode: 'flip' },
         { t: 'exit', x: 34.5, y: 10 },
@@ -133,7 +143,9 @@ export const CHAPTER_5 = {
       dejaVu: 1,
       deathHints: { burn: 'Cette porte-là ne s\'ouvre pas. Regarde en bas.' },
       entities: [
-        { t: 'solid', x: 0, y: 12, w: 16, h: 1 },
+        { t: 'solid', x: 0, y: 12, w: 9, h: 1 },
+        { t: 'mirage', x: 9, y: 12, w: 1, h: 1 },
+        { t: 'solid', x: 10, y: 12, w: 6, h: 1 },
         { t: 'solid', x: 18, y: 12, w: 8, h: 1 },
         { t: 'door', x: 16, y: 12, w: 1, h: 1, slide: 'left', travel: 1, speed: 260, signal: 'trappe' },
         { t: 'door', x: 17, y: 12, w: 1, h: 1, slide: 'right', travel: 1, speed: 260, signal: 'trappe' },
@@ -194,7 +206,9 @@ export const CHAPTER_5 = {
         { t: 'mover', x: 46, y: 1, w: 1, h: 1, path: [[46, 4]], speed: 130, mode: 'pingpong', wait: 0.4, deadly: true, style: 'saw' },
         { t: 'grav', x: 50.2, y: 1, w: 1.2, h: 3.5, dir: 'flip', mode: 'flip' },
 
-        { t: 'solid', x: 44, y: 12, w: 10, h: 3 },
+        { t: 'solid', x: 44, y: 12, w: 3, h: 3 },
+        { t: 'mirage', x: 47, y: 12, w: 1, h: 3 },
+        { t: 'solid', x: 48, y: 12, w: 6, h: 3 },
         { t: 'exit', x: 49, y: 10, fake: 'flee', to: [50.5, 10], range: 2.5 },
       ],
     },

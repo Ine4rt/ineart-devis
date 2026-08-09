@@ -102,6 +102,10 @@ export class AudioManager {
       case 'creak': this.noise(0.3, 0.12, 500, 2, 'bandpass'); break;
       case 'crumble': this.noise(0.45, 0.22, 380); this.tone(70, 0.3, 'square', 0.1, null, 40); break;
       case 'slam': this.noise(0.2, 0.3, 220); this.tone(60, 0.25, 'square', 0.22, null, 35); break;
+      // Jaillissement d'une grille : claquement métallique bref et sec.
+      case 'snap': this.noise(0.09, 0.3, 2600, 4, 'bandpass'); this.tone(140, 0.12, 'square', 0.2, null, 420); break;
+      // Mirage traversé : le sol « décroche », son de circuit qui lâche.
+      case 'mirage': this.tone(320, 0.2, 'triangle', 0.16, null, 70); this.noise(0.16, 0.1, 1400); break;
       case 'alarm': this.tone(880, 0.08, 'square', 0.09); setTimeout(() => this.tone(660, 0.08, 'square', 0.09), 90); break;
       case 'warp': this.tone(200, 0.28, 'sine', 0.16, null, 1600); break;
       case 'gravity': this.tone(300, 0.35, 'triangle', 0.18, null, 120); break;

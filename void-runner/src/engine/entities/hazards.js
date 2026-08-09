@@ -16,15 +16,21 @@ export class Zap extends Entity {
     // Cycle optionnel : [durée allumé, durée éteint]. Apprenable, donc juste.
     this.cycle = spec.cycle || null;
     this.phase = spec.phase ?? 0;
+    this.pop = 0; // animation de jaillissement, lue par le rendu
   }
 
-  preStep(world) {
+  preStep(world, dt) {
     let on = this.gateOpen(world);
     if (on && this.cycle) {
       const period = this.cycle[0] + this.cycle[1];
       const t = (world.time + this.phase) % period;
       on = t < this.cycle[0];
     }
+    if (on && !this.deadly) {
+      this.pop = 1;
+      world.fx('snap', { x: this.x + this.w / 2, y: this.y });
+    }
+    if (this.pop > 0) this.pop = Math.max(0, this.pop - dt / 0.12);
     this.deadly = on;
     this.alpha = on ? 1 : 0.25;
   }

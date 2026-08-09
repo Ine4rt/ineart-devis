@@ -27,7 +27,9 @@ export const CHAPTER_4 = {
       spawn: { x: 1.5, y: 10 },
       entities: [
         { t: 'solid', x: 0, y: 12, w: 8, h: 3 },
-        { t: 'solid', x: 14, y: 12, w: 8, h: 3 },
+        { t: 'solid', x: 14, y: 12, w: 6, h: 3 },
+        { t: 'mirage', x: 20, y: 12, w: 1, h: 3 },
+        { t: 'solid', x: 21, y: 12, w: 1, h: 3 },
         { t: 'solid', x: 28, y: 12, w: 8, h: 3 },
         { t: 'deco', x: 3, y: 10.6, w: 1.5, h: 1.4, kind: 'core' },
         { t: 'sign', x: 4.5, y: 9.4, w: 4, h: 1, text: 'IMPULSION\nDISPONIBLE', always: true },
@@ -47,6 +49,8 @@ export const CHAPTER_4 = {
         { t: 'mover', x: 7, y: 11, w: 1, h: 1, path: [[12, 11]], speed: 150, mode: 'pingpong', deadly: true, style: 'saw' },
         { t: 'mover', x: 16, y: 5, w: 1, h: 1, path: [[16, 11]], speed: 175, mode: 'pingpong', deadly: true, style: 'saw' },
         { t: 'mover', x: 21, y: 11, w: 1, h: 1, path: [[27, 11]], speed: 205, mode: 'pingpong', deadly: true, style: 'saw' },
+        { t: 'mover', x: 29, y: 5, w: 1, h: 1, path: [[29, 11]], speed: 190, mode: 'pingpong', deadly: true, style: 'saw' },
+        { t: 'mirage', x: 13, y: 12, w: 1, h: 3 },
         { t: 'deco', x: 0, y: 11.7, w: 36, h: 0.3, kind: 'rail' },
         { t: 'exit', x: 32, y: 10 },
       ],
@@ -64,6 +68,8 @@ export const CHAPTER_4 = {
       entities: [
         { t: 'solid', x: 0, y: 12, w: 13, h: 3 },
         { t: 'field', x: 6, y: 9, w: 7, h: 3, kind: 'ice' },
+        // Un mirage sur la glace : impossible de s'arrêter pile devant.
+        { t: 'mirage', x: 10, y: 12, w: 1, h: 3 },
         { t: 'solid', x: 16, y: 12, w: 9, h: 3 },
         // Le survolteur couvre AUSSI le gouffre : une zone de vitesse qui
         // s'arrête au bord de la falaise ne sert à rien, la décélération
@@ -104,6 +110,7 @@ export const CHAPTER_4 = {
         { t: 'sign', x: 1.2, y: 9.4, w: 3.5, h: 1, text: 'VERROU 1\n3,8 s', always: true },
         { t: 'button', x: 13, y: 11.6, w: 2, h: 0.4, mode: 'once', emits: 'v2' },
         { t: 'sign', x: 12, y: 9.4, w: 3, h: 1, text: 'VERROU 2', always: true },
+        { t: 'mirage', x: 16, y: 12, w: 1, h: 3 },
         { t: 'button', x: 18, y: 11.6, w: 2, h: 0.4, mode: 'once', emits: 'v3' },
         { t: 'sign', x: 17, y: 9.4, w: 3, h: 1, text: 'VERROU 3', always: true },
 
@@ -130,6 +137,8 @@ export const CHAPTER_4 = {
         { t: 'laser', x: 12.2, y: 3.5, w: 0.5, h: 0.6, dir: 'down', len: 10, cycle: [0.7, 1.7], phase: 0.6 },
         { t: 'laser', x: 17.2, y: 3.5, w: 0.5, h: 0.6, dir: 'down', len: 10, cycle: [0.7, 1.7], phase: 1.2 },
         { t: 'laser', x: 22.2, y: 3.5, w: 0.5, h: 0.6, dir: 'down', len: 10, cycle: [0.7, 1.7], phase: 1.8 },
+        { t: 'mirage', x: 14, y: 12, w: 1, h: 3 },
+        { t: 'mirage', x: 25, y: 12, w: 1, h: 3 },
         { t: 'deco', x: 6.8, y: 2.4, w: 1.4, h: 1.1, kind: 'panel' },
         { t: 'deco', x: 11.8, y: 2.4, w: 1.4, h: 1.1, kind: 'panel' },
         { t: 'deco', x: 16.8, y: 2.4, w: 1.4, h: 1.1, kind: 'panel' },
@@ -156,7 +165,8 @@ export const CHAPTER_4 = {
         { t: 'crumble', x: 26, y: 11, w: 1, h: 1, delay: 0.4 },
         { t: 'crumble', x: 27, y: 11, w: 1, h: 1, delay: 0.4 },
         { t: 'crumble', x: 28, y: 11, w: 1, h: 1, delay: 0.4 },
-        { t: 'solid', x: 29, y: 11, w: 3, h: 4 },
+        { t: 'solid', x: 29, y: 11, w: 2, h: 4 },
+        { t: 'mirage', x: 31, y: 11, w: 1, h: 4 },
 
         { t: 'mover', x: 33, y: 10, w: 3, h: 1, path: [[33, 6], [33, 10]], speed: 74, mode: 'loop', wait: 0.5 },
         { t: 'solid', x: 38, y: 6, w: 8, h: 1 },

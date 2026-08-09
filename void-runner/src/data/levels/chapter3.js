@@ -24,7 +24,9 @@ export const CHAPTER_3 = {
       spawn: { x: 1.5, y: 10 },
       entities: [
         { t: 'solid', x: 0, y: 12, w: 9, h: 3 },
-        { t: 'solid', x: 20, y: 12, w: 8, h: 3 },
+        { t: 'solid', x: 20, y: 12, w: 3, h: 3 },
+        { t: 'mirage', x: 23, y: 12, w: 1, h: 3 },
+        { t: 'solid', x: 24, y: 12, w: 4, h: 3 },
         { t: 'solid', x: 0, y: 0, w: 28, h: 1 },
 
         { t: 'grav', x: 8.4, y: 8, w: 1.2, h: 4, dir: 'flip', mode: 'flip' },
@@ -56,6 +58,7 @@ export const CHAPTER_3 = {
         { t: 'laser', x: 0.4, y: 3.2, w: 0.5, h: 0.5, dir: 'right', len: 11, cycle: [1.0, 1.4] },
         { t: 'zap', x: 12, y: 4.5, w: 10, h: 0.5, dir: 'down' },
         { t: 'grav', x: 23.4, y: 1, w: 1.2, h: 3.5, dir: 'flip', mode: 'flip' },
+        { t: 'mirage', x: 17, y: 5, w: 1, h: 1 },
         { t: 'crumble', x: 26, y: 12, w: 1, h: 1, delay: 0.4 },
         { t: 'crumble', x: 27, y: 12, w: 1, h: 1, delay: 0.4 },
         { t: 'exit', x: 29, y: 10 },
@@ -77,7 +80,8 @@ export const CHAPTER_3 = {
       entities: [
         { t: 'solid', x: 0, y: 12, w: 9, h: 3 },
         { t: 'crumble', x: 12, y: 12, w: 1, h: 1, delay: 0.45, respawn: 2.6 },
-        { t: 'crumble', x: 13, y: 12, w: 1, h: 1, delay: 0.45, respawn: 2.6 },
+        // Salle 4 : mirage en 14. Ici : en 13. Même salle, autre dalle.
+        { t: 'mirage', x: 13, y: 12, w: 1, h: 1, look: 'crumble' },
         { t: 'crumble', x: 14, y: 12, w: 1, h: 1, delay: 0.45, respawn: 2.6 },
         { t: 'crumble', x: 15, y: 12, w: 1, h: 1, delay: 0.45, respawn: 2.6 },
         { t: 'solid', x: 19, y: 12, w: 7, h: 3 },
@@ -116,7 +120,8 @@ export const CHAPTER_3 = {
 
         // Le courant d'air du haut pousse vers la gauche : rester en altitude
         // n'est pas gratuit.
-        { t: 'fan', x: 11, y: 1, w: 10, h: 3, dir: 'left', force: 950 },
+        { t: 'fan', x: 11, y: 1, w: 10, h: 3, dir: 'left', force: 1250 },
+        { t: 'mirage', x: 25, y: 12, w: 1, h: 3 },
         { t: 'exit', x: 28, y: 10 },
       ],
     },
@@ -137,7 +142,8 @@ export const CHAPTER_3 = {
 
         { t: 'field', x: 8, y: 5, w: 7, h: 7, kind: 'magnet', anchor: [16, 11], force: 620 },
         { t: 'field', x: 20, y: 5, w: 6, h: 7, kind: 'magnet', anchor: [23, 13.6], force: 700, hostile: true },
-        { t: 'zap', x: 20, y: 13.4, w: 6, h: 0.6, dir: 'up' },
+        { t: 'zone', x: 20, y: 5, w: 6, h: 7, mode: 'once', emits: 'grille' },
+        { t: 'zap', x: 20, y: 13.4, w: 6, h: 0.6, dir: 'up', signal: 'grille' },
 
         { t: 'mover', x: 20.5, y: 11, w: 2, h: 0.6, path: [[24, 11]], speed: 78, mode: 'pingpong' },
         { t: 'sign', x: 4, y: 9.4, w: 3.5, h: 1, text: 'CHAMPS ACTIFS', always: true },
@@ -161,7 +167,9 @@ export const CHAPTER_3 = {
 
         { t: 'vanish', x: 13.5, y: 11, w: 2, h: 0.6, mode: 'onLand', delay: 0.45, respawn: 1.4 },
         { t: 'vanish', x: 17, y: 10, w: 2, h: 0.6, mode: 'onLand', delay: 0.45, respawn: 1.4 },
-        { t: 'solid', x: 20, y: 12, w: 8, h: 3 },
+        { t: 'solid', x: 20, y: 12, w: 3, h: 3 },
+        { t: 'mirage', x: 23, y: 12, w: 1, h: 3 },
+        { t: 'solid', x: 24, y: 12, w: 4, h: 3 },
         { t: 'check', x: 24, y: 10.5, w: 1, h: 1.5, fake: true },
 
         { t: 'grav', x: 28.4, y: 8, w: 1.2, h: 4, dir: 'flip', mode: 'flip' },

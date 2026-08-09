@@ -24,7 +24,9 @@ export const CHAPTER_2 = {
       w: 30, h: 15,
       spawn: { x: 1.5, y: 10 },
       entities: [
-        { t: 'solid', x: 0, y: 12, w: 30, h: 3 },
+        { t: 'solid', x: 0, y: 12, w: 9, h: 3 },
+        { t: 'mirage', x: 9, y: 12, w: 1, h: 3 },
+        { t: 'solid', x: 10, y: 12, w: 20, h: 3 },
         { t: 'sign', x: 18, y: 9.4, w: 4, h: 1, text: 'SORTIE  →', always: true },
         { t: 'exit', x: 25, y: 10, fake: 'warp', to: [1.5, 10], emits: 'vu' },
 
@@ -48,12 +50,25 @@ export const CHAPTER_2 = {
       w: 30, h: 15,
       spawn: { x: 1.5, y: 10 },
       entities: [
-        { t: 'solid', x: 0, y: 12, w: 30, h: 3 },
+        // Sol volontairement FENDU en 16-18 : la trappe s'ouvre sur du vide.
+        // (Première version : la trappe posée sur un sol continu — elle
+        // coulissait joliment et ne changeait strictement rien.)
+        { t: 'solid', x: 0, y: 12, w: 16, h: 3 },
+        { t: 'solid', x: 18, y: 12, w: 12, h: 3 },
         { t: 'button', x: 4, y: 11.6, w: 2, h: 0.4, mode: 'once', emits: 'scan' },
         { t: 'sign', x: 2, y: 9.4, w: 3.5, h: 1, text: 'SCANNER\nDE PORTES', always: true },
 
         { t: 'crusher', x: 11, y: 0, w: 4, h: 2, axis: 'y', to: 10, speed: 95, back: 50, hold: 1.4, trigger: 'signal', signal: 'scan' },
         { t: 'deco', x: 11, y: 2.1, w: 4, h: 0.4, kind: 'stripe' },
+
+        // Le trou qui mord. Le sol se dérobe sous le couloir ; le réflexe est
+        // de se laisser tomber dedans pour éviter la presse — et c'est
+        // exactement à cet instant que la grille jaillit du fond.
+        // Il reste une corniche à droite : la chute doit être DIRIGÉE.
+        { t: 'door', x: 16, y: 12, w: 1, h: 1, slide: 'left', travel: 1, speed: 280, signal: 'scan' },
+        { t: 'door', x: 17, y: 12, w: 1, h: 1, slide: 'right', travel: 1, speed: 280, signal: 'scan' },
+        { t: 'zone', x: 15.4, y: 12.2, w: 3.2, h: 1.6, mode: 'once', emits: 'grille' },
+        { t: 'zap', x: 15.5, y: 14.2, w: 3, h: 0.8, dir: 'up', signal: 'grille' },
 
         { t: 'exit', x: 20, y: 10, fake: 'trap' },
         { t: 'deco', x: 20.2, y: 8.6, w: 0.8, h: 0.8, kind: 'lamp' },
@@ -89,6 +104,7 @@ export const CHAPTER_2 = {
         { t: 'tele', x: 13.4, y: 9.5, w: 1, h: 2.5, to: [1.5, 10], broken: true },
         { t: 'sign', x: 12, y: 8, w: 3.5, h: 1, text: 'TP-1\nDÉFAUT', always: true },
 
+        { t: 'mirage', x: 21, y: 12, w: 1, h: 3 },
         { t: 'vanish', x: 23, y: 10, w: 2, h: 0.6, mode: 'cycle', period: 2.4, duty: 0.7 },
         { t: 'vanish', x: 26.5, y: 9, w: 2, h: 0.6, mode: 'cycle', period: 2.4, duty: 0.7, phase: 0.6 },
         { t: 'solid', x: 29, y: 8, w: 3, h: 1 },
@@ -110,6 +126,8 @@ export const CHAPTER_2 = {
         { t: 'crusher', x: 7, y: 0, w: 3, h: 3, axis: 'y', to: 9, speed: 620, back: 110, hold: 0.35, trigger: 'near', range: 3 },
         { t: 'crusher', x: 14, y: 0, w: 3, h: 3, axis: 'y', to: 9, speed: 620, back: 110, hold: 0.35, trigger: 'near', range: 3 },
         { t: 'crusher', x: 21, y: 0, w: 3, h: 3, axis: 'y', to: 9, speed: 620, back: 110, hold: 0.35, trigger: 'near', range: 3 },
+        { t: 'mirage', x: 12, y: 12, w: 1, h: 3 },
+        { t: 'mirage', x: 19, y: 12, w: 1, h: 3 },
         { t: 'deco', x: 7, y: 3.1, w: 3, h: 0.4, kind: 'stripe' },
         { t: 'deco', x: 14, y: 3.1, w: 3, h: 0.4, kind: 'stripe' },
         { t: 'deco', x: 21, y: 3.1, w: 3, h: 0.4, kind: 'stripe' },
@@ -138,6 +156,7 @@ export const CHAPTER_2 = {
         // 0,26 s : le solveur l'a immédiatement déclaré infranchissable.
         { t: 'vanish', x: 8, y: 11, w: 2, h: 0.6, mode: 'cycle', period: 2.4, duty: 0.7 },
         { t: 'vanish', x: 12, y: 10, w: 2, h: 0.6, mode: 'cycle', period: 2.4, duty: 0.7, phase: 0.6 },
+        { t: 'mirage', x: 14.2, y: 11, w: 1.4, h: 0.6 },
         { t: 'vanish', x: 16, y: 11, w: 2, h: 0.6, mode: 'cycle', period: 2.4, duty: 0.7, phase: 1.2 },
         { t: 'vanish', x: 20, y: 10, w: 2, h: 0.6, mode: 'cycle', period: 2.4, duty: 0.7, phase: 1.8 },
         { t: 'solid', x: 24, y: 12, w: 6, h: 3 },

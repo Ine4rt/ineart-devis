@@ -1,0 +1,27 @@
+{
+  "appId": "com.ineart.voidrunner",
+  "appName": "Void Runner",
+  "webDir": ".",
+  "bundledWebRuntime": false,
+  "android": {
+    "backgroundColor": "#05060F",
+    "allowMixedContent": false
+  },
+  "ios": {
+    "backgroundColor": "#05060F",
+    "contentInset": "never",
+    "scrollEnabled": false
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchAutoHide": true,
+      "launchShowDuration": 400,
+      "backgroundColor": "#05060F",
+      "showSpinner": false
+    },
+    "StatusBar": {
+      "overlaysWebView": true,
+      "style": "DARK"
+    }
+  }
+}

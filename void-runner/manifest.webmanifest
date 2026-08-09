@@ -1,0 +1,13 @@
+{
+  "name": "VOID RUNNER",
+  "short_name": "VOID RUNNER",
+  "description": "Un petit robot, une station spatiale en panne, et beaucoup de pièges.",
+  "start_url": "./index.html",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#05060f",
+  "theme_color": "#0b0d20",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

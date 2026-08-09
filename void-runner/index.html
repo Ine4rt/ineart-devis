@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>VOID RUNNER</title>
+<!-- viewport-fit=cover + safe-area : indispensable sur iPhone à encoche en paysage -->
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0b0d20">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="description" content="VOID RUNNER — un petit robot, une station spatiale en panne, et beaucoup de pièges.">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="app">
+  <canvas id="game"></canvas>
+
+  <!-- ATH de jeu : minimal, en retrait, jamais dans le champ d'action -->
+  <div id="hud" hidden>
+    <div class="hud-left">
+      <button class="icon-btn" id="btn-pause" aria-label="Pause">❚❚</button>
+      <div class="hud-level"><span id="hud-num">01</span><span id="hud-name">—</span></div>
+    </div>
+    <div class="hud-right">
+      <div class="hud-attempt">ESSAI <b id="hud-attempt">1</b></div>
+      <div class="hud-time" id="hud-time">0.00</div>
+    </div>
+  </div>
+
+  <!-- Commandes tactiles. Les zones de frappe débordent volontairement le
+       visuel (voir .pad::before) : c'est ce qui rend le jeu jouable au pouce. -->
+  <div id="touch" hidden>
+    <div class="pad-group pad-left">
+      <button class="pad" data-key="left" aria-label="Gauche"><svg viewBox="0 0 24 24"><path d="M15 4 7 12l8 8"/></svg></button>
+      <button class="pad" data-key="right" aria-label="Droite"><svg viewBox="0 0 24 24"><path d="M9 4l8 8-8 8"/></svg></button>
+    </div>
+    <div class="pad-group pad-right">
+      <button class="pad pad-dash" data-key="dash" aria-label="Impulsion" hidden><svg viewBox="0 0 24 24"><path d="M4 12h13m0 0-5-5m5 5-5 5"/></svg></button>
+      <button class="pad pad-jump" data-key="jump" aria-label="Saut"><svg viewBox="0 0 24 24"><path d="M12 20V6m0 0-6 6m6-6 6 6"/></svg></button>
+    </div>
+  </div>
+
+  <!-- Bandeau de mort : ultra-court, il ne bloque jamais la reprise -->
+  <div id="deathband" hidden><span id="deathband-text"></span></div>
+  <div id="flash"></div>
+  <div id="toast-wrap"></div>
+
+  <!-- ÉCRANS ------------------------------------------------------------- -->
+  <section class="screen" data-screen="menu">
+    <div class="menu-brand">
+      <canvas id="menu-robot" width="180" height="180"></canvas>
+      <h1>VOID<span>RUNNER</span></h1>
+      <p class="tagline">Station Kestrel — évacuation en cours depuis 11 ans.</p>
+    </div>
+    <nav class="menu-nav">
+      <button class="btn btn-primary" data-go="play"><b id="menu-play-label">JOUER</b><small id="menu-play-sub">Salle 01</small></button>
+      <button class="btn" data-go="levels">NIVEAUX</button>
+      <button class="btn" data-go="robot">ROBOT</button>
+      <button class="btn" data-go="stats">STATISTIQUES</button>
+      <button class="btn" data-go="settings">PARAMÈTRES</button>
+    </nav>
+  </section>
+
+  <section class="screen" data-screen="levels" hidden>
+    <header class="scr-head">
+      <button class="icon-btn" data-go="menu">←</button><h2>NIVEAUX</h2><div class="scr-meta" id="levels-meta"></div>
+    </header>
+    <div class="scroll" id="levels-list"></div>
+  </section>
+
+  <section class="screen" data-screen="robot" hidden>
+    <header class="scr-head">
+      <button class="icon-btn" data-go="menu">←</button><h2>ROBOT</h2><div class="scr-meta" id="robot-meta"></div>
+    </header>
+    <div class="robot-stage"><canvas id="robot-preview" width="260" height="200"></canvas>
+      <div class="robot-info"><h3 id="robot-name">—</h3><p id="robot-desc">—</p><p class="robot-lock" id="robot-lock"></p></div>
+    </div>
+    <div class="scroll skins" id="skins-list"></div>
+  </section>
+
+  <section class="screen" data-screen="stats" hidden>
+    <header class="scr-head"><button class="icon-btn" data-go="menu">←</button><h2>STATISTIQUES</h2></header>
+    <div class="scroll" id="stats-body"></div>
+  </section>
+
+  <section class="screen" data-screen="settings" hidden>
+    <header class="scr-head"><button class="icon-btn" data-go="menu">←</button><h2>PARAMÈTRES</h2></header>
+    <div class="scroll" id="settings-body"></div>
+  </section>
+
+  <section class="screen screen-overlay" data-screen="pause" hidden>
+    <div class="panel">
+      <h2>PAUSE</h2>
+      <p class="panel-sub" id="pause-sub">—</p>
+      <button class="btn btn-primary" data-go="resume">REPRENDRE</button>
+      <button class="btn" data-go="retry">RECOMMENCER</button>
+      <button class="btn" data-go="menu">MENU PRINCIPAL</button>
+    </div>
+  </section>
+
+  <section class="screen screen-overlay" data-screen="win" hidden>
+    <div class="panel panel-win">
+      <div class="win-stamp">SALLE FRANCHIE</div>
+      <h2 id="win-title">—</h2>
+      <p class="win-line" id="win-line">—</p>
+      <div class="win-grid">
+        <div><span id="win-time">—</span><small>TEMPS</small></div>
+        <div><span id="win-deaths">—</span><small>MORTS ICI</small></div>
+        <div><span id="win-best">—</span><small>RECORD</small></div>
+      </div>
+      <div class="win-actions">
+        <button class="btn btn-primary" data-go="next">SALLE SUIVANTE</button>
+        <button class="btn" data-go="retry">REJOUER</button>
+        <button class="btn" data-go="levels">NIVEAUX</button>
+      </div>
+    </div>
+  </section>
+</div>
+<script type="module" src="src/main.js"></script>
+</body>
+</html>

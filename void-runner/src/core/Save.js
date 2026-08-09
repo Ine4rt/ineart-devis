@@ -40,11 +40,15 @@ export class SaveManager {
   }
 
   read() {
-    try { return localStorage.getItem(KEY); } catch { return null; }
+    try { return localStorage.getItem(KEY) ?? this.mem ?? null; } catch { return this.mem ?? null; }
   }
 
   write(str) {
-    try { localStorage.setItem(KEY, str); } catch { /* mode privé : on continue sans sauvegarde */ }
+    // Repli en mémoire : navigation privée, iframe cloisonnée, quota plein…
+    // La progression survit alors au moins à la session en cours, au lieu de
+    // s'évaporer à chaque niveau terminé.
+    this.mem = str;
+    try { localStorage.setItem(KEY, str); } catch { /* stockage indisponible */ }
   }
 
   load() {

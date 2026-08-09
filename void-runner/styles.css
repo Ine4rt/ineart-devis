@@ -112,6 +112,17 @@ body.hand-left #touch { flex-direction: row-reverse; }
 
 /* --------------------------------------------------------- Retours ------- */
 
+#rotate {
+  display: none;
+  position: absolute; left: 50%; transform: translateX(-50%);
+  top: calc(52px + var(--safe-t));
+  white-space: nowrap;
+  font-size: 10.5px; letter-spacing: .08em; color: var(--dim);
+  background: rgba(10, 14, 34, .72); border: 1px solid var(--line);
+  border-radius: 999px; padding: 6px 14px; backdrop-filter: blur(6px);
+}
+@media (orientation: portrait) { #rotate { display: block; } }
+
 #flash { position: absolute; inset: 0; pointer-events: none; opacity: 0; background: #fff; }
 #flash.on { animation: flash .18s ease-out; }
 @keyframes flash { from { opacity: .5 } to { opacity: 0 } }

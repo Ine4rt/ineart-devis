@@ -15,11 +15,18 @@ cd void-runner
 npm start            # http://localhost:8080
 npm test             # valide les 30 niveaux (le solveur les joue vraiment)
 npm run test:fast    # structure et cohérence seulement (~1 s)
+npm run build        # dist/void-runner.html — le jeu entier en un fichier
 ```
 
-Aucune dépendance, aucune étape de build, aucun asset binaire : le jeu est
-constitué de modules ES chargés directement par le navigateur. Le serveur
-fourni n'existe que parce que `file://` interdit les modules.
+`dist/void-runner.html` (212 Ko) s'ouvre directement dans n'importe quel
+navigateur, sans serveur : c'est la version à envoyer pour faire essayer le
+jeu. La version de développement reste en modules séparés, c'est celle qu'on
+modifie.
+
+Aucune dépendance, aucun asset binaire : le jeu est constitué de modules ES
+chargés directement par le navigateur, sans transpilation. Le serveur fourni
+n'existe que parce que `file://` interdit les modules ; `npm run build`
+n'est nécessaire que pour produire la version en un fichier.
 
 Raccourci de test : `index.html#17` démarre directement la salle 17.
 

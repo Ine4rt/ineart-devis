@@ -83,12 +83,18 @@ export class Game {
     this.canvas.height = Math.round(ch * dpr);
     const scale = Math.min(this.canvas.width / vw, this.canvas.height / VIEW_H);
     this.view.scale = scale;
+    const offX = Math.round((this.canvas.width - vw * scale) / 2);
+    const offY = Math.round((this.canvas.height - VIEW_H * scale) / 2);
+    // Débord : la zone de canevas située HORS de la boîte de jeu, exprimée en
+    // unités de jeu. Le fond y est peint aussi — sans quoi un écran au ratio
+    // inhabituel (portrait, panneau étroit) encadre la salle de deux bandes
+    // noires franches, ce qui a l'air d'un bug plutôt que d'un cadrage.
+    this.view.padX = offX / scale;
+    this.view.padY = offY / scale;
+    this.view.fullW = this.canvas.width / scale;
+    this.view.fullH = this.canvas.height / scale;
     const ctx = this.renderer.ctx;
-    ctx.setTransform(
-      scale, 0, 0, scale,
-      Math.round((this.canvas.width - vw * scale) / 2),
-      Math.round((this.canvas.height - VIEW_H * scale) / 2),
-    );
+    ctx.setTransform(scale, 0, 0, scale, offX, offY);
     ctx.imageSmoothingEnabled = false;
   }
 

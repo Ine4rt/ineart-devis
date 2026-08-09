@@ -6,8 +6,11 @@
   "type": "module",
   "scripts": {
     "start": "node tools/serve.js",
+    "build": "node tools/bundle.js",
     "test": "node tests/run.js",
     "test:fast": "node tests/run.js --fast"
   },
-  "engines": { "node": ">=18" }
+  "engines": {
+    "node": ">=18"
+  }
 }

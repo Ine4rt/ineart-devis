@@ -20,38 +20,49 @@ export class Renderer {
     this.quality = 1; // 1 = complet, 0 = économe (baissé automatiquement)
   }
 
-  /** Le fond : dégradé, grille en parallaxe, brume. Zéro allocation par frame. */
-  drawBackground(w, h, cam, pal) {
+  /**
+   * Le fond : dégradé, grille en parallaxe, brume.
+   * Peint sur TOUT le canevas (débord compris), pas seulement sur la boîte de
+   * jeu — c'est ce qui fait qu'un ratio d'écran inattendu produit un cadrage
+   * et non deux bandes noires. Zéro allocation par frame.
+   */
+  drawBackground(view, cam, pal) {
     const ctx = this.ctx;
-    const g = ctx.createLinearGradient(0, 0, 0, h);
+    const x0 = -(view.padX || 0);
+    const y0 = -(view.padY || 0);
+    const w = view.fullW || view.w;
+    const h = view.fullH || view.h;
+    const g = ctx.createLinearGradient(0, y0, 0, y0 + h);
     g.addColorStop(0, pal.bg0);
     g.addColorStop(1, pal.bg1);
     ctx.fillStyle = g;
-    ctx.fillRect(0, 0, w, h);
+    ctx.fillRect(x0, y0, w, h);
 
     // Grille lointaine — parallaxe 0,35 : elle donne la vitesse sans distraire.
     const step = 48;
-    const ox = -((cam.x * 0.35) % step);
-    const oy = -((cam.y * 0.35) % step);
+    const ox = x0 - ((cam.x * 0.35) % step);
+    const oy = y0 - ((cam.y * 0.35) % step);
     ctx.strokeStyle = pal.grid;
     ctx.lineWidth = 1;
     ctx.beginPath();
-    for (let x = ox; x < w + step; x += step) {
-      ctx.moveTo(Math.round(x) + 0.5, 0);
-      ctx.lineTo(Math.round(x) + 0.5, h);
+    for (let x = ox; x < x0 + w + step; x += step) {
+      ctx.moveTo(Math.round(x) + 0.5, y0);
+      ctx.lineTo(Math.round(x) + 0.5, y0 + h);
     }
-    for (let y = oy; y < h + step; y += step) {
-      ctx.moveTo(0, Math.round(y) + 0.5);
-      ctx.lineTo(w, Math.round(y) + 0.5);
+    for (let y = oy; y < y0 + h + step; y += step) {
+      ctx.moveTo(x0, Math.round(y) + 0.5);
+      ctx.lineTo(x0 + w, Math.round(y) + 0.5);
     }
     ctx.stroke();
 
     if (this.quality > 0) {
-      const hz = ctx.createRadialGradient(w * 0.5, h * 0.45, 10, w * 0.5, h * 0.45, w * 0.7);
+      const cx = view.w * 0.5;
+      const cy = view.h * 0.45;
+      const hz = ctx.createRadialGradient(cx, cy, 10, cx, cy, view.w * 0.7);
       hz.addColorStop(0, pal.haze);
       hz.addColorStop(1, 'rgba(0,0,0,0)');
       ctx.fillStyle = hz;
-      ctx.fillRect(0, 0, w, h);
+      ctx.fillRect(x0, y0, w, h);
     }
   }
 
@@ -600,7 +611,10 @@ export class Renderer {
     const ctx = this.ctx;
     this.t += dt;
     const pal = palette(world.level.palette);
-    this.drawBackground(view.w, view.h, cam, pal);
+    this.drawBackground(view, cam, pal);
+    // Marge de masquage : elle doit couvrir tout le débord, sinon la salle
+    // « flotte » au milieu du fond sur un écran très allongé.
+    const over = Math.max(240, (view.padX || 0) + 40, (view.padY || 0) + 40);
 
     ctx.save();
     ctx.translate(Math.round(-cam.x + cam.shakeX), Math.round(-cam.y + cam.shakeY));
@@ -654,14 +668,16 @@ export class Renderer {
     // Hors-salle : quand la pièce est plus étroite que l'écran, on masque
     // franchement l'extérieur. Sans ça, le sol « s'arrête dans le vide » et la
     // salle a l'air inachevée.
+    // Étendue réellement visible du canevas, en coordonnées de salle.
+    const mL = cam.x - (view.padX || 0) - over;
+    const mT = cam.y - (view.padY || 0) - over;
+    const mR = cam.x - (view.padX || 0) + (view.fullW || view.w) + over;
+    const mB = cam.y - (view.padY || 0) + (view.fullH || view.h) + over;
     ctx.fillStyle = 'rgba(3,4,12,0.86)';
-    if (cam.x < 0) ctx.fillRect(cam.x - 200, cam.y - 200, 200 - cam.x, view.h + 400);
-    if (cam.x + view.w > world.w) {
-      ctx.fillRect(world.w, cam.y - 200, cam.x + view.w - world.w + 200, view.h + 400);
-    }
-    if (cam.y + view.h > world.h) {
-      ctx.fillRect(cam.x - 200, world.h, view.w + 400, cam.y + view.h - world.h + 200);
-    }
+    if (mL < 0) ctx.fillRect(mL, mT, -mL, mB - mT);
+    if (mR > world.w) ctx.fillRect(world.w, mT, mR - world.w, mB - mT);
+    if (mT < 0) ctx.fillRect(0, mT, world.w, -mT);
+    if (mB > world.h) ctx.fillRect(0, world.h, world.w, mB - world.h);
 
     // Le robot, toujours au premier plan.
     const p = world.player;

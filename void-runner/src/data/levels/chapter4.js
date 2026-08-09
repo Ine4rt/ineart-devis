@@ -82,27 +82,36 @@ export const CHAPTER_4 = {
     {
       name: 'Séquence',
       hint: 'Trois verrous.',
-      // Leçon : l'ordre compte. Le verrou 1 est le premier rencontré et se
-      // referme au bout de 3,4 s — le trajet naturel (gauche → droite) est
-      // donc exactement le mauvais. Aucun blocage possible : il se réarme.
+      // Leçon : le troisième verrou est DERRIÈRE toi.
+      //
+      // Le robot apparaît face à la droite ; le verrou 1 est hors champ, à
+      // gauche. On presse donc 2 et 3, on arrive devant une porte close, et
+      // il faut faire l'aller-retour — sous les 3,8 s de la temporisation.
+      // Aller-retour mesuré : 2,5 s, soit 1,3 s de marge. Aucun blocage
+      // possible, le verrou se réarme.
+      //
+      // Première version : les trois verrous alignés de gauche à droite, le
+      // temporisé en premier. Le joueur prudent automatique (tools/playtest.js)
+      // l'a franchie du premier coup en courant tout droit — la temporisation
+      // n'expirait jamais avant la porte. Il n'y avait tout simplement pas
+      // d'énigme.
       w: 30, h: 15,
-      spawn: { x: 1.5, y: 10 },
-      // Itinéraire de référence : verrou 2, verrou 3, retour au verrou 1, porte.
-      solve: [[11, 11.5], [17, 11.5], [4, 11.5], [22, 11.5], [27, 11.4]],
+      spawn: { x: 8, y: 10 },
+      solve: [[14, 11.5], [19, 11.5], [3, 11.5], [23, 11.5], [27, 11.4]],
       entities: [
         { t: 'solid', x: 0, y: 12, w: 30, h: 3 },
-        { t: 'button', x: 3, y: 11.6, w: 2, h: 0.4, mode: 'once', emits: 'v1', autoOff: 3.8 },
-        { t: 'sign', x: 2, y: 9.4, w: 3.5, h: 1, text: 'VERROU 1\n3,8 s', always: true },
-        { t: 'button', x: 10, y: 11.6, w: 2, h: 0.4, mode: 'once', emits: 'v2' },
-        { t: 'sign', x: 9, y: 9.4, w: 3, h: 1, text: 'VERROU 2', always: true },
-        { t: 'button', x: 16, y: 11.6, w: 2, h: 0.4, mode: 'once', emits: 'v3' },
-        { t: 'sign', x: 15, y: 9.4, w: 3, h: 1, text: 'VERROU 3', always: true },
+        { t: 'button', x: 2, y: 11.6, w: 2, h: 0.4, mode: 'once', emits: 'v1', autoOff: 3.8 },
+        { t: 'sign', x: 1.2, y: 9.4, w: 3.5, h: 1, text: 'VERROU 1\n3,8 s', always: true },
+        { t: 'button', x: 13, y: 11.6, w: 2, h: 0.4, mode: 'once', emits: 'v2' },
+        { t: 'sign', x: 12, y: 9.4, w: 3, h: 1, text: 'VERROU 2', always: true },
+        { t: 'button', x: 18, y: 11.6, w: 2, h: 0.4, mode: 'once', emits: 'v3' },
+        { t: 'sign', x: 17, y: 9.4, w: 3, h: 1, text: 'VERROU 3', always: true },
 
         { t: 'logic', op: 'and', in: ['v1', 'v2', 'v3'], emits: 'porte' },
-        { t: 'solid', x: 21, y: 3, w: 2, h: 7 },
-        { t: 'door', x: 21, y: 10, w: 2, h: 2, slide: 'up', travel: 2, speed: 420, signal: 'porte' },
-        { t: 'deco', x: 20, y: 8.2, w: 0.8, h: 0.8, kind: 'lamp', signal: 'porte' },
-        { t: 'exit', x: 26, y: 10 },
+        { t: 'solid', x: 22, y: 3, w: 2, h: 7 },
+        { t: 'door', x: 22, y: 10, w: 2, h: 2, slide: 'up', travel: 2, speed: 420, signal: 'porte' },
+        { t: 'deco', x: 21, y: 8.2, w: 0.8, h: 0.8, kind: 'lamp', signal: 'porte' },
+        { t: 'exit', x: 26.5, y: 10 },
       ],
     },
 

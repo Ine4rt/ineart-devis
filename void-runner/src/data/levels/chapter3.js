@@ -81,8 +81,10 @@ export const CHAPTER_3 = {
         { t: 'crumble', x: 14, y: 12, w: 1, h: 1, delay: 0.45, respawn: 2.6 },
         { t: 'crumble', x: 15, y: 12, w: 1, h: 1, delay: 0.45, respawn: 2.6 },
         { t: 'solid', x: 19, y: 12, w: 7, h: 3 },
-        { t: 'laser', x: 10.2, y: 4.5, w: 0.5, h: 0.6, dir: 'down', len: 9, cycle: [1.0, 1.5], phase: 1.25 },
-        { t: 'laser', x: 17.2, y: 4.5, w: 0.5, h: 0.6, dir: 'down', len: 9, cycle: [1.0, 1.5] },
+        // Mêmes faisceaux qu'à la salle 4, phases interverties. Rien d'autre
+        // ne change dans le rythme : c'est la mémoire du joueur qui le trompe.
+        { t: 'laser', x: 10.2, y: 4.5, w: 0.5, h: 0.6, dir: 'down', len: 9, cycle: [0.9, 1.8], phase: 1.3 },
+        { t: 'laser', x: 17.2, y: 4.5, w: 0.5, h: 0.6, dir: 'down', len: 9, cycle: [0.9, 1.8], phase: 2.2 },
         { t: 'deco', x: 9.8, y: 3.4, w: 1.4, h: 1.1, kind: 'panel' },
         { t: 'deco', x: 16.8, y: 3.4, w: 1.4, h: 1.1, kind: 'panel' },
         { t: 'sign', x: 4, y: 9.4, w: 4, h: 1, text: 'FAISCEAUX\nINTERMITTENTS', always: true },

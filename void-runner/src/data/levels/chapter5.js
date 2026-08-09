@@ -131,6 +131,7 @@ export const CHAPTER_5 = {
       w: 26, h: 22,
       spawn: { x: 2, y: 10 },
       dejaVu: 1,
+      deathHints: { burn: 'Cette porte-là ne s\'ouvre pas. Regarde en bas.' },
       entities: [
         { t: 'solid', x: 0, y: 12, w: 16, h: 1 },
         { t: 'solid', x: 18, y: 12, w: 8, h: 1 },

@@ -1,8 +1,8 @@
 import { LEVELS } from '../src/data/levels/index.js';
 import { ENTITY_TYPES } from '../src/engine/entities/index.js';
 import { World } from '../src/engine/World.js';
-import { TILE, JUMP_VEL, GRAVITY, RUN_SPEED } from '../src/engine/constants.js';
-import { solve, replay } from './solver.js';
+import { TILE } from '../src/engine/constants.js';
+import { solve, replay, robustness } from './solver.js';
 
 /**
  * Suite de validation. Trois passes, de la moins chère à la plus chère :
@@ -20,8 +20,53 @@ const args = process.argv.slice(2);
 const fast = args.includes('--fast');
 const only = args.filter((a) => /^\d+$/.test(a)).map(Number);
 
-const APEX = (JUMP_VEL * JUMP_VEL) / (2 * GRAVITY);
-const RANGE = ((2 * JUMP_VEL) / GRAVITY) * RUN_SPEED;
+/**
+ * Capacités du robot, MESURÉES sur le moteur — pas calculées à la main.
+ *
+ * La formule continue v²/2g donne 87 px ; la simulation en donne 79,5, parce
+ * que le pas fixe applique la gravité dès la frame du saut. Neuf pour cent
+ * d'écart, c'est-à-dire un gouffre de plus qu'il n'en faut pour rendre une
+ * salle infranchissable. Les repères de level design doivent donc sortir du
+ * moteur lui-même, sinon ils mentent.
+ */
+function measureAbilities() {
+  const flat = {
+    name: 'banc d\'essai', w: 60, h: 15, spawn: { x: 2, y: 10 },
+    entities: [{ t: 'solid', x: 0, y: 12, w: 60, h: 3 }, { t: 'exit', x: 58, y: 10 }],
+  };
+  const settle = (w, right = false) => {
+    // Le robot apparaît légèrement au-dessus du sol : on le laisse se poser
+    // avant de mesurer quoi que ce soit.
+    for (let f = 0; f < 90; f++) {
+      w.step({ left: false, right, jump: false, jumpPressed: false, dashPressed: false });
+    }
+  };
+
+  // Apex : appui maintenu, depuis l'arrêt.
+  let w = new World(flat, {});
+  settle(w);
+  const groundY = w.player.y;
+  let top = groundY;
+  for (let f = 0; f < 120; f++) {
+    w.step({ left: false, right: false, jump: true, jumpPressed: f === 0, dashPressed: false });
+    top = Math.min(top, w.player.y);
+  }
+  const apex = groundY - top;
+
+  // Portée : lancé à pleine vitesse, saut maintenu, distance parcourue en l'air.
+  w = new World(flat, {});
+  settle(w, true);
+  const x0 = w.player.x;
+  let range = 0;
+  for (let f = 0; f < 120; f++) {
+    w.step({ left: false, right: true, jump: true, jumpPressed: f === 0, dashPressed: false });
+    if (!w.player.grounded) range = w.player.x - x0;
+    else if (f > 2) break;
+  }
+  return { apex, range };
+}
+
+const { apex: APEX, range: RANGE } = measureAbilities();
 
 let failures = 0;
 const fail = (lvl, msg) => {
@@ -83,9 +128,19 @@ function checkSolvable(lv) {
     fail(lv, `simulation non déterministe (rejeu : ${again})`);
     return false;
   }
+  // Marge d'erreur. Un chapitre d'introduction doit pardonner ; le chapitre 5
+  // a le droit d'être exigeant. On n'échoue donc pas dessus, on le signale.
+  const rob = robustness(lv, r.path, r.stride);
+  const pct = Math.round(rob * 100);
+  const tag = rob >= 0.75 ? '\x1b[32m' : rob >= 0.5 ? '\x1b[33m' : '\x1b[31m';
+  if (rob < 0.5 && lv.chapterId <= 2) {
+    fail(lv, `trop exigeante pour un début de jeu (robustesse ${pct} %)`);
+    return false;
+  }
   console.log(
     `  \x1b[32m✓\x1b[0m  ${lv.num.toString().padStart(2)} ${lv.name.padEnd(22)} ` +
-    `résolu en ${r.time.toFixed(1)} s  (${(ms / 1000).toFixed(1)} s de calcul)`,
+    `résolu en ${r.time.toFixed(1).padStart(4)} s   robustesse ${tag}${String(pct).padStart(3)} %\x1b[0m` +
+    `  \x1b[2m(${(ms / 1000).toFixed(1)} s de calcul)\x1b[0m`,
   );
   return true;
 }

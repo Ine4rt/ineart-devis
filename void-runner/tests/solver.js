@@ -145,6 +145,50 @@ export function solve(level, opts = {}) {
   };
 }
 
+/**
+ * ROBUSTESSE : une erreur d'une frame est-elle fatale ?
+ *
+ * Le solveur prouve qu'un chemin existe. Ça ne dit rien de ce qui compte pour
+ * un joueur : la marge d'erreur. On reprend donc la solution trouvée et on la
+ * décale d'une frame — en retard, puis en avance — à chaque point de décision,
+ * et on compte combien de ces variantes franchissent quand même la salle.
+ *
+ * Une salle à 100 % pardonne un décalage d'une frame n'importe où. Une salle
+ * sous 50 % exige une exécution à la frame près à un moment donné : c'est
+ * acceptable en fin de jeu, jamais dans un chapitre d'introduction.
+ */
+export function robustness(level, path, stride) {
+  const frames = [];
+  for (const a of path) {
+    for (let f = 0; f < stride; f++) frames.push({ a, first: f === 0 });
+  }
+
+  const run = (list) => {
+    const w = new World(level, { dash: level.dash === true });
+    for (const { a, first } of list) {
+      w.step({
+        left: a.left, right: a.right, jump: a.jump,
+        jumpPressed: a.jump && first,
+        dashPressed: a.dash === true && first,
+      });
+      if (w.state !== 'run') break;
+    }
+    return w.state === 'win';
+  };
+
+  let tried = 0;
+  let survived = 0;
+  for (let i = 0; i < path.length; i++) {
+    const at = i * stride;
+    // Une frame de retard : le joueur a réagi un poil trop tard.
+    const late = frames.slice(0, at).concat([frames[at]], frames.slice(at));
+    // Une frame d'avance : il a réagi un poil trop tôt.
+    const early = frames.slice(0, at).concat(frames.slice(at + 1));
+    for (const v of [late, early]) { tried++; if (run(v)) survived++; }
+  }
+  return tried ? survived / tried : 1;
+}
+
 /** Rejoue une solution trouvée (utile pour vérifier le déterminisme). */
 export function replay(level, path, stride) {
   const w = new World(level, { dash: level.dash === true });

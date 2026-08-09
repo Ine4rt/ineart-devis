@@ -129,15 +129,31 @@ recoder.
 | Grandeur | Valeur |
 |---|---|
 | Tuile | 24 px |
-| Hauteur de saut | 87 px — 3,6 tuiles |
-| Portée d'un saut lancé | 118 px — 4,9 tuiles |
-| Portée avec impulsion | ~165 px — 6,8 tuiles |
+| Hauteur de saut | **83 px — 3,4 tuiles** (mesurée, pas calculée) |
+| Portée d'un saut lancé | **114 px — 4,8 tuiles** |
+| Portée avec impulsion | ~160 px — 6,6 tuiles |
 | Pas de simulation | 1/60 s fixe, déterministe |
 | Coyote time / jump buffer | 90 ms / 120 ms |
 | Reprise après la mort | 320 ms |
 
-Ces chiffres sont affichés au lancement de `npm test`. Un gouffre plus large
-que la portée n'est pas un défi : c'est un bug, et le solveur le dit.
+Ces chiffres sont **mesurés sur le moteur** au lancement de `npm test`, jamais
+recopiés d'une formule : la formule continue annonce 87 px d'apex, la
+simulation à pas fixe en donne 83. Neuf pour cent d'écart suffisent à rendre un
+gouffre infranchissable sans que rien ne se voie sur le plan.
+
+Deux outils complètent le solveur, parce que « franchissable » ne veut pas dire
+« jouable » :
+
+```bash
+node tools/tolerance.js 1   # de combien peut-on se tromper sur une salle ?
+npm test                    # inclut la robustesse : une frame d'erreur est-elle fatale ?
+```
+
+`tolerance.js` rejoue la salle pour toutes les combinaisons (instant du saut ×
+durée d'appui) et dessine la carte des issues. Repère : une tape de pouce dure
+60 à 150 ms — une salle d'introduction dont la marge d'appui est plus courte
+que ça est injouable, quoi qu'en dise le solveur. C'est exactement ce qui
+clouait la salle 1 : 150 ms de marge.
 
 ---
 

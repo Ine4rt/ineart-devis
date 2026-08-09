@@ -46,6 +46,7 @@ export class Game {
     this.levelMemory = new Map();
     this.checkpoint = null;
     this.prevTrace = null;
+    this.hintShown = new Map();
     this.rng = makeRng(Date.now() & 0xffff);
 
     this.acc = 0;
@@ -107,6 +108,7 @@ export class Game {
     this.levelMemory = new Map();
     this.checkpoint = null;
     this.prevTrace = null;
+    this.hintShown = new Map();
     this.mode = 'play';
     this.spawnWorld();
     this.camera.snap(this.world, this.view);
@@ -303,12 +305,24 @@ export class Game {
     const near = exit
       ? Math.hypot(ev.x - (exit.x + exit.w / 2), ev.y - (exit.y + exit.h / 2)) < 90
       : false;
-    const quip = pickQuip({
-      attempt: this.attempt,
-      totalDeaths: this.save.data.totalDeaths,
-      nearExit: near,
-      rng: this.rng,
-    });
+    // Indice ciblé : certaines salles ont une leçon précise qu'une mort seule
+    // ne transmet pas (« pourquoi ce laser s'est-il allumé ? »). On le montre
+    // au plus deux fois — après, c'est le joueur qui n'écoute pas, et le lui
+    // répéter serait condescendant.
+    const hint = this.world.level.deathHints?.[ev.kind];
+    const shown = this.hintShown.get(ev.kind) || 0;
+    let quip;
+    if (hint && shown < 2) {
+      this.hintShown.set(ev.kind, shown + 1);
+      quip = hint;
+    } else {
+      quip = pickQuip({
+        attempt: this.attempt,
+        totalDeaths: this.save.data.totalDeaths,
+        nearExit: near,
+        rng: this.rng,
+      });
+    }
     this.ui?.onDeath(this.attempt + 1, quip);
     this.checkUnlocks();
   }

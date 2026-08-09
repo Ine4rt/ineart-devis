@@ -33,8 +33,12 @@ export const ACCEL_AIR = 1500;
 export const FRICTION_GROUND = 2800;
 export const FRICTION_AIR = 260;
 
-// Saut : hauteur d'apex = JUMP_VEL² / (2 * GRAVITY) ≈ 87 px ≈ 3.6 tuiles
-// Portée horizontale à pleine vitesse ≈ 118 px ≈ 4.9 tuiles
+// Saut. ATTENTION aux valeurs théoriques : la formule continue v²/2g donne
+// 87 px, la simulation à pas fixe en donne 83, parce que la gravité s'applique
+// dès la frame du saut. Les repères réels — apex 83 px (3,4 tuiles), portée
+// 114 px (4,8 tuiles) — sont MESURÉS sur le moteur au lancement de `npm test`.
+// Concevoir une salle d'après la formule, c'est se tromper de 9 % : de quoi
+// rendre un gouffre infranchissable sans que rien ne le montre sur le plan.
 export const GRAVITY = 1800;
 export const JUMP_VEL = 560;
 export const JUMP_CUT = 0.42; // saut variable : relâcher coupe l'élan
